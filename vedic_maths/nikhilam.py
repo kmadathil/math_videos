@@ -1,6 +1,7 @@
 from manim import *
 from numpy import array
 
+# Helper Function for Title
 def Title(scene, t0, t1, wait=5, scale=0.3, move=(3, 6)):
     # Title Scene
     t0 = Text(t0)
@@ -9,7 +10,8 @@ def Title(scene, t0, t1, wait=5, scale=0.3, move=(3, 6)):
     scene.add(tg)
     scene.wait(wait)
     scene.play(tg.animate.scale(scale).move_to(move[0]*DOWN+move[1]*RIGHT))
-    
+
+# Helper function for multi-line explanation
 def Explanation(scene, text, wait=3):
     # Explanation
     el = [MarkupText(x) for x in text]
@@ -18,7 +20,8 @@ def Explanation(scene, text, wait=3):
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
     scene.wait(wait)
     scene.play(FadeOut(eg))
-    
+
+# Helper function to display text message
 def DisplayText(scene, text, scale=1, move=(0, 0), wait=5, fade=True):
     t = MarkupText(text).scale(scale)
     scene.play(FadeIn(t.move_to(move[0]*DOWN+move[1]*RIGHT)))
@@ -26,6 +29,95 @@ def DisplayText(scene, text, scale=1, move=(0, 0), wait=5, fade=True):
     if fade:
         scene.play(FadeOut(t))
 
+# Helper function for subtraction example
+def SubExample(scene, num1, num2):
+        op = Text("-")
+        op1 = Text("+")
+        sn1 = str(num1)
+        sn2 = str(num2)
+        # Number lengths
+        len1 = len(sn1)
+        len2 = len(sn2)
+        dlen = abs(len1-len2)
+        mlen = max(len1, len2)
+        lenz = len2 - len(sn2.rstrip('0'))
+        len9 = len2-1-lenz
+        
+        # Prepend shorter number with 0s
+        if len1 > len2:
+            sn2 = "0"*dlen + sn2
+        elif len2 > len1:
+            sn1 = "0"*dlen + sn1
+            
+        # Setup minuend, subtrahend, complement and answer
+        #n1 = Text("91234").set_color(GREEN)
+        n1 = Text(sn1).set_color(GREEN) 
+        d1 = Text("Minuend").set_color(GREEN) 
+        #n2 = Text("18765").set_color(YELLOW)
+        n2 = Text(sn2).set_color(YELLOW)
+        d2 = Text("Subtrahend").set_color(YELLOW) 
+        n3 = Text("?")
+        #ans = "172469"
+        if num1 >= num2:
+            # Positive answer
+            ans = "1" + str(num1-num2)
+            posans = True
+        else:
+            # Negative answer
+            ans = str(10**mlen - (num2-num1))
+            posans = False
+            
+        res = Text(ans)
+        ln = Line(start=array([-1*2,0,0]), end=array([0,0,0])).set_color(YELLOW)
+        g1 = VGroup(n1, n2, ln, n3).arrange(DOWN, aligned_edge=RIGHT).move_to(UP*2)
+        g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
+        op.next_to(n1, RIGHT)
+        g2 = VGroup(d1, d2).arrange(DOWN).next_to(g, LEFT, aligned_edge=UP, buff=1)
+        
+        #nik = MarkupText("9999<span size='small'>10</span>")
+        nik = MarkupText('9'*len9 + "<span size='small'>10</span>")
+        n2c = n2.copy()
+        lnc = ln.copy()
+        g3  = VGroup(nik, n2c, lnc).arrange(DOWN, aligned_edge=LEFT)
+        cmpl = Text(str(10**mlen - num2)).set_color(ORANGE)
+        cmplc = cmpl.copy()
+        ct  = Text("Complement of Subtrahend").scale(0.5).set_color(ORANGE)
+        
+        scene.play(FadeIn(g))
+        scene.play(FadeIn(g2))
+        DisplayText(scene, "Subtract these numbers", wait=3, move=(-3, 0))
+        #scene.wait(2)
+        scene.play(FadeOut(g2))
+        scene.play(g.animate.move_to(LEFT*2))
+        scene.play(FadeIn(g3.next_to(g, RIGHT, buff=1, aligned_edge=UP)))
+        DisplayText(scene, "1. Find the complement of the <span color='yellow'>Subtrahend</span>", scale=1, wait=2, move=(-3, 0))
+        scene.play(AddTextLetterByLetter(cmpl.next_to(g3, DOWN, aligned_edge=LEFT), time_per_char=0.3))
+        scene.play(FadeIn(ct.next_to(cmpl, RIGHT)))
+        pos = n2.get_center()
+        opos = op.get_center()
+        DisplayText(scene, "2. Add the complement to the Minuend", wait=3, move=(-3, 0))
+        scene.play(FadeOut(n2), FadeOut(op), FadeIn(cmplc.move_to(pos)), FadeIn(op1.move_to(opos)))
+        scene.play(FadeOut(n3))
+        scene.play(FadeIn(res.next_to(ln, DOWN, aligned_edge=RIGHT)))
+        scene.wait(3)
+        if posans:
+            fb = SurroundingRectangle(res[0], buff=0.1)
+            scene.play(Create(fb))
+            DisplayText(scene, "If the result has an extra digit of 1, the answer is positive", scale=0.5, wait=3, move=(2,-2))
+            DisplayText(scene, "Drop the extra 1 to get the final answer", scale=0.5,  wait=3, move=(2,-2))
+            #scene.wait(2)
+            scene.play(res[0].animate.set_opacity(0.3))
+            scene.play(FadeOut(fb))
+            DisplayText(scene, f"Answer is {ans[1:]}", wait=5, move=(3,-2))
+        else:
+            DisplayText(scene, "If the result does not have an extra digit, it is negative", scale=0.5, wait=3, move=(2,-2))
+            DisplayText(scene, "The complement of the result is the absolute value of the answer", scale=0.5, wait=3, move=(2,-2))
+            DisplayText(scene, f"Answer is -{10**mlen - int(ans)}", wait=5, move=(3,-2))
+        
+        #scene.wait(5)
+        scene.remove(n1, ln, g3, op1, cmpl, ct, cmplc, res)
+
+        
 class Nikhilam(Scene):
     def construct(self):
 
@@ -159,7 +251,6 @@ class Nikhilam(Scene):
             _show(num)
         self.wait(5)
 
-
 class Subtraction(Scene):
     def construct(self):
         # Title
@@ -179,52 +270,8 @@ class Subtraction(Scene):
         self.next_section()
 
         # Detailed Example
-        op = Text("-")
-        op1 = Text("+")
-        n1 = Text("91234").set_color(GREEN) 
-        d1 = Text("Minuend").set_color(GREEN) 
-        n2 = Text("18765").set_color(YELLOW)
-        d2 = Text("Subtrahend").set_color(YELLOW) 
-        n3 = Text("?")
-        ans = "172469"
-        res = Text(ans)
-        ln = Line(start=array([-1*2,0,0]), end=array([0,0,0])).set_color(YELLOW)
-        g1 = VGroup(n1, n2, ln, n3).arrange(DOWN, aligned_edge=RIGHT).move_to(UP*2)
-        g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
-        op.next_to(n1, RIGHT)
-        g2 = VGroup(d1, d2).arrange(DOWN).next_to(g, LEFT, aligned_edge=UP, buff=1)
-        
-        nik = MarkupText("9999<span size='small'>10</span>")
-        n2c = n2.copy()
-        lnc = ln.copy()
-        g3  = VGroup(nik, n2c, lnc).arrange(DOWN, aligned_edge=LEFT)
-        cmpl = Text("81235").set_color(ORANGE)
-        cmplc = cmpl.copy()
-        ct  = Text("Complement of Subtrahend").scale(0.5).set_color(ORANGE)
-        
-        self.play(FadeIn(g))
-        self.play(FadeIn(g2))
-        DisplayText(self, "Subtract these numbers", wait=3, move=(-3, 0))
-        #self.wait(2)
-        self.play(FadeOut(g2))
-        self.play(g.animate.move_to(LEFT*2))
-        self.play(FadeIn(g3.next_to(g, RIGHT, buff=1, aligned_edge=UP)))
-        DisplayText(self, "1. Find the complement of the <span color='yellow'>Subtrahend</span>", scale=1, wait=2, move=(-3, 0))
-        self.play(AddTextLetterByLetter(cmpl.next_to(g3, DOWN, aligned_edge=LEFT), time_per_char=0.3))
-        self.play(FadeIn(ct.next_to(cmpl, RIGHT)))
-        pos = n2.get_center()
-        opos = op.get_center()
-        DisplayText(self, "2. Add the complement to the Minuend", wait=3, move=(-3, 0))
-        self.play(FadeOut(n2), FadeOut(op), FadeIn(cmplc.move_to(pos)), FadeIn(op1.move_to(opos)))
-        self.play(FadeOut(n3))
-        self.play(FadeIn(res.next_to(ln, DOWN, aligned_edge=RIGHT)))
-        self.wait(3)
-        fb = SurroundingRectangle(res[0], buff=0.1)
-        self.play(Create(fb))
-        DisplayText(self, "If the answer has an extra digit of 1, it is positive", scale=0.5, wait=3, move=(2,-2))
-        DisplayText(self, "Ignore the extra 1", scale=0.5,  wait=3, move=(2,-2))
-        #self.wait(2)
-        self.play(res[0].animate.set_opacity(0.3))
-        self.play(FadeOut(fb))
-        DisplayText(self, f"Answer is {ans[1:]}", wait=5, move=(3,-2))
-        #self.wait(5)
+        SubExample(self, 91234,18765)
+        self.next_section()
+        # Detailed Example - Negative Answer
+        SubExample(self, 14569,69875)
+        self.next_section()
