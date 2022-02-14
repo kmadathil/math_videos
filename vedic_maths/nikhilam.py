@@ -42,9 +42,6 @@ def DisplayText(scene, text, scale=1, move=(0, 0), wait=5, fade=True):
 #   translation - List of translation segments, matching viccheda
 def Sutra(scene, sutra, viccheda, translation, wait=3, scale=0.5, move=(3, 5), fade=False):
     sg = VGroup(Text("सूत्रम्"), Text("विच्छेदः"), Text("Translation")).arrange(direction=DOWN, aligned_edge=RIGHT).set_color(BLUE).set_opacity(0.5)
-    #t0 = Text("निखिलं नवतश्चरमं दशतः")
-    #t1 = [Text("निखिलं नवतः "), Text("चरमं दशतः")]
-    #t2 = [Text("All from 9, "), Text("Last from 10")]
     t0 = MarkupText(sutra)
     t1 = [MarkupText(x) for x in viccheda]
     t2 = [MarkupText(x) for x in translation]
@@ -88,13 +85,13 @@ def NikhilamExample(scene, num):
     t22 = Text(num).set_color(YELLOW) # Final Display
 
     # Horizontal line
-    ln = Line(start=array([-1*l,0,0]), end=array([0,0,0])).set_color(YELLOW).next_to(t2, DOWN)
+    ln = Line(start=array([-1*l/2,0,0]), end=array([0,0,0])).set_color(YELLOW).next_to(t2, DOWN, aligned_edge=RIGHT)
 
     # COmplement
     l9 = l - len(num.lstrip('9'))
     p = str(10**l - int(num))
     p0 = '0'*l9+p
-    t3 = Text(p0).set_color(ORANGE).next_to(ln, DOWN)
+    t3 = Text(p0).set_color(ORANGE).next_to(ln, DOWN, aligned_edge=RIGHT)
     t33 = Text(p).set_color(ORANGE) #Final Display
 
     # 9s and 10
@@ -208,6 +205,20 @@ def SubExample(scene, num1, num2):
         #scene.wait(5)
         scene.remove(n1, ln, g3, op1, cmpl, ct, cmplc, res)
 
+def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True):
+    n1 = MarkupText(str(sn1))
+    n2 = MarkupText(str(sn2))
+    ln = Line(start=array([-1*len(str(sn1))/2,0,0]), end=array([0,0,0])).set_color(YELLOW)
+    op = MarkupText(str(sop))
+    res = MarkupText(str(sr))
+    g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT).move_to(UP*move[0]+RIGHT*move[1])
+    g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
+    scene.play(Write(g))
+    if wait:
+        scene.wait(wait)
+    if fade:
+        scene.play(FadeOut(g))
+    return g
         
 class Nikhilam(Scene):
     def construct(self):
@@ -305,4 +316,48 @@ class Subtraction(Scene):
         self.next_section()
         # Detailed Example - Negative Answer
         SubExample(self, 14569,69875)
+        self.next_section()
+
+# Subtracting sequence of nines with ekyanyunena
+class Ekanyunena(Scene):
+    def construct(self):
+        # Title
+        Title(self, "नवश्रेणीगुणनम्", "Multiplying by nines", move=(3,5), wait=1)
+        self.next_section()
+        # Introduction
+        text = ["Multiplying by a series of nines",
+                "Using complement, shift, and a bit more (or less?)"]
+        Explanation(self, text)
+        self.next_section()
+        # Revision and Example
+
+        eg = DisplayText(self, "Revision (Complement)", fade=True)
+        self.next_section()
+
+        # Sutra Scene
+        t0 = "निखिलं नवतश्चरमं दशतः"
+        t1 = ["निखिलं नवतः ", "चरमं दशतः"]
+        t2 = ["All from 9, ", "Last from 10"]
+        Sutra(self, t0, t1, t2, wait=1, scale=0.5, move=None, fade=True)
+        self.next_section()
+        # Explanation
+        el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10", "And Subtract all digits to the left of it from 9"]
+        eg = Explanation(self, el, wait=2, fade=True)
+        self.next_section()
+    
+        NikhilamExample(self, "6583200")
+        self.next_section()
+  
+        eg = DisplayText(self, "How do we use this for multiplying by nines?", wait=0, move=(-3, 0), fade=False)
+        g = ShowOp(self, 98765, 999, "×","?", wait=0, fade=False)
+        self.wait(5)
+        self.play(FadeOut(eg, g))
+        
+        self.next_section()
+        
+        # Sutra Scene
+        t0 = "एकन्यूनेन पूर्वेण"
+        t1 = ["एकन्यूनेन", "पूर्वेण"]
+        t2 = ["By one less than", "the previous"]
+        Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=(3, 5), fade=False)
         self.next_section()
