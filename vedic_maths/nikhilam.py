@@ -216,9 +216,9 @@ def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True, oplen=0):
     ln = Line(start=array([-1*oplen/2,0,0]), end=array([0,0,0])).set_color(YELLOW)
     op = MarkupText(str(sop))
     res = MarkupText(str(sr))
-    g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT).move_to(UP*move[0]+RIGHT*move[1])
+    g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
     g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
-    scene.play(Write(g))
+    scene.play(Write(g.move_to(UP*move[0]+RIGHT*move[1])))
     if wait:
         scene.wait(wait)
     if fade:
@@ -239,20 +239,20 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     # String of 9s
     assert mplr == int('9'*len(smplr)), "This works only for a number that's all nines"
     g0 = ShowOp(scene, num, mplr, "×", "?", fade=False)
-    scene.play(g0.animate.shift(6*LEFT))
+    scene.play(g0.animate.shift(5.5*LEFT))
     fb0 = SurroundingRectangle(g0, buff=0.1)
     scene.add(fb0)
-    t = DisplayText(scene, "1. Find the complement of the Multiplicand", scale=1, wait=0, move=(-3, 0), fade=False)
+    t = DisplayText(scene, "1. Find the complement of the Multiplicand", scale=1, wait=0, move=(-3, -1), fade=False)
     g = ShowOp(scene, niks(num), num, "-",scmpl, oplen=len(snum), fade=False)
-    scene.play(g.animate.shift(3*LEFT))
+    scene.play(g.animate.next_to(g0, RIGHT, buff=0.2))
     fb = SurroundingRectangle(g, buff=0.1)
     scene.add(fb)
     scene.play(FadeOut(t))
-    t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=1, wait=0, move=(-3, 0), fade=False)
+    t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=1, wait=0, move=(-3, -1), fade=False)
     s2 = "<span size='small'>-1</span>"+scmpl
-    t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(3, 0), fade=False)
+    t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(3, -1), fade=False)
     ds2 = DisplayText(scene, s2, fade=False)
-    scene.play(ds2.animate.shift(3*LEFT+2*DOWN))
+    scene.play(ds2.animate.next_to(g, DOWN))
     fb2 = SurroundingRectangle(ds2, buff=0.1)
     scene.add(fb2)
     scene.play(FadeOut(t, t1))
@@ -262,24 +262,21 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     DisplayText(scene, snumz)
     scene.play(FadeOut(t))
     
-    t = DisplayText(scene, "4. Add with the result of step 2", scale=1, wait=0, move=(-3, 0), fade=False)
-    t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(3, 0), fade=False)
-    ans = inum*(10**len(smplr))+cmpl-10**len(str(cmpl))
-    assert ans==(inum*implr)
-    #print(ans, inum*implr)
+    t = DisplayText(scene, "4. Add with the result of step 2", scale=1, wait=0, move=(-3, -1), fade=False)
+    t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(3, -1), fade=False)
+    ans = inum*(10**len(smplr))+cmpl-10**len(snum)
+    assert ans==(inum*implr), f"Error> Compute error in ekanyunena {ans} {inum*implr}"
+
     g3 = ShowOp(scene, snumz, s2, "+", ans, wait=7, fade=False)
     fb3 = SurroundingRectangle(g3, buff=0.1)
     scene.add(fb3)
     scene.play(FadeOut(t, t1))
     t = DisplayText(scene, "5. That is our answer", scale=1, wait=0, move=(-3, 0), fade=False)
-    g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0,2), fade=False)
+    g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0,3), fade=False)
     fb4 = SurroundingRectangle(g4, buff=0.1)
     scene.add(fb4)
     scene.wait(7)
-    scene.remove(g0,fb0,g,fb, ds2, fb2, g3, fb3, g4)
-   
-
-
+    scene.remove(t, g0,fb0,g,fb, ds2, fb2, g3, fb3, g4, fb4)
 
 
 # Nikhilam Subtrahend for complement
@@ -319,7 +316,6 @@ class Nikhilam(Scene):
             self.play(FadeOut(s,s1))
         self.play(FadeOut(eg))
         self.next_section()
-        
         
         # Sutra Scene
         t0 = "निखिलं नवतश्चरमं दशतः"
@@ -435,13 +431,14 @@ class Ekanyunena(Scene):
         t0 = "एकन्यूनेन पूर्वेण"
         t1 = ["एकन्यूनेन", "पूर्वेण"]
         t2 = ["By one less than", "the previous"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=(3, 5), fade=False)
+        Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=None, fade=True)
         self.next_section()
         
         text = ["To multiply by a series of nines",
                 "1. Calculate the complement of the multiplicand",
                 "2. Prepend it with a -1 (single digit)",
-                "3. Append as many zeros to the multiplicand as there are nines in the multiplier",
+                "3. Append as many zeros to the multiplicand ...",
+                "   ... as there are nines in the multiplier",
                 "4. Add with the result of step 2",
                 "5. The sum is our answer"]
         Explanation(self, text, aligned_edge=LEFT)
@@ -449,4 +446,7 @@ class Ekanyunena(Scene):
         # Example
 
         NinesExample(self, 123,99)
+        self.next_section()
+
+        NinesExample(self, 9876,999)
         self.next_section()
