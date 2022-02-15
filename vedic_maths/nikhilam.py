@@ -12,11 +12,12 @@ def Title(scene, t0, t1, wait=5, scale=0.3, move=(3, 6)):
     scene.play(tg.animate.scale(scale).move_to(move[0]*DOWN+move[1]*RIGHT))
     return tg
 
+
 # Helper function for multi-line explanation
-def Explanation(scene, text, wait=3, fade=True):
+def Explanation(scene, text, wait=3, fade=True, aligned_edge=ORIGIN):
     # Explanation
     el = [MarkupText(x) for x in text]
-    eg = VGroup(*el).scale(0.7).arrange(DOWN)
+    eg = VGroup(*el).scale(0.7).arrange(DOWN, aligned_edge=aligned_edge)
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
     if wait:
@@ -205,10 +206,14 @@ def SubExample(scene, num1, num2):
         #scene.wait(5)
         scene.remove(n1, ln, g3, op1, cmpl, ct, cmplc, res)
 
-def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True):
+
+
+def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True, oplen=0):
     n1 = MarkupText(str(sn1))
     n2 = MarkupText(str(sn2))
-    ln = Line(start=array([-1*len(str(sn1))/2,0,0]), end=array([0,0,0])).set_color(YELLOW)
+    if oplen==0:
+        oplen = len(str(sn1))
+    ln = Line(start=array([-1*oplen/2,0,0]), end=array([0,0,0])).set_color(YELLOW)
     op = MarkupText(str(sop))
     res = MarkupText(str(sr))
     g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT).move_to(UP*move[0]+RIGHT*move[1])
@@ -219,6 +224,77 @@ def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True):
     if fade:
         scene.play(FadeOut(g))
     return g
+        
+
+
+
+
+def NinesExample(scene, num, mplr, wait=3, fade=True):
+    snum = str(num)
+    inum = int(num)
+    cmpl = complement(inum)
+    scmpl = "<span color='orange'>"+str(cmpl)+"</span>"
+    smplr = str(mplr)
+    implr = int(mplr)
+    # String of 9s
+    assert mplr == int('9'*len(smplr)), "This works only for a number that's all nines"
+    g0 = ShowOp(scene, num, mplr, "×", "?", fade=False)
+    scene.play(g0.animate.shift(6*LEFT))
+    fb0 = SurroundingRectangle(g0, buff=0.1)
+    scene.add(fb0)
+    t = DisplayText(scene, "1. Find the complement of the Multiplicand", scale=1, wait=0, move=(-3, 0), fade=False)
+    g = ShowOp(scene, niks(num), num, "-",scmpl, oplen=len(snum), fade=False)
+    scene.play(g.animate.shift(3*LEFT))
+    fb = SurroundingRectangle(g, buff=0.1)
+    scene.add(fb)
+    scene.play(FadeOut(t))
+    t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=1, wait=0, move=(-3, 0), fade=False)
+    s2 = "<span size='small'>-1</span>"+scmpl
+    t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(3, 0), fade=False)
+    ds2 = DisplayText(scene, s2, fade=False)
+    scene.play(ds2.animate.shift(3*LEFT+2*DOWN))
+    fb2 = SurroundingRectangle(ds2, buff=0.1)
+    scene.add(fb2)
+    scene.play(FadeOut(t, t1))
+    t = DisplayText(scene, "3. Append as many zeros to the multiplicand as there are nines in the multiplier",
+                    scale=0.5, wait=0, move=(-3, 0), fade=False)
+    snumz = snum+'0'*len(smplr)
+    DisplayText(scene, snumz)
+    scene.play(FadeOut(t))
+    
+    t = DisplayText(scene, "4. Add with the result of step 2", scale=1, wait=0, move=(-3, 0), fade=False)
+    t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(3, 0), fade=False)
+    ans = inum*(10**len(smplr))+cmpl-10**len(str(cmpl))
+    assert ans==(inum*implr)
+    #print(ans, inum*implr)
+    g3 = ShowOp(scene, snumz, s2, "+", ans, wait=7, fade=False)
+    fb3 = SurroundingRectangle(g3, buff=0.1)
+    scene.add(fb3)
+    scene.play(FadeOut(t, t1))
+    t = DisplayText(scene, "5. That is our answer", scale=1, wait=0, move=(-3, 0), fade=False)
+    g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0,2), fade=False)
+    fb4 = SurroundingRectangle(g4, buff=0.1)
+    scene.add(fb4)
+    scene.wait(7)
+    scene.remove(g0,fb0,g,fb, ds2, fb2, g3, fb3, g4)
+   
+
+
+
+
+# Nikhilam Subtrahend for complement
+def niks(num):
+    snum = str(num)
+    l = len(snum)
+    lz = l - len(snum.rstrip('0'))
+    l9 = l -1 -lz
+    return "9"*l9+"<span size='small'>10</span>"
+
+
+# 10s Complement
+def complement(i: int):
+    l = len(str(i))
+    return (10**l - i)
         
 class Nikhilam(Scene):
     def construct(self):
@@ -360,4 +436,17 @@ class Ekanyunena(Scene):
         t1 = ["एकन्यूनेन", "पूर्वेण"]
         t2 = ["By one less than", "the previous"]
         Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=(3, 5), fade=False)
+        self.next_section()
+        
+        text = ["To multiply by a series of nines",
+                "1. Calculate the complement of the multiplicand",
+                "2. Prepend it with a -1 (single digit)",
+                "3. Append as many zeros to the multiplicand as there are nines in the multiplier",
+                "4. Add with the result of step 2",
+                "5. The sum is our answer"]
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
+        # Example
+
+        NinesExample(self, 123,99)
         self.next_section()
