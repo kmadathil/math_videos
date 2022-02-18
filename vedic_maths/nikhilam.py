@@ -208,7 +208,8 @@ def SubExample(scene, num1, num2):
 
 
 
-def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True, oplen=0):
+def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fade=True, oplen=0):
+    ''' Helper function to display a single operation '''
     n1 = MarkupText(str(sn1))
     n2 = MarkupText(str(sn2))
     if oplen==0:
@@ -218,65 +219,90 @@ def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, fade=True, oplen=0):
     res = MarkupText(str(sr))
     g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
     g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
-    scene.play(Write(g.move_to(UP*move[0]+RIGHT*move[1])))
-    if wait:
-        scene.wait(wait)
-    if fade:
-        scene.play(FadeOut(g))
+    if play:
+        scene.play(Write(g.move_to(UP*move[0]+RIGHT*move[1])))
+        if wait:
+            scene.wait(wait)
+        if fade:
+            scene.play(FadeOut(g))
     return g
         
 
-
+def ShowNikhilamOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fade=True, oplen=0):
+    ''' Helper function to display a Nikhilam Operation 
+    
+        Different from ShowOp in that the Nikhilam minuend is left aligned with 
+        the subtrahend (looks better)
+    '''
+    n1 = MarkupText(str(sn1))
+    n2 = MarkupText(str(sn2))
+    if oplen==0:
+        oplen = len(str(sn1))
+    ln = Line(start=array([-1*oplen/2,0,0]), end=array([0,0,0])).set_color(YELLOW)
+    op = MarkupText(str(sop))
+    res = MarkupText(str(sr))
+    g = VGroup(n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
+    g.move_to(UP*move[0]+RIGHT*move[1])
+    n1.next_to(n2, UP, aligned_edge=LEFT)
+    op.next_to(n1, RIGHT, aligned_edge=UP)
+    if play:
+        scene.play(FadeIn(n1))
+        scene.play(FadeIn(op))
+        scene.play(FadeIn(g))
+        if wait:
+            scene.wait(wait)
+        if fade:
+            scene.play(FadeOut(g, n1, op))
+    return g, n1, op
+        
 
 
 def NinesExample(scene, num, mplr, wait=3, fade=True):
+    ''' Example for multiply by nines using ekannyUnena'''
     snum = str(num)
     inum = int(num)
-    cmpl = complement(inum)
-    scmpl = "<span color='orange'>"+str(cmpl)+"</span>"
     smplr = str(mplr)
     implr = int(mplr)
+    ml = max(len(snum), len(smplr))
+    snum = snum.zfill(ml)
+    cmpl = complement(inum, ml)
+    scmpl = "<span color='orange'>"+str(cmpl).zfill(len(snum))+"</span>"
     # String of 9s
     assert mplr == int('9'*len(smplr)), "This works only for a number that's all nines"
     g0 = ShowOp(scene, num, mplr, "×", "?", fade=False)
-    scene.play(g0.animate.shift(5.5*LEFT))
-    fb0 = SurroundingRectangle(g0, buff=0.1)
-    scene.add(fb0)
-    t = DisplayText(scene, "1. Find the complement of the Multiplicand", scale=1, wait=0, move=(-3, -1), fade=False)
-    g = ShowOp(scene, niks(num), num, "-",scmpl, oplen=len(snum), fade=False)
-    scene.play(g.animate.next_to(g0, RIGHT, buff=0.2))
-    fb = SurroundingRectangle(g, buff=0.1)
-    scene.add(fb)
+    
+    t = DisplayText(scene, "1. Find the complement of the Multiplicand", scale=0.8, wait=0, move=(-3, -1), fade=False)
+    g = ShowOp(scene, niks(num), snum, "-",scmpl, oplen=len(snum), fade=False, play=False)
+    scene.play(Transform(g0, g))
+
     scene.play(FadeOut(t))
-    t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=1, wait=0, move=(-3, -1), fade=False)
+    t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=0.8, wait=0, move=(-3, -1), fade=False)
     s2 = "<span size='small'>-1</span>"+scmpl
     t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(3, -1), fade=False)
-    ds2 = DisplayText(scene, s2, fade=False)
-    scene.play(ds2.animate.next_to(g, DOWN))
-    fb2 = SurroundingRectangle(ds2, buff=0.1)
-    scene.add(fb2)
+    ds2 = MarkupText(s2)
+    ds2.move_to(g0[0][3].get_center())
+    scene.play(Transform(g0[0][3], ds2))
+   
     scene.play(FadeOut(t, t1))
-    t = DisplayText(scene, "3. Append as many zeros to the multiplicand as there are nines in the multiplier",
-                    scale=0.5, wait=0, move=(-3, 0), fade=False)
+    t = DisplayText(scene, "3. Append one zero to the multiplicand for each 9 in the multiplier",
+                    scale=0.7, wait=0, move=(-3, 0), fade=False)
+    ans = inum*(10**len(smplr))+cmpl-10**ml
+    assert ans==(inum*implr), f"Error> Compute error in ekanyunena {ans} {inum*implr}"
     snumz = snum+'0'*len(smplr)
-    DisplayText(scene, snumz)
+    g3 = ShowOp(scene, snumz, s2, "+", ans, play=False, wait=7, fade=False)
+    scene.play(Transform(g0, g3))
     scene.play(FadeOut(t))
-    
+
     t = DisplayText(scene, "4. Add with the result of step 2", scale=1, wait=0, move=(-3, -1), fade=False)
     t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(3, -1), fade=False)
-    ans = inum*(10**len(smplr))+cmpl-10**len(snum)
-    assert ans==(inum*implr), f"Error> Compute error in ekanyunena {ans} {inum*implr}"
-
-    g3 = ShowOp(scene, snumz, s2, "+", ans, wait=7, fade=False)
-    fb3 = SurroundingRectangle(g3, buff=0.1)
-    scene.add(fb3)
     scene.play(FadeOut(t, t1))
-    t = DisplayText(scene, "5. That is our answer", scale=1, wait=0, move=(-3, 0), fade=False)
-    g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0,3), fade=False)
-    fb4 = SurroundingRectangle(g4, buff=0.1)
-    scene.add(fb4)
+    t = DisplayText(scene, "5. That sum is our answer", scale=1, wait=5, move=(-3, 0), fade=False)
+    g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0,3), fade=False, play=False)
+    scene.play(Transform(g0, g4))
+    
     scene.wait(7)
-    scene.remove(t, g0,fb0,g,fb, ds2, fb2, g3, fb3, g4, fb4)
+    scene.play(FadeOut(t, g0))
+
 
 
 # Nikhilam Subtrahend for complement
@@ -289,8 +315,9 @@ def niks(num):
 
 
 # 10s Complement
-def complement(i: int):
-    l = len(str(i))
+def complement(i: int, l:int = 0):
+    if l==0:
+        l = len(str(i))
     return (10**l - i)
         
 class Nikhilam(Scene):
@@ -449,4 +476,7 @@ class Ekanyunena(Scene):
         self.next_section()
 
         NinesExample(self, 9876,999)
+        self.next_section()
+
+        NinesExample(self, 451,9999)
         self.next_section()
