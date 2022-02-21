@@ -15,23 +15,24 @@ def Title(scene, t0, t1, wait=5, scale=0.3, move=(3, 6)):
 
 
 # Helper function for multi-line explanation
-def Explanation(scene, text, wait=3, fade=True, aligned_edge=ORIGIN):
+def Explanation(scene, text, font='', wait=3, fade=True, aligned_edge=ORIGIN):
     # Explanation
-    el = [MarkupText(x, font="Cambria Math") for x in text]
+
+    el = [MarkupText(x, font=font) for x in text]
     eg = VGroup(*el).scale(0.7).arrange(DOWN, aligned_edge=aligned_edge)
 
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
-    if wait:
-        scene.wait(wait)
-    if fade:
-        scene.play(FadeOut(eg))
-    return eg
+        if wait:
+            scene.wait(wait)
+        if fade:
+            scene.play(FadeOut(eg))
+        return eg
 
 
 # Helper function to display text message
-def DisplayText(scene, text, scale=1, move=(0, 0), wait=5, fade=True):
-    t = MarkupText(text).scale(scale)
+def DisplayText(scene, text, font='', scale=1, move=(0, 0), wait=5, fade=True):
+    t = MarkupText(text, font=font).scale(scale)
     scene.play(FadeIn(t.move_to(move[0] * DOWN + move[1] * RIGHT)))
     scene.wait(wait)
     if fade:
@@ -44,13 +45,13 @@ def DisplayText(scene, text, scale=1, move=(0, 0), wait=5, fade=True):
 #     sutra     - Sutra string
 #     viccheda  - List of sandhi split segments
 #   translation - List of translation segments, matching viccheda
-def Sutra(scene, sutra, viccheda, translation, wait=3, scale=0.5, move=(3, 5), fade=False):
+def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=0.5, move=(3, 5), fade=False):
     sg = VGroup(Text("सूत्रम्"), Text("विच्छेदः"), Text("Translation")).arrange(direction=DOWN,
                                                                                 aligned_edge=RIGHT).set_color(
         BLUE).set_opacity(0.5)
     t0 = MarkupText(sutra)
     t1 = [MarkupText(x) for x in viccheda]
-    t2 = [MarkupText(x, font="Cambria Math") for x in translation]
+    t2 = [MarkupText(x, font=font) for x in translation]
     assert len(viccheda) == len(translation), "Sandhi split (viccheda) and translation must be of equal length"
     t1g = VGroup(*t1).arrange(direction=RIGHT).set_opacity(0)
     t2g = VGroup(*t2).arrange(direction=RIGHT).set_opacity(0)
@@ -186,12 +187,12 @@ def SubExample(scene, num1, num2):
     scene.play(g.animate.move_to(LEFT * 2))
     scene.play(FadeIn(g3.next_to(g, RIGHT, buff=1, aligned_edge=UP)))
     DisplayText(scene, "1. Find the complement of the <span color='yellow'>Subtrahend</span>", scale=1, wait=2,
-                move=(-3, 0))
+                move=(-3, 0), font='Cambria Math')
     scene.play(AddTextLetterByLetter(cmpl.next_to(g3, DOWN, aligned_edge=LEFT), time_per_char=0.3))
     scene.play(FadeIn(ct.next_to(cmpl, RIGHT)))
     pos = n2.get_center()
     opos = op.get_center()
-    DisplayText(scene, "2. Add the complement to the Minuend", wait=3, move=(-3, 0))
+    DisplayText(scene, "2. Add the complement to the Minuend", wait=3, move=(-3, 0), font='Cambria Math')
     scene.play(FadeOut(n2), FadeOut(op), FadeIn(cmplc.move_to(pos)), FadeIn(op1.move_to(opos)))
     scene.play(FadeOut(n3))
     scene.play(FadeIn(res.next_to(ln, DOWN, aligned_edge=RIGHT)))
@@ -200,8 +201,9 @@ def SubExample(scene, num1, num2):
         fb = SurroundingRectangle(res[0], buff=0.1)
         scene.play(Create(fb))
         DisplayText(scene, "If the result has an extra digit of 1, the answer is positive", scale=0.5, wait=3,
-                    move=(2, -2))
-        DisplayText(scene, "Drop the extra 1 to get the final answer", scale=0.5, wait=3, move=(2, -2))
+                    move=(2, -2), font='Cambria Math')
+        DisplayText(scene, "Drop the extra 1 to get the final answer", scale=0.5, wait=3, move=(2, -2),
+                    font='Cambria Math')
         # scene.wait(2)
         scene.play(res[0].animate.set_opacity(0.3))
         scene.play(FadeOut(fb))
@@ -280,21 +282,21 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     g0 = ShowOp(scene, num, mplr, "×", "?", fade=False)
 
     t = DisplayText(scene, " 1. Find the complement of the Multiplicand ", scale=0.7, wait=0, move=(-3, -1),
-                    fade=False)
+                    fade=False, font='Cambria Math')
 
     if (len(str(num)) < len(str(mplr))):
         t2 = DisplayText(scene, "Zeroes prefixed as multiplicand digits are less", scale=0.7, wait=0, move=(3, -1),
-                        fade=False)
+                         fade=False)
 
     g = ShowOp(scene, niks(num), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
     scene.play(Transform(g0, g))
 
     scene.play(FadeOut(t))
     if (len(str(num)) < len(str(mplr))):
-         scene.play(FadeOut(t2))
+        scene.play(FadeOut(t2))
 
     t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=0.7, wait=0, move=(-3, -1),
-                    fade=False)
+                    fade=False, font='Cambria Math')
     s2 = "<span size='small'>-1</span>" + scmpl
     t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(3, -1),
                      fade=False)
@@ -304,7 +306,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
 
     scene.play(FadeOut(t, t1))
     t = DisplayText(scene, "3. Append one zero to the multiplicand for each 9 in the multiplier",
-                    scale=0.7, wait=0, move=(-3, 0), fade=False)
+                    scale=0.7, wait=0, move=(-3, 0), fade=False, font='Cambria Math')
     ans = inum * (10 ** len(smplr)) + cmpl - 10 ** ml
     assert ans == (inum * implr), f"Error> Compute error in ekanyunena {ans} {inum * implr}"
     snumz = snum + '0' * len(smplr)
@@ -312,10 +314,11 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     scene.play(Transform(g0, g3))
     scene.play(FadeOut(t))
 
-    t = DisplayText(scene, "4. Add with the result of step 2", scale=1, wait=0, move=(-3, -1), fade=False)
+    t = DisplayText(scene, "4. Add with the result of step 2", scale=0.7, wait=0, move=(-3, -1), fade=False,
+                    font='Cambria Math')
     t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(3, -1), fade=False)
     scene.play(FadeOut(t, t1))
-    t = DisplayText(scene, "5. That sum is our answer", scale=1, wait=5, move=(-3, 0), fade=False)
+    t = DisplayText(scene, "5. That sum is our answer", scale=0.7, wait=5, move=(-3, 0), fade=False, font='Cambria Math')
     g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0, 3), fade=False, play=False)
     scene.play(Transform(g0, g4))
 
@@ -350,7 +353,7 @@ class Nikhilam(Scene):
         el = ["A Complement Completes a Number",
               "A <span foreground='yellow'>Number</span> and its <span foreground='orange'>Complement</span>",
               "always add up to a power of 10"]
-        eg = Explanation(self, el, wait=3)
+        eg = Explanation(self, el, wait=3, font='Cambria Math')
         self.play(eg.animate.move_to(UP * 2.5))
         for k in [55, 90, 145, 270]:
             s = Sector(inner_radius=0, outer_radius=1, start_angle=0, angle=k * DEGREES, color=YELLOW)
@@ -367,13 +370,14 @@ class Nikhilam(Scene):
         t0 = "निखिलं नवतश्चरमं दशतः"
         t1 = ["निखिलं नवतः ", "चरमं दशतः"]
         t2 = ["All from 9, ", "Last from 10"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=(3, 5), fade=False)
+
+        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=(3, 5), fade=False, font='Cambria Math')
         self.next_section()
 
         # Explanation
         el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
               "And Subtract all digits to the left of it from 9"]
-        eg = Explanation(self, el, wait=5)
+        eg = Explanation(self, el, wait=5, font='Cambria Math')
         self.play(eg.animate.scale(0.4).move_to(RIGHT * 5))
         self.next_section()
 
@@ -410,12 +414,12 @@ class Subtraction(Scene):
         t0 = "निखिलं नवतश्चरमं दशतः"
         t1 = ["निखिलं नवतः ", "चरमं दशतः"]
         t2 = ["All from 9, ", "Last from 10"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True)
+        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
         self.next_section()
         # Explanation
         el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
               "And Subtract all digits to the left of it from 9"]
-        eg = Explanation(self, el, wait=2, fade=True)
+        eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
         self.next_section()
 
         NikhilamExample(self, "6583200")
@@ -460,12 +464,12 @@ class Ekanyunena(Scene):
         t0 = "निखिलं नवतश्चरमं दशतः"
         t1 = ["निखिलं नवतः ", "चरमं दशतः"]
         t2 = ["All from 9, ", "Last from 10"]
-        Sutra(self, t0, t1, t2, wait=1, scale=0.5, move=None, fade=True)
+        Sutra(self, t0, t1, t2, wait=1, scale=0.5, move=None, fade=True, font='Cambria Math')
         self.next_section()
         # Explanation
         el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
               "And Subtract all digits to the left of it from 9"]
-        eg = Explanation(self, el, wait=2, fade=True)
+        eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
         self.next_section()
 
         NikhilamExample(self, "6583200")
@@ -482,7 +486,7 @@ class Ekanyunena(Scene):
         t0 = "एकन्यूनेन पूर्वेण"
         t1 = ["एकन्यूनेन", "पूर्वेण"]
         t2 = ["By one less than", "the previous"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=None, fade=True)
+        Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         text = ["To multiply by a series of nines",
@@ -492,7 +496,7 @@ class Ekanyunena(Scene):
                 "   ... as there are nines in the multiplier",
                 "4. Add with the result of step 2",
                 "5. The sum is our answer"]
-        Explanation(self, text, aligned_edge=LEFT)
+        Explanation(self, text, aligned_edge=LEFT, font='Cambria Math')
         self.next_section()
         # Example
 
