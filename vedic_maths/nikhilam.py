@@ -27,6 +27,7 @@ def Explanation(scene, text, font='', wait=3, fade=True, aligned_edge=ORIGIN):
             scene.wait(wait)
         if fade:
             scene.play(FadeOut(eg))
+
         return eg
 
 
