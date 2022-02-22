@@ -246,27 +246,9 @@ def ShowNikhilamOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fad
         Different from ShowOp in that the Nikhilam minuend is left aligned with 
         the subtrahend (looks better)
     '''
-    n1 = MarkupText(str(sn1))
-    n2 = MarkupText(str(sn2))
-    if oplen == 0:
-        oplen = len(str(sn1))
-    ln = Line(start=array([-1 * oplen / 2, 0, 0]), end=array([0, 0, 0])).set_color(YELLOW)
-    op = MarkupText(str(sop))
-    res = MarkupText(str(sr))
-    g = VGroup(n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
-    g.move_to(UP * move[0] + RIGHT * move[1])
-    n1.next_to(n2, UP, aligned_edge=LEFT)
-    op.next_to(n1, RIGHT, aligned_edge=UP)
-    if play:
-        scene.play(FadeIn(n1))
-        scene.play(FadeIn(op))
-        scene.play(FadeIn(g))
-        if wait:
-            scene.wait(wait)
-        if fade:
-            scene.play(FadeOut(g, n1, op))
-    return g, n1, op
-
+    g = ShowOp(scene, sn1, sn2, sop, sr, move, wait, play, fade, oplen)
+    g[0][0].next_to(g[0][1], UP, aligned_edge=LEFT)
+    return g
 
 def NinesExample(scene, num, mplr, wait=3, fade=True):
     ''' Example for multiply by nines using ekannyUnena'''
@@ -289,7 +271,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
         t2 = DisplayText(scene, "Zeroes prefixed as multiplicand digits are less", scale=0.7, wait=0, move=(3, -1),
                          fade=False)
 
-    g = ShowOp(scene, niks(num), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
+    g = ShowOp(scene, niks(num, len(snum)), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
     scene.play(Transform(g0, g))
 
     scene.play(FadeOut(t))
@@ -328,12 +310,15 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
 
 
 # Nikhilam Subtrahend for complement
-def niks(num):
+def niks(num, oplen=0):
     snum = str(num)
-    l = len(snum)
-    lz = l - len(snum.rstrip('0'))
-    l9 = l - 1 - lz
-    return "9" * l9 + "<span size='small'>10</span>"
+    length = len(snum)
+    lz = length - len(snum.rstrip('0'))
+    if oplen == 0:
+        len9 = length - 1 - lz
+    else:
+        len9 = oplen - 1 - lz
+    return "9" * len9 + "<span size='small'>10</span>"
 
 
 # 10s Complement
