@@ -23,12 +23,12 @@ def Explanation(scene, text, font='', wait=3, fade=True, aligned_edge=ORIGIN):
 
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
-        if wait:
-            scene.wait(wait)
-        if fade:
-            scene.play(FadeOut(eg))
+    if wait:
+        scene.wait(wait)
+    if fade:
+        scene.play(FadeOut(eg))
 
-        return eg
+    return eg
 
 
 # Helper function to display text message
