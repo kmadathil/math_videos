@@ -284,7 +284,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     t = DisplayText(scene, " 1. Find the complement of the Multiplicand ", scale=0.7, wait=0, move=(-3, -1),
                     fade=False, font='Cambria Math')
 
-    if (len(str(num)) < len(str(mplr))):
+    if len(str(num)) < len(str(mplr)):
         t2 = DisplayText(scene, "Zeroes prefixed as multiplicand digits are less", scale=0.7, wait=0, move=(3, -1),
                          fade=False)
 
@@ -292,7 +292,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     scene.play(Transform(g0, g))
 
     scene.play(FadeOut(t))
-    if (len(str(num)) < len(str(mplr))):
+    if len(str(num)) < len(str(mplr)):
         scene.play(FadeOut(t2))
 
     t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=0.7, wait=0, move=(-3, -1),
