@@ -248,6 +248,7 @@ def ShowNikhilamOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fad
     '''
     g = ShowOp(scene, sn1, sn2, sop, sr, move, wait, play, fade, oplen)
     g[0][0].next_to(g[0][1], UP, aligned_edge=LEFT)
+    g[1].next_to(g[0][0], RIGHT, aligned_edge=UP)
     return g
 
 def NinesExample(scene, num, mplr, wait=3, fade=True):
@@ -271,7 +272,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
         t2 = DisplayText(scene, "Zeroes prefixed as multiplicand digits are less", scale=0.7, wait=0, move=(3, -1),
                          fade=False)
 
-    g = ShowOp(scene, niks(num, len(snum)), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
+    g = ShowNikhilamOp(scene, niks(num, len(snum)), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
     scene.play(Transform(g0, g))
 
     scene.play(FadeOut(t))
@@ -309,7 +310,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     scene.play(FadeOut(t, g0))
 
 
-# Nikhilam Subtrahend for complement
+# Nikhilam Minuend for complement
 def niks(num, oplen=0):
     snum = str(num)
     length = len(snum)
@@ -478,8 +479,8 @@ class Ekanyunena(Scene):
         text = ["To multiply by a series of nines",
                 "1. Calculate the complement of the multiplicand",
                 "2. Prepend it with a -1 (single digit)",
-                "3. Append as many zeros to the multiplicand ...",
-                "   ... as there are nines in the multiplier",
+                "3. Append as many zeros to the multiplicand",
+                "   as there are nines in the multiplier",
                 "4. Add with the result of step 2",
                 "5. The sum is our answer"]
         Explanation(self, text, aligned_edge=LEFT, font='Cambria Math')
