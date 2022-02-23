@@ -358,14 +358,14 @@ class Nikhilam(Scene):
         t1 = ["निखिलं नवतः ", "चरमं दशतः"]
         t2 = ["All from 9, ", "Last from 10"]
 
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=(3, 5), fade=False, font='Cambria Math')
+        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         # Explanation
         el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
               "And Subtract all digits to the left of it from 9"]
         eg = Explanation(self, el, wait=5, font='Cambria Math')
-        self.play(eg.animate.scale(0.4).move_to(RIGHT * 5))
+        #self.play(eg.animate.scale(0.4).move_to(RIGHT * 5))
         self.next_section()
 
         # Example 1
@@ -373,7 +373,7 @@ class Nikhilam(Scene):
         titex = Text("Examples")
         self.play(Write(titex))
         self.wait(3)
-        self.play(titex.animate.scale(0.7).move_to(UP * 3 + LEFT))
+        self.play(titex.animate.move_to(UP * 3 + LEFT))
 
         examples = ["17", "83", "189", "320", "765432", "58730", "982000"]
         for num in examples:
