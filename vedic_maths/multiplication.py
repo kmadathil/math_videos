@@ -1,6 +1,6 @@
 from manim import *
 from numpy import array
-from vedic_maths.common import *
+from common import *
 
 
 def EkadhikenaSquare(scene, num, wait=5, fade=True):
@@ -14,7 +14,7 @@ def EkadhikenaSquare(scene, num, wait=5, fade=True):
         f"Digit(s) before 5 are <span color='yellow'>{sprev}</span>",
         f"One more than that is  <span color='yellow'>{prev+1}</span>",
         f"Our answer is simply <span color='yellow'>{prev} times {prev+1}, suffixed with 25</span>",
-        f"which is <span color='yellow'>{prev*(prev+1)}{25}</span>"]
+        f"Which is <span color='yellow'>{prev*(prev+1)}{25}</span>"]
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
     scene.next_section()
     ans = inum**2
@@ -66,8 +66,8 @@ def EkadhikenaMult(scene, num, num2, wait=5, fade=True):
         f"Pre-final Digit(s) are <span color='yellow'>{sprev}</span>",
         f"One more than that is  <span color='yellow'>{prev+1}</span>",
         f"As before, our answer begins with <span color='yellow'>{prev} times {prev+1}</span>",
-        f"But is now suffixed with <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
-        f"which is <span color='yellow'>{inum*inum2}</span>"]
+        f"It is now suffixed with <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
+        f"Which leads us to <span color='yellow'>{inum*inum2}</span>"]
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
     scene.next_section()
     return EkCom(scene, snum, snum2, prev, fin, fin2, ans, wait, fade)
@@ -85,8 +85,7 @@ class Ekadhikena(Scene):
         # Introduction
         text = ["Simple multiplication and squares",
                 "Before we introduce a general method for multiplication",
-                "We will look at special cases which are easier",
-                "This promotes algorithmic thinking - picking the right method"]
+                "We will look at special cases which are easier"]
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
 
@@ -121,8 +120,8 @@ class Ekadhikena(Scene):
 
         # Introduction
         text = ["We can use this to multiply numbers that",
-                "1. have final digits adding up to 10",
-                "2. also have other digits identical"]
+                "1. have identical digits barring the final one",
+                "2. have thier final digits adding up to 10"]
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
 

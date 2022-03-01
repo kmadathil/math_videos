@@ -1,6 +1,6 @@
 from manim import *
 from numpy import array
-from vedic_maths.common import *
+from common import *
 
 
 # Helper Function for Nikhilam
