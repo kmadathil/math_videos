@@ -10,7 +10,7 @@ def EkadhikenaSquare(scene, num, wait=5, fade=True):
     prev = int(sprev)
     assert snum[-1] == "5", "Only works with numbers ending in 5"
     text= [
-        f"Find the Square of <span color='yellow'>{snum}</span>",
+        f"<span color='#0C8694'>Find the Square of </span><span color='yellow'>{snum}</span>",
         f"Digit(s) before 5 are <span color='yellow'>{sprev}</span>",
         f"One more than that is  <span color='yellow'>{prev+1}</span>",
         f"Our answer is simply <span color='yellow'>{prev} times {prev+1}, suffixed with 25</span>",
@@ -60,7 +60,7 @@ def EkadhikenaMult(scene, num, num2, wait=5, fade=True):
     assert ans == prev*(prev+1)*100+fin*fin2
 
     text= [
-        f"Find the product of <span color='yellow'>{snum} and {snum2}</span>",
+        f"<span color='#0C8694'>Find the product of </span><span color='yellow'>{snum} and {snum2}</span>",
         f"Final digits are <span color='yellow'>{snum[-1]} and {snum2[-1]}</span>",
         f"Their product is <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
         f"Pre-final Digit(s) are <span color='yellow'>{sprev}</span>",
@@ -78,23 +78,25 @@ class Ekadhikena(Scene):
     ''' Ekadhikena Purvena '''
     def construct(self):
         # Title
-        Title(self, "एकाधिकेन पूर्वेण", "Squares and Multiplication with Ekadhikena",
-              move=(3, 5), wait=1)
+        Title(self, "एकाधिकेन पूर्वेण", "Squares and Products with Ekadhikena",
+              move=(3, 5), wait=2)
         self.next_section()
 
         # Introduction
-        text = ["Simple multiplication and squares",
+
+        text = ["<span color='#0C8694'>Simple multiplication and squaring</span>",
                 "Before we introduce a general method for multiplication",
                 "We will look at special cases which are easier"]
+
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
 
         # Introduction
-        text = ["Our first method works for ",
+        text = ["<span color='#0C8694'>Our first method works for</span> ",
                 "1. Squares of numbers ending in 5",
                 "2. Products of numbers with last digits adding to 10",
-                "and other digits identical"]
-        Explanation(self, text, aligned_edge=LEFT)
+                "    and other digits identical"]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
         self.next_section()
 
 
@@ -119,10 +121,10 @@ class Ekadhikena(Scene):
         self.next_section()
 
         # Introduction
-        text = ["We can use this to multiply numbers that",
+        text = ["<span color='#0C8694'>We can use this to multiply numbers that</span>",
                 "1. have identical digits barring the final one",
-                "2. have thier final digits adding up to 10"]
-        Explanation(self, text, aligned_edge=LEFT)
+                "2. have their final digits adding up to 10"]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
         self.next_section()
 
         EkadhikenaMult(self, 33, 37)
