@@ -1,5 +1,5 @@
 from manim import *
-from numpy import array
+from numpy import array, array_equal
 
 # Helper Function for Title
 def Title(scene, t0, t1, wait=5, scale=0.3, move=(3, 6)):
@@ -45,7 +45,7 @@ def DisplayText(scene, text, font='', scale=1, move=(0, 0), wait=5, fade=True):
 #     sutra     - Sutra string
 #     viccheda  - List of sandhi split segments
 #   translation - List of translation segments, matching viccheda
-def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=0.5, move=(3, 5), fade=False):
+def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=0.5, move=(3, 5), fade=False, dir1=RIGHT, dir2=RIGHT):
     sg = VGroup(Text("सूत्रम्"), Text("विच्छेदः"),
                 Text("Translation")).arrange(direction=DOWN,
                                                                                 aligned_edge=RIGHT).set_color(
@@ -54,12 +54,16 @@ def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=0.5, move=
     t1 = [MarkupText(x) for x in viccheda]
     t2 = [MarkupText(x, font=font) for x in translation]
     assert len(viccheda) == len(translation), "Sandhi split (viccheda) and translation must be of equal length"
-    t1g = VGroup(*t1).arrange(direction=RIGHT, aligned_edge=UP).set_opacity(0)
-    t2g = VGroup(*t2).arrange(direction=RIGHT).set_opacity(0)
-    tg = VGroup(t0, t1g, t2g).arrange(direction=DOWN)
+    a1 =  UP if array_equal(dir1, RIGHT) else LEFT
+    a2 =  UP if array_equal(dir2, RIGHT) else LEFT
+    t1g = VGroup(*t1).arrange(direction=dir1, aligned_edge=a1).set_opacity(0)
+    t2g = VGroup(*t2).arrange(direction=dir2, aligned_edge=a2).set_opacity(0)
+    tg = VGroup(t0, t1g, t2g).arrange(direction=DOWN, aligned_edge=LEFT)
 
     tg.move_to(UP + RIGHT)
-    sg.next_to(tg, LEFT)
+    sg[0].next_to(t0, LEFT)
+    sg[1].next_to(t1g, LEFT)
+    sg[2].next_to(t2g, LEFT)
 
     scene.play(FadeIn(sg))
     scene.play(Write(t0.set_color(ORANGE)))
@@ -103,3 +107,8 @@ def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fade=True, 
         if fade:
             scene.play(FadeOut(g))
     return g
+
+def Span(t, **kwargs):
+    ''' Helper function for generating text with span tag '''
+    return "<span " + ",".join([f"{k}='{v}'" for k,v in kwargs.items()]) + f">{t}</span>"
+    

@@ -132,3 +132,57 @@ class Ekadhikena(Scene):
         
         EkadhikenaMult(self, 72, 78)
         self.next_section()
+
+
+class Yavadunam(Scene):
+    ''' Multiplication with Yavadunam '''
+    def construct(self):
+        # Title
+        Title(self, "यावदूनम्", "Squares and Products with Yavadunam",
+              move=(3, 5), wait=2)
+        self.next_section()
+
+        # Introduction
+        text = [Span("Our second  method works for", color='#0C8694'),
+                "1. Squares of numbers near a power of 10",
+                "2. Products of numbers near a power of 10"
+                ]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+
+        # Sutra Scene
+        t0 = Span("यावदूनम् तावदूनीकृत्य वर्गं च योजयेत्", size='smaller')
+        t1 = [Span("यावद् ऊनम्", size='smaller'), Span("तावद् ऊनीकृत्य", size='smaller'), Span("वर्गं च योजयेत्", size='smaller')]
+        t2 = [Span("By the difference from the base", size='smaller'),
+              Span("Reduce the number", size='smaller'),
+              Span("and append the square", size='smaller')]
+        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
+        self.next_section()
+
+        YavadunamSquare(self, 94)
+        self.next_section()
+
+        YavadunamSquare(self, 1002)
+        self.next_section()
+
+        # # Sutra Scene
+        # t0 = "अन्त्ययोर्दशकेऽपि"
+        # t1 = ["अन्त्ययोः", "दशके अपि"]
+        # t2 = ["<span size='smaller'>When the last</span>", "<span size='smaller'>sum to 10</span>"]
+        # Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
+        # self.next_section()
+
+        # # Introduction
+        # text = ["<span color='#0C8694'>We can use this to multiply numbers that</span>",
+        #         "1. have identical digits barring the final one",
+        #         "2. have their final digits adding up to 10"]
+        # Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        # self.next_section()
+
+        # EkadhikenaMult(self, 33, 37)
+        # self.next_section()
+        
+        # EkadhikenaMult(self, 72, 78)
+        # self.next_section()
+    
