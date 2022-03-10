@@ -73,6 +73,90 @@ def EkadhikenaMult(scene, num, num2, wait=5, fade=True):
     return EkCom(scene, snum, snum2, prev, fin, fin2, ans, wait, fade)
 
 
+def findbase(num):
+    ''' Nearest power of 10 '''
+    snum = str(num)
+    inum = int(num)
+    hbase = 10**len(snum)
+    lbase = 10**(len(snum)-1)
+    return hbase if (hbase - inum) < hbase/2 else lbase
+
+def YavadunamSquare(scene, num, wait=5, fade=True):
+    snum = str(num)
+    inum = int(num)
+    base = findbase(num)  # Nearest power of 10
+    diff = (base - inum)  # Difference from that
+    negp = (diff > 0)     # Are we below base?
+    ndig = len(str(base))-1   # Number of zeros in base
+
+    rans = diff **2  # Right part of answer, has ndig digits
+    lans = inum - diff  # Left part of answer - number + diff from base 
+    
+    dirs = " - " if negp else " + "
+    bdiff = "less than" if negp else "greater than"
+
+    ans = inum**2
+    assert ans == lans * 10**ndig + rans, f" {ans} != {lans * 10**ndig + rans}, {base, diff, lans, ndig, rans}"
+    
+    text= [
+        f"<span color='#0C8694'>Find the Square of </span><span color='yellow'>{snum}</span>",
+        "1.  Nearest Base is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " digits",
+        "1a. Our number is " + Span(str(abs(diff)), color='orange') + f" {bdiff} the base " + Span(str(base),color='red'),
+        "2.  The right part of the answer is " + Span(str(abs(diff)), color='orange') + "² = " + Span(str(rans).zfill(ndig), color='yellow'),
+        "3.  The left side of the answer is " + Span(snum, color='yellow') + dirs + Span(str(abs(diff)), color='orange') + " = " + Span(lans, color='yellow'),
+        "4. Putting them together, our final answer is: " + Span(ans, color='yellow')
+    ]
+    
+    Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
+    scene.next_section()
+    return YCom(scene, snum, snum, base, negp, abs(diff), abs(diff), rans, lans, ans, ndig, wait, fade)
+
+def YCom(scene, snum, snum2, base, negp, diff, diff2,  rans, lans, ans, ndig, wait, fade):
+    g   = ShowOp(scene, snum, snum2, "×", "?", wait=1, fade=False)
+    if negp:
+        g1 = ShowOp(scene, base, snum, "-", diff, play=False)
+    else:
+        g1 = ShowOp(scene, snum, base, "-", diff, play=False)
+
+    op = "-" if negp else "+"
+    g2 = ShowOp(scene, snum, diff2, op, lans, play=False)
+    g3 = ShowOp(scene, diff, diff2, "*", str(rans).zfill(ndig), play=False)
+    g4  = ShowOp(scene, snum, snum2, "×", ans, play=False)
+
+    ar = Text("_" * ndig, color='yellow').scale(1.2)
+    arf = Text(str(rans).zfill(ndig), color='yellow').scale(1.2)
+    al = Text("_" * len(snum), color='yellow').scale(1.2)
+    alf = Text(str(lans), color='yellow').scale(1.2)
+    br = SurroundingRectangle(ar, buff=0.5)
+    bl = SurroundingRectangle(al, buff=0.5)
+    ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)
+    
+    scene.add(g)
+    g1.move_to(RIGHT*2)
+    g3.move_to(RIGHT*2)
+    ga.move_to(DOWN*2)
+    arf.next_to(ar, ORIGIN)
+    alf.next_to(al, ORIGIN)
+    scene.add(ga)
+    scene.wait(2)
+    scene.add(g1)
+    scene.wait(2)
+    scene.play(Transform(g1, g3))
+    scene.wait(1)
+    scene.play(Transform(ar, arf))
+    scene.wait(1)
+    scene.play(Transform(g, g2))
+    scene.wait(1)
+    scene.play(Transform(al, alf))
+    scene.wait(2)
+    scene.play(FadeOut(g, g1))
+    scene.wait(2)
+    scene.remove(g1, g3)
+    scene.play(Transform(ga, g4))
+    scene.wait(wait)
+    if fade:
+        scene.play(FadeOut(ga))
+    return ga
 
 class Ekadhikena(Scene):
     ''' Ekadhikena Purvena '''
@@ -159,6 +243,20 @@ class Yavadunam(Scene):
               Span("and append the square", size='smaller')]
         Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
         self.next_section()
+
+        text= [
+            f"<span color='#0C8694'>To find the Square of a number </span><span color='yellow'>n</span>",
+            "1. Find the nearest base b, and note its number of digits <span color='green'>k</span>",
+            "1a. Note if n is above or below b, and note the difference <span color='orange'>d</span>",
+            "2. We then divide the answer into two parts - right and left",
+            "3. The right part of the answer is <span color='orange'>d²</span>, padded to " + Span("k", color='green') + " digits",
+            "4. The left part of the answer, is ",
+            "4a. if n less than b    ⇒ <span color='yellow'>n-</span><span color='orange'>d</span>",
+            "4b. if n greater than b ⇒ <span color='yellow'>n+</span><span color='orange'>d</span>",
+            "5. Append the left and right parts to get the answer"
+        ]
+    
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
 
         YavadunamSquare(self, 94)
         self.next_section()
