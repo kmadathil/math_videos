@@ -24,23 +24,44 @@ def EkadhikenaSquare(scene, num, wait=5, fade=True):
     return EkCom(scene, snum, snum2, prev, f1, f2, ans, wait, fade)
 
 def EkCom(scene, snum, snum2, prev, f1, f2, ans, wait=5, fade=True):
+    lans = prev*(prev + 1)
+    rans = f1*f2
+    ndig = 2
+
     g   = ShowOp(scene, snum, snum2, "×", "?", wait=1, fade=False)
-    g11   = ShowOp(scene, prev, "<span color='red'>"+str(prev+1)+"</span>", "×", prev*(prev+1), play=False)
-    g12   = ShowOp(scene, f1, f2, "×", f1*f2, play=False)
+    g11   = ShowOp(scene, prev, "<span color='red'>"+str(prev+1)+"</span>", "×", lans, play=False)
+    g12   = ShowOp(scene, f1, f2, "×", rans, play=False)
+
+    ar = Text("_" * ndig, color='yellow').scale(1.2)
+    arf = Text(str(rans).zfill(ndig), color='yellow').scale(1.2)
+    al = Text("_" * len(str(lans)), color='yellow').scale(1.2)
+    alf = Text(str(lans), color='yellow').scale(1.2)
+    br = SurroundingRectangle(ar, buff=0.5)
+    bl = SurroundingRectangle(al, buff=0.5)
+    ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)
+    
+    ga.move_to(DOWN*2)
+    arf.next_to(ar, ORIGIN)
+    alf.next_to(al, ORIGIN)
+    scene.add(ga)
+    scene.wait(2)
     g12.move_to(RIGHT*2)
     scene.play(Transform(g, g11))
     scene.add(g12)
+    scene.play(Transform(ar, arf))
+    scene.play(Transform(al, alf))
     scene.wait(2)
-    scene.play(FadeOut(g[1]))
-    scene.play(g12.animate.next_to(g[0], RIGHT, aligned_edge=UP))
+    #scene.play(FadeOut(g[1]))
+    #scene.play(g12.animate.next_to(g[0], RIGHT, aligned_edge=UP))
+    scene.play(FadeOut(g, g12))
     scene.wait(2)
     g2  = ShowOp(scene, snum, snum2, "×", ans, play=False)
-    scene.remove(g12)
-    scene.play(Transform(g, g2))
+    #scene.remove(g12)
+    scene.play(Transform(ga, g2))
     scene.wait(wait)
     if fade:
-        scene.play(FadeOut(g))
-    return g
+        scene.play(FadeOut(ga))
+    return ga
 
 def EkadhikenaMult(scene, num, num2, wait=5, fade=True):
     snum = str(num)
