@@ -19,4 +19,6 @@ $ manim -pql vedic_math/nikhilam.py Ekanyunena
 एकाधिकेन पूर्वेण
 ```
 $ manim -pql vedic_math/multiplication.py Ekadhikena 
+$ manim -pql vedic_math/multiplication.py Yavadunam 
+
 ```
