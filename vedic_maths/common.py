@@ -45,14 +45,14 @@ def DisplayText(scene, text, font='', scale=1, move=(0, 0), wait=5, fade=True):
 #     sutra     - Sutra string
 #     viccheda  - List of sandhi split segments
 #   translation - List of translation segments, matching viccheda
-def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=0.5, move=(3, 5), fade=False, dir1=RIGHT, dir2=RIGHT):
+def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=1, move=(3, 5), fade=False, dir1=RIGHT, dir2=RIGHT):
     sg = VGroup(Text("सूत्रम्"), Text("विच्छेदः"),
                 Text("Translation")).arrange(direction=DOWN,
                                                                                 aligned_edge=RIGHT).set_color(
-        BLUE).set_opacity(0.5)
-    t0 = MarkupText(sutra)
-    t1 = [MarkupText(x) for x in viccheda]
-    t2 = [MarkupText(x, font=font) for x in translation]
+        BLUE).set_opacity(0.5).scale(scale)
+    t0 = MarkupText(sutra).scale(scale)
+    t1 = [MarkupText(x).scale(scale) for x in viccheda]
+    t2 = [MarkupText(x, font=font).scale(scale) for x in translation]
     assert len(viccheda) == len(translation), "Sandhi split (viccheda) and translation must be of equal length"
     a1 =  UP if array_equal(dir1, RIGHT) else LEFT
     a2 =  UP if array_equal(dir2, RIGHT) else LEFT
@@ -67,8 +67,9 @@ def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=0.5, move=
 
     scene.play(FadeIn(sg))
     scene.play(Write(t0.set_color(ORANGE)))
-    scene.wait()
+    scene.wait(1)
     scene.play(t1g.animate.set_opacity(1))
+    scene.wait(1)
     for i in range(len(translation)):
         scene.play(t1g[i].animate.set_color(YELLOW),
                    t2g[i].animate.set_color(YELLOW).set_opacity(1))
@@ -110,5 +111,5 @@ def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fade=True, 
 
 def Span(t, **kwargs):
     ''' Helper function for generating text with span tag '''
-    return "<span " + ",".join([f"{k}='{v}'" for k,v in kwargs.items()]) + f">{t}</span>"
+    return "<span " + " ".join([f"{k}='{v}'" for k,v in kwargs.items()]) + f">{t}</span>"
     

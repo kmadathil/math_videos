@@ -129,12 +129,12 @@ def YavadunamMult(scene, num1, num2, wait=5, fade=True):
     
     text= [
         f"<span color='#0C8694'>Find the product of </span><span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span>",
-        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " digits",
-        f"1a. <span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span> are " + Span(str(abs(diff1)), color='orange') + f" {bdiff1} and " + Span(str(abs(diff2)), color='orange') +  f" {bdiff2} the base " + Span(str(base),color='red'),
-        "2.  The right part of the answer is " + Span(f"{abs(diff1)} * {abs(diff2)}", color='orange') + " = " + Span(str(rans).zfill(ndig), color='yellow'),
-        "3.  The left part of the answer is " + Span(snum1, color='yellow') + dirs1 + Span(str(abs(diff2)), color='orange') + " = " + Span(lans, color='yellow'),
-        "3a. The left part of the answer can also be written as " + Span(snum2, color='yellow') + dirs2 + Span(str(abs(diff1)), color='orange') + " = " + Span(lans, color='yellow'),
-        f"4. Putting them together, <span color='yellow'>{snum1}×{snum2}</span> = " + Span(ans, color='yellow')
+        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " zeros",
+        f"2. <span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span> are " + Span(str(abs(diff1)), color='orange') + f" {bdiff1} and " + Span(str(abs(diff2)), color='orange') +  f" {bdiff2} the base " + Span(str(base),color='red'),
+        "3.  The right part of the answer is " + Span(f"{abs(diff1)} * {abs(diff2)}", color='orange') + " = " + Span(str(rans).zfill(ndig), color='yellow'),
+        "4.  The left part of the answer is " + Span(snum1, color='yellow') + dirs1 + Span(str(abs(diff2)), color='orange') + " = " + Span(lans, color='yellow'),
+        ".. The left part of the answer can also be written as " + Span(snum2, color='yellow') + dirs2 + Span(str(abs(diff1)), color='orange') + " = " + Span(lans, color='yellow'),
+        f"5. Putting them together, <span color='yellow'>{snum1}×{snum2}</span> = " + Span(ans, color='yellow')
     ]
     
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
@@ -161,11 +161,11 @@ def YavadunamSquare(scene, num, wait=5, fade=True):
     
     text= [
         f"<span color='#0C8694'>Find the square of </span><span color='yellow'>{snum}</span>",
-        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " digits",
-        f"1a. <span color='yellow'>{snum}</span> is " + Span(str(abs(diff)), color='orange') + f" {bdiff} the base " + Span(str(base),color='red'),
-        "2.  The right part of the answer is " + Span(str(abs(diff)), color='orange') + "² = " + Span(str(rans).zfill(ndig), color='yellow'),
-        "3.  The left part of the answer is " + Span(snum, color='yellow') + dirs + Span(str(abs(diff)), color='orange') + " = " + Span(lans, color='yellow'),
-        f"4. Putting them together: <span color='yellow'>{snum}</span>² = "  + Span(ans, color='yellow')
+        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " zeros",
+        f"2. <span color='yellow'>{snum}</span> is " + Span(str(abs(diff)), color='orange') + f" {bdiff} the base " + Span(str(base),color='red'),
+        "3.  The right part of the answer is " + Span(str(abs(diff)), color='orange') + "² = " + Span(str(rans).zfill(ndig), color='yellow'),
+        "4.  The left part of the answer is " + Span(snum, color='yellow') + dirs + Span(str(abs(diff)), color='orange') + " = " + Span(lans, color='yellow'),
+        f"5. Putting them together: <span color='yellow'>{snum}</span>² = "  + Span(ans, color='yellow')
     ]
     
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
@@ -187,7 +187,7 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
     g2 = ShowOp(scene, snum, diff2, op, lans, play=False)
     op2 = "-" if negp1 else "+"
     g22 = ShowOp(scene, snum2, diff, op2, lans, play=False)
-    g3 = ShowOp(scene, diff, diff2, "*", str(rans).zfill(ndig), play=False)
+    g3 = ShowOp(scene, diff, diff2, "×", str(rans).zfill(ndig), play=False)
     g4  = ShowOp(scene, snum, snum2, "×", ans, play=False)
 
     ar = Text("_" * ndig, color='yellow').scale(1.2)
@@ -196,17 +196,24 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
     alf = Text(str(lans), color='yellow').scale(1.2)
     br = SurroundingRectangle(ar, buff=0.5)
     bl = SurroundingRectangle(al, buff=0.5)
-    ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)
-    
-    scene.add(g)
-    g1.move_to(RIGHT*2)
-    g12.move_to(RIGHT*2)
-    g3.move_to(RIGHT*2)
+    ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)    
+
     ga.move_to(DOWN*2)
-    arf.next_to(ar, ORIGIN)
+    g.next_to(ga[0], UP)
     alf.next_to(al, ORIGIN)
+    arf.next_to(ar, ORIGIN)
+    g2.next_to(ga[0], UP)
+    g22.move_to(LEFT)
+    g1.next_to(ga[1], UP)
+    g12.next_to(g1, ORIGIN)
+    g3.next_to(g1, ORIGIN)
+
+
+
+    scene.add(g)
+    scene.wait(1)
     scene.add(ga)
-    scene.wait(2)
+    scene.wait(1)
     scene.add(g1)
     scene.wait(2)
     if diff != diff2:
@@ -302,32 +309,35 @@ class Yavadunam(Scene):
 
         # Introduction
         text = [Span("This method works for", color='#0C8694'),
-                "1. Squares of numbers near a power of 10",
-                "2. Products of numbers near a power of 10"
+                "1. Squares of numbers near a power of 10 ",
+                "2. Products of numbers near a power of 10 ",
                 ]
-        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        e = Explanation(self, text, font='Cambria Math', wait=0, fade=False, aligned_edge=LEFT)
+        t = DisplayText(self, Span("Powers of 10 are 10, 100, 1000, etc.", size='x-small', color='violet'),
+                        scale=0.75, move=(2, 2), wait=0, fade=False)
+        self.wait(5)
+        self.play(FadeOut(e, t))
         self.next_section()
 
 
         # Sutra Scene
-        t0 = Span("यावदूनम् तावदूनीकृत्य वर्गं च योजयेत्", size='smaller')
-        t1 = [Span("यावद् ऊनम्", size='smaller'), Span("तावद् ऊनीकृत्य", size='smaller'), Span("वर्गं च योजयेत्", size='smaller')]
-        t2 = [Span("By the difference from the base", size='smaller'),
-              Span("Reduce the number", size='smaller'),
-              Span("and append the square", size='smaller')]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
+        t0 = Span("यावदूनम् तावदूनीकृत्य वर्गं च योजयेत्")
+        t1 = [Span("यावद् ऊनम् तावद् ऊनीकृत्य"), Span("वर्गं च योजयेत्")]
+        t2 = [Span("Reduce further by the difference from the base"),
+              Span("and append the square")]
+        Sutra(self, t0, t1, t2, wait=3, scale=0.65, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
         self.next_section()
 
         text= [
             f"<span color='#0C8694'>To find the square of a number </span><span color='yellow'>n</span>",
-            "1. Find the nearest base <span color='red'>b</span>, and note its number of digits <span color='green'>k</span>",
-            "1a. Note if <span color='yellow'>n</span> is above or below <span color='red'>b</span>, and note the difference <span color='orange'>d</span>",
-            "2. We then divide the answer into two parts - left and right",
-            "3. The right part of the answer is <span color='orange'>d²</span>, padded to " + Span("k", color='green') + " digits",
-            "4. The left part of the answer is,",
-            "4a. if n less than b    ⇒ <span color='yellow'>n-</span><span color='orange'>d</span>",
-            "4b. if n greater than b ⇒ <span color='yellow'>n+</span><span color='orange'>d</span>",
-            "5. Append the left and right parts"
+            "1. Find the nearest base <span color='red'>b</span>, and note its number of zeros <span color='green'>k</span>",
+            "2. Note if <span color='yellow'>n</span> is above or below <span color='red'>b</span>, and note the difference <span color='orange'>d</span>",
+            "3. We then divide the answer into two parts - left and right",
+            "4. The right part of the answer is <span color='orange'>d²</span>, padded to " + Span("k", color='green') + " digits",
+            "5. The left part of the answer is,",
+            ".. if n less than b    ⇒ <span color='yellow'>n-</span><span color='orange'>d</span>",
+            ".. if n greater than b ⇒ <span color='yellow'>n+</span><span color='orange'>d</span>",
+            "6. Combine the left and right parts"
         ]
     
         Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
@@ -342,15 +352,15 @@ class Yavadunam(Scene):
     
         text= [
             f"<span color='#0C8694'>To find the product of two numbers </span><span color='yellow'>n1</span> and <span color='yellow'>n2</span>",
-            "1. Find the nearest base <span color='red'>b</span>, and note its number of digits <span color='green'>k</span>",
-            "1a. Note if <span color='yellow'>n1</span> and <span color='yellow'>n2</span> are above or below <span color='red'>b</span>",
-            "1b. note the differences <span color='orange'>d1</span> and <span color='orange'>d2</span>",
-            "2. We then divide the answer into two parts - left and right",
-            "3. The right part of the answer is <span color='orange'>d1*d2</span>, padded to " + Span("k", color='green') + " digits",
-            "4. The left part of the answer is, ",
-            "4a. if n1 less than b    ⇒ <span color='yellow'>n1-</span><span color='orange'>d2</span>",
-            "4b. if n1 greater than b ⇒ <span color='yellow'>n1+</span><span color='orange'>d2</span>",
-            "5. Append the left and right parts"
+            "1. Find the nearest base <span color='red'>b</span>, and note its number of zeros <span color='green'>k</span>",
+            "2. Note if <span color='yellow'>n1</span> and <span color='yellow'>n2</span> are above or below <span color='red'>b</span>",
+            "3. note the differences <span color='orange'>d1</span> and <span color='orange'>d2</span>",
+            "4. We then divide the answer into two parts - left and right",
+            "5. The right part of the answer is <span color='orange'>d1*d2</span>, padded to " + Span("k", color='green') + " digits",
+            "6. The left part of the answer is, ",
+            ".. if n1 less than b    ⇒ <span color='yellow'>n1-</span><span color='orange'>d2</span>",
+            ".. if n1 greater than b ⇒ <span color='yellow'>n1+</span><span color='orange'>d2</span>",
+            "7. Combine the left and right parts"
         ]
     
         Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
