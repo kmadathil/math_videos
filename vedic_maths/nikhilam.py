@@ -31,7 +31,7 @@ def NikhilamExample(scene, num):
                                                                                    UP, aligned_edge=LEFT)
 
     # Answer
-    g2 = VGroup(t33, Text("is the complement of"), t22).arrange(RIGHT).next_to(t3, 2 * DOWN)
+    g2 = VGroup(t33, Text("is the complement of", font_size=38), t22).arrange(RIGHT).next_to(t3, 2 * DOWN)
 
     scene.play(Write(t2))
     scene.play(FadeIn(ln))
@@ -98,20 +98,20 @@ def SubExample(scene, num1, num2):
     cmplc = cmpl.copy()
     ct = Text("Complement of Subtrahend").scale(0.5).set_color(ORANGE)
 
+    DisplayText(scene, "Example", scale=0.8, wait=2, move=(-3, -2))
     scene.play(FadeIn(g))
     scene.play(FadeIn(g2))
-    DisplayText(scene, "Subtract these numbers", wait=3, move=(-3, 0))
     # scene.wait(2)
     scene.play(FadeOut(g2))
     scene.play(g.animate.move_to(LEFT * 2))
     scene.play(FadeIn(g3.next_to(g, RIGHT, buff=1, aligned_edge=UP)))
-    DisplayText(scene, "1. Find the complement of the <span color='yellow'>Subtrahend</span>", scale=1, wait=2,
-                move=(-3, 0), font='Cambria Math')
+    DisplayText(scene, "1. Find the complement of the <span color='yellow'>Subtrahend</span>", scale=0.8, wait=2,
+                move=(-2, 0), font='Cambria Math')
     scene.play(AddTextLetterByLetter(cmpl.next_to(g3, DOWN, aligned_edge=LEFT), time_per_char=0.3))
     scene.play(FadeIn(ct.next_to(cmpl, RIGHT)))
     pos = n2.get_center()
     opos = op.get_center()
-    DisplayText(scene, "2. Add the complement to the Minuend", wait=3, move=(-3, 0), font='Cambria Math')
+    DisplayText(scene, "2. Add the complement to the Minuend", scale=0.8, wait=3, move=(-2, 0), font='Cambria Math')
     scene.play(FadeOut(n2), FadeOut(op), FadeIn(cmplc.move_to(pos)), FadeIn(op1.move_to(opos)))
     scene.play(FadeOut(n3))
     scene.play(FadeIn(res.next_to(ln, DOWN, aligned_edge=RIGHT)))
@@ -126,13 +126,13 @@ def SubExample(scene, num1, num2):
         # scene.wait(2)
         scene.play(res[0].animate.set_opacity(0.3))
         scene.play(FadeOut(fb))
-        DisplayText(scene, f"Answer is {ans[1:]}", wait=5, move=(3, -2))
+        DisplayText(scene, f"<span color='TEAL'>Answer is </span> {ans[1:]}", scale=0.7, wait=5, move=(2, -1))
     else:
         DisplayText(scene, "If the result does not have an extra digit, it is negative", scale=0.5, wait=3,
                     move=(2, -2))
         DisplayText(scene, "The complement of the result is the absolute value of the answer", scale=0.5, wait=3,
                     move=(2, -2))
-        DisplayText(scene, f"Answer is -{10 ** mlen - int(ans)}", wait=5, move=(3, -2))
+        DisplayText(scene, f"<span color='TEAL'>Answer is </span> -{10 ** mlen - int(ans)}",  scale=0.7, wait=5, move=(2, -1))
 
     # scene.wait(5)
     scene.remove(n1, ln, g3, op1, cmpl, ct, cmplc, res)
@@ -168,7 +168,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
                     fade=False, font='Cambria Math')
 
     if len(str(num)) < len(str(mplr)):
-        t2 = DisplayText(scene, "Zeroes prefixed as multiplicand digits are less", scale=0.7, wait=0, move=(3, -1),
+        t2 = DisplayText(scene, "Zero prefixed as multiplicand digits are less", scale=0.7, wait=0, move=(2, -1),
                          fade=False)
 
     g = ShowNikhilamOp(scene, niks(num, len(snum)), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
@@ -181,7 +181,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     t = DisplayText(scene, "2. Prepend it with a -1 (single negative digit)", scale=0.7, wait=0, move=(-3, -1),
                     fade=False, font='Cambria Math')
     s2 = "<span size='small'>-1</span>" + scmpl
-    t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(3, -1),
+    t1 = DisplayText(scene, "Note, this doesn't make the whole number negative!", scale=0.7, wait=0, move=(2, -1),
                      fade=False)
     ds2 = MarkupText(s2)
     ds2.move_to(g0[0][3].get_center())
@@ -199,7 +199,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
 
     t = DisplayText(scene, "4. Add with the result of step 2", scale=0.7, wait=0, move=(-3, -1), fade=False,
                     font='Cambria Math')
-    t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(3, -1), fade=False)
+    t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(2, -1), fade=False)
     scene.play(FadeOut(t, t1))
     t = DisplayText(scene, "5. That sum is our answer", scale=0.7, wait=5, move=(-3, 0), fade=False, font='Cambria Math')
     g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0, 3), fade=False, play=False)
@@ -236,9 +236,9 @@ class Nikhilam(Scene):
         self.next_section()
 
         # Definition
-        el = ["A Complement Completes a Number",
+        el = ["A <span foreground='TEAL'>Complement </span>Completes a Number.",
               "A <span foreground='yellow'>Number</span> and its <span foreground='orange'>Complement</span>",
-              "always add up to a power of 10"]
+              "always add up to a power of 10."]
         eg = Explanation(self, el, wait=3, font='Cambria Math')
         self.play(eg.animate.move_to(UP * 2.5))
         for k in [55, 90, 145, 270]:
@@ -261,18 +261,18 @@ class Nikhilam(Scene):
         self.next_section()
 
         # Explanation
-        el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
-              "And Subtract all digits to the left of it from 9"]
+        el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
+              "And all other digits to the left of it from 9."]
         eg = Explanation(self, el, wait=5, font='Cambria Math')
         #self.play(eg.animate.scale(0.4).move_to(RIGHT * 5))
         self.next_section()
 
         # Example 1
         # 17, 83, 189, 320, 765432 , 58730, 982000
-        titex = Text("Examples")
+        titex = Text("Examples", color='TEAL', font_size=40)
         self.play(Write(titex))
         self.wait(3)
-        self.play(titex.animate.move_to(UP * 3 + LEFT))
+        self.play(titex.animate.move_to(UP * 2 + LEFT))
 
         examples = ["17", "83", "189", "320", "765432", "58730", "982000"]
         for num in examples:
@@ -283,10 +283,10 @@ class Nikhilam(Scene):
 class Subtraction(Scene):
     def construct(self):
         # Title
-        Title(self, "परिपूरकेण व्यवकलनम्", "Subtraction using Complement", move=(3, 5), wait=1)
+        Title(self, "परिपूरकेण व्यवकलनम् ", " Subtraction using Complement", move=(3, 5), wait=1)
         self.next_section()
         # Introduction
-        text = ["Application of Complement",
+        text = [" <span color='TEAL'>Application of Complement</span>",
                 "Subtraction without the pain of borrowing!"]
         Explanation(self, text)
         self.next_section()
@@ -303,22 +303,22 @@ class Subtraction(Scene):
         Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
         self.next_section()
         # Explanation
-        el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
-              "And Subtract all digits to the left of it from 9"]
+        el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
+              "And all other digits to the left of it from 9."]
         eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
         self.next_section()
 
         NikhilamExample(self, "6583200")
         self.next_section()
 
-        eg = DisplayText(self, "How do we use this for subtraction?", fade=True)
+        eg = DisplayText(self, "How do we use this for subtraction?", scale=0.7, fade=True)
         self.next_section()
 
         # Explanation
-        text = ["To subtract a number",
+        text = ["<span color='TEAL'>To subtract a number</span>",
                 "Compute the complement of the subtrahend using निखिलं",
-                "Add it to the minuend",
-                "This removes the need to borrow"]
+                "Add it to the minuend.",
+                "This removes the need to borrow."]
         Explanation(self, text)
         self.next_section()
 
@@ -337,7 +337,7 @@ class Ekanyunena(Scene):
         Title(self, "नवश्रेणीगुणनम्", "Multiplying by nines", move=(3, 5), wait=1)
         self.next_section()
         # Introduction
-        text = ["Multiplying by a series of nines",
+        text = ["<span color='TEAL'>Multiplying by a series of nines</span>",
                 "Using complement, shift, and a bit more (or less?)"]
         Explanation(self, text)
         self.next_section()
@@ -353,15 +353,15 @@ class Ekanyunena(Scene):
         Sutra(self, t0, t1, t2, wait=1, scale=0.5, move=None, fade=True, font='Cambria Math')
         self.next_section()
         # Explanation
-        el = ["To Calculate the Complement of a Number", "Subtract the last nonzero digit from 10",
-              "And Subtract all digits to the left of it from 9"]
+        el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
+              "And all other digits to the left of it from 9."]
         eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
         self.next_section()
 
         NikhilamExample(self, "6583200")
         self.next_section()
 
-        eg = DisplayText(self, "How do we use this for multiplying by nines?", wait=0, move=(-3, 0), fade=False)
+        eg = DisplayText(self, "How do we use this for multiplying by nines?", scale=0.7, wait=0, move=(-3, 0), fade=False)
         g = ShowOp(self, 98765, 999, "×", "?", wait=0, fade=False)
         self.wait(5)
         self.play(FadeOut(eg, g))
@@ -375,13 +375,13 @@ class Ekanyunena(Scene):
         Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
-        text = ["To multiply by a series of nines",
+        text = ["<span color='TEAL'>To multiply by a series of nines </span>",
                 "1. Calculate the complement of the multiplicand",
                 "2. Prepend it with a -1 (single digit)",
                 "3. Append as many zeros to the multiplicand",
-                "   as there are nines in the multiplier",
+                "    ...  as there are nines in the multiplier",
                 "4. Add with the result of step 2",
-                "5. The sum is our answer"]
+                "5. The sum is our answer."]
         Explanation(self, text, aligned_edge=LEFT, font='Cambria Math')
         self.next_section()
         # Example
