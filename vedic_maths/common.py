@@ -73,7 +73,7 @@ def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=1, move=(3
     for i in range(len(translation)):
         scene.play(t1g[i].animate.set_color(YELLOW),
                    t2g[i].animate.set_color(YELLOW).set_opacity(1))
-        scene.wait(5)
+        scene.wait(3)
 
         scene.play(t1g[i].animate.set_opacity(0.25),
                    t2g[i].animate.set_opacity(0.25))
@@ -92,13 +92,13 @@ def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=1, move=(3
 
 def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fade=True, oplen=0):
     ''' Helper function to display a single operation '''
-    n1 = MarkupText(str(sn1))
-    n2 = MarkupText(str(sn2))
+    n1 = MarkupText(str(sn1), font='Cambria Math')
+    n2 = MarkupText(str(sn2), font='Cambria Math')
     if oplen == 0:
         oplen = len(str(sn1))
     ln = Line(start=array([-1 * oplen / 2, 0, 0]), end=array([0, 0, 0])).set_color(YELLOW)
-    op = MarkupText(str(sop))
-    res = MarkupText(str(sr))
+    op = MarkupText(str(sop), font='Cambria Math')
+    res = MarkupText(str(sr), font='Cambria Math')
     g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
     g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
     if play:

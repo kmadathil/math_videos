@@ -173,6 +173,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
 
     g = ShowNikhilamOp(scene, niks(num, len(snum)), snum, "-", scmpl, oplen=len(snum), fade=False, play=False)
     scene.play(Transform(g0, g))
+    scene.wait(3)
 
     scene.play(FadeOut(t))
     if len(str(num)) < len(str(mplr)):
@@ -186,6 +187,7 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     ds2 = MarkupText(s2)
     ds2.move_to(g0[0][3].get_center())
     scene.play(Transform(g0[0][3], ds2))
+    scene.wait(3)
 
     scene.play(FadeOut(t, t1))
     t = DisplayText(scene, "3. Append one zero to the multiplicand for each 9 in the multiplier",
@@ -195,11 +197,13 @@ def NinesExample(scene, num, mplr, wait=3, fade=True):
     snumz = snum + '0' * len(smplr)
     g3 = ShowOp(scene, snumz, s2, "+", ans, play=False, wait=7, fade=False)
     scene.play(Transform(g0, g3))
+    scene.wait(3)
     scene.play(FadeOut(t))
 
     t = DisplayText(scene, "4. Add with the result of step 2", scale=0.7, wait=0, move=(-3, -1), fade=False,
                     font='Cambria Math')
     t1 = DisplayText(scene, "Note how the negative digit is handled!", scale=0.7, wait=0, move=(2, -1), fade=False)
+    scene.wait(3)
     scene.play(FadeOut(t, t1))
     t = DisplayText(scene, "5. That sum is our answer", scale=0.7, wait=5, move=(-3, 0), fade=False, font='Cambria Math')
     g4 = ShowOp(scene, num, mplr, "×", ans, wait=0, move=(0, 3), fade=False, play=False)
@@ -257,7 +261,7 @@ class Nikhilam(Scene):
         t1 = ["निखिलं नवतः ", "चरमं दशतः"]
         t2 = ["All from 9, ", "Last from 10"]
 
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
+        Sutra(self, t0, t1, t2, wait=3, scale=1, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         # Explanation
@@ -292,27 +296,27 @@ class Subtraction(Scene):
         self.next_section()
         # Revision and Example
 
-        # Explanation
-        eg = DisplayText(self, "Revision", fade=True)
-        self.next_section()
+        # # Explanation
+        # eg = DisplayText(self, "Revision", fade=True)
+        # self.next_section()
 
-        # Sutra Scene
-        t0 = "निखिलं नवतश्चरमं दशतः"
-        t1 = ["निखिलं नवतः ", "चरमं दशतः"]
-        t2 = ["All from 9, ", "Last from 10"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
-        self.next_section()
-        # Explanation
-        el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
-              "And all other digits to the left of it from 9."]
-        eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
-        self.next_section()
+        # # Sutra Scene
+        # t0 = "निखिलं नवतश्चरमं दशतः"
+        # t1 = ["निखिलं नवतः ", "चरमं दशतः"]
+        # t2 = ["All from 9, ", "Last from 10"]
+        # Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
+        # self.next_section()
+        # # Explanation
+        # el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
+        #       "And all other digits to the left of it from 9."]
+        # eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
+        # self.next_section()
 
-        NikhilamExample(self, "6583200")
-        self.next_section()
+        # NikhilamExample(self, "6583200")
+        # self.next_section()
 
-        eg = DisplayText(self, "How do we use this for subtraction?", scale=0.7, fade=True)
-        self.next_section()
+        #eg = DisplayText(self, "How do we use this for subtraction?", scale=0.7, fade=True)
+        #self.next_section()
 
         # Explanation
         text = ["<span color='TEAL'>To subtract a number</span>",
@@ -341,38 +345,38 @@ class Ekanyunena(Scene):
                 "Using complement, shift, and a bit more (or less?)"]
         Explanation(self, text)
         self.next_section()
-        # Revision and Example
+        # # Revision and Example
 
-        eg = DisplayText(self, "Revision (Complement)", fade=True)
-        self.next_section()
+        # eg = DisplayText(self, "Revision (Complement)", fade=True)
+        # self.next_section()
 
-        # Sutra Scene
-        t0 = "निखिलं नवतश्चरमं दशतः"
-        t1 = ["निखिलं नवतः ", "चरमं दशतः"]
-        t2 = ["All from 9, ", "Last from 10"]
-        Sutra(self, t0, t1, t2, wait=1, scale=0.5, move=None, fade=True, font='Cambria Math')
-        self.next_section()
-        # Explanation
-        el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
-              "And all other digits to the left of it from 9."]
-        eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
-        self.next_section()
+        # # Sutra Scene
+        # t0 = "निखिलं नवतश्चरमं दशतः"
+        # t1 = ["निखिलं नवतः ", "चरमं दशतः"]
+        # t2 = ["All from 9, ", "Last from 10"]
+        # Sutra(self, t0, t1, t2, wait=1, scale=0.5, move=None, fade=True, font='Cambria Math')
+        # self.next_section()
+        # # Explanation
+        # el = ["<span color='TEAL'>To Calculate the Complement of a Number</span>", "Subtract the last nonzero digit from 10",
+        #       "And all other digits to the left of it from 9."]
+        # eg = Explanation(self, el, wait=2, fade=True, font='Cambria Math')
+        # self.next_section()
 
-        NikhilamExample(self, "6583200")
-        self.next_section()
+        # NikhilamExample(self, "6583200")
+        # self.next_section()
 
-        eg = DisplayText(self, "How do we use this for multiplying by nines?", scale=0.7, wait=0, move=(-3, 0), fade=False)
-        g = ShowOp(self, 98765, 999, "×", "?", wait=0, fade=False)
-        self.wait(5)
-        self.play(FadeOut(eg, g))
+        # eg = DisplayText(self, "How do we use this for multiplying by nines?", scale=0.7, wait=0, move=(-3, 0), fade=False)
+        # g = ShowOp(self, 98765, 999, "×", "?", wait=0, fade=False)
+        # self.wait(5)
+        # self.play(FadeOut(eg, g))
 
-        self.next_section()
+        # self.next_section()
 
         # Sutra Scene
         t0 = "एकन्यूनेन पूर्वेण"
         t1 = ["एकन्यूनेन", "पूर्वेण"]
         t2 = ["By one less than", "the previous"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.4, move=None, fade=True, font='Cambria Math')
+        Sutra(self, t0, t1, t2, wait=3, scale=1, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         text = ["<span color='TEAL'>To multiply by a series of nines </span>",

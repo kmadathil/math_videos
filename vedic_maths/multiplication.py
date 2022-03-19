@@ -44,16 +44,26 @@ def EkCom(scene, snum, snum2, prev, f1, f2, ans, wait=5, fade=True):
     arf.next_to(ar, ORIGIN)
     alf.next_to(al, ORIGIN)
     scene.add(ga)
-    scene.wait(2)
-    g12.move_to(RIGHT*2)
+    scene.wait()
+    g11.next_to(ga[0], UP)
+    g12.next_to(ga[1], UP)
     scene.play(Transform(g, g11))
     scene.add(g12)
+    t11 = MarkupText(Span(f"{prev} × ({prev}+1)", color="Teal")).scale(0.5)
+    if f1 == f2:
+        t12 = MarkupText(Span("Square of 5", color="Teal")).scale(0.5)
+    else:
+        t12 = MarkupText(Span("Product of final digits", color="Teal")).scale(0.5)
+    t11.next_to(bl, LEFT)
+    t12.next_to(br, RIGHT)
+    scene.add(t11, t12)
+    scene.wait(2)
     scene.play(Transform(ar, arf))
     scene.play(Transform(al, alf))
     scene.wait(2)
     #scene.play(FadeOut(g[1]))
     #scene.play(g12.animate.next_to(g[0], RIGHT, aligned_edge=UP))
-    scene.play(FadeOut(g, g12))
+    scene.play(FadeOut(g, g12, t11, t12))
     scene.wait(2)
     g2  = ShowOp(scene, snum, snum2, "×", ans, play=False)
     #scene.remove(g12)
@@ -268,7 +278,7 @@ class Ekadhikena(Scene):
         t0 = "एकाधिकेन पूर्वेण"
         t1 = ["एकाधिकेन", "पूर्वेणः"]
         t2 = ["<span size='smaller'>By one more than</span>", "<span size='smaller'>the previous</span>"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
+        Sutra(self, t0, t1, t2, wait=3, scale=0.75, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         EkadhikenaSquare(self, 35)
@@ -281,7 +291,7 @@ class Ekadhikena(Scene):
         t0 = "अन्त्ययोर्दशकेऽपि"
         t1 = ["अन्त्ययोः", "दशके अपि"]
         t2 = ["<span size='smaller'>When the last</span>", "<span size='smaller'>sum to 10</span>"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='Cambria Math')
+        Sutra(self, t0, t1, t2, wait=3, scale=0.75, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         # Introduction
