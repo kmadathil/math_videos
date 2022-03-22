@@ -14,11 +14,11 @@ def Title(scene, t0, t1, wait=5, scale=0.3, move=(3, 6)):
 
 
 # Helper function for multi-line explanation
-def Explanation(scene, text, font='', wait=3, fade=True, aligned_edge=ORIGIN):
+def Explanation(scene, text, font='', wait=3, scale=0.7, fade=True, aligned_edge=ORIGIN):
     # Explanation
 
     el = [MarkupText(x, font=font) for x in text]
-    eg = VGroup(*el).scale(0.7).arrange(DOWN, aligned_edge=aligned_edge)
+    eg = VGroup(*el).scale(scale).arrange(DOWN, aligned_edge=aligned_edge)
 
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
@@ -67,7 +67,7 @@ def Sutra(scene, sutra, viccheda, translation, font='', wait=3, scale=1, move=(3
 
     scene.play(FadeIn(sg))
     scene.play(Write(t0.set_color(ORANGE)))
-    scene.wait(1)
+    scene.wait(2)
     scene.play(t1g.animate.set_opacity(1))
     scene.wait(1)
     for i in range(len(translation)):
