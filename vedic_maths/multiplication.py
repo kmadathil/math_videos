@@ -266,13 +266,14 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
     n = numdig - 1
     i = 0
 
-    numg = []
-    while i <= n:
-        dig1 = str(snum[i])
-        numg.append(dig1)
-        i = i + 1
-
-    t = DisplayText(scene, Span("1.Add Zeroes at both ends of the number.", color="Turquoise"), scale=0.5, wait=0, move=(-2, 3),
+    #numg = []
+    #while i <= n:
+    #    dig1 = str(snum[i])
+    #    numg.append(dig1)
+    #    i = i + 1
+    numg = [s for s in snum]
+    
+    t = DisplayText(scene, Span("1.Add zeroes at both ends of the number.", color="Turquoise"), scale=0.5, wait=0, move=(-2, 3),
                     fade=False, font='Cambria Math')
 
     el = [MarkupText(x, font_size=130) for x in numg]
@@ -283,16 +284,17 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
     scene.wait(1)
 
-    sp = []
-    j = n
-    while j > 0:
-        sum = int(snum[j])
-        j = j-1
-        sum = sum + int(snum[j])
-        sp.append(str(sum))
-
+    #sp = []
+    #j = n
+    #while j > 0:
+    #    sum = int(snum[j])
+    #    j = j-1
+    #    sum = sum + int(snum[j])
+    #    sp.append(str(sum))
+    sp = [str(int(snum[i])+int(snum[i+1])) for i in reversed(range(len(snum)-1))]
+    
     scene.play(FadeOut(t))
-    t = DisplayText(scene, Span("2. Add last two digits to get one digit of the Answer.", color="Turquoise"), scale=0.5, wait=0, move=(-2, 3),
+    t = DisplayText(scene, Span("2. Add the last two digits to get one digit of the Answer.", color="Turquoise"), scale=0.5, wait=0, move=(-2, 3),
                     fade=False, font='Cambria Math')
 
     spl = [MarkupText(x, font_size=130) for x in sp]
@@ -333,12 +335,12 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
         t1 = DisplayText(scene, Span("3. Retain only the unit digit in each place...", color="Turquoise"),
                         scale=0.5, wait=0, move=(-2.4, 3),
                         fade=False, font='Cambria Math')
-        t2 = DisplayText(scene, Span("...  other digits are added with it's left digit.",
+        t2 = DisplayText(scene, Span("...  other digits are added to the digits to its left.",
                                     color="Turquoise"),
                         scale=0.5, wait=0, move=(-2, 3),
                         fade=False, font='Cambria Math')
 
-        t3 = DisplayText(scene, Span("With more practise, we can do this in 2nd step itself",
+        t3 = DisplayText(scene, Span("With more practice, we can do this directly in 2nd step",
                                     color="Turquoise"),
                         scale=0.5, wait=0, move=(2, 3),
                         fade=False, font='Cambria Math')
@@ -529,17 +531,18 @@ class Antyayoreva(Scene):
 
         # Sutra Scene
         t0 = "अन्त्ययोरेव"
-        t1 = ["अन्त्ययो:", "एव"]
-        t2 = ["<span size='small'>Last terms</span>", "<span size='small'>only</span>"]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.5, move=None, fade=True, font='')
+        t1 = ["अन्त्ययोः", "एव"]
+        t2 = ["<span size='smaller'>(Sum of) last digits</span>", "<span size='smaller'>only</span>"]
+        Sutra(self, t0, t1, t2, wait=3, scale=1, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
         text = [
             f"<span color='TURQUOISE'>To multiply any number by 11</span>",
             f"Add zeros at both ends of the number.",
-            f"In every step,",
+            f"At each step,",
             f"1) Add the last two digits to get one digit of the answer.",
-            f"2) Drop the right digit of the number and repeat until no digits remain."]
+            f"2) Drop the right digit of the number",
+            "repeat until no digits remain."]
 
         Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
         self.next_section()
