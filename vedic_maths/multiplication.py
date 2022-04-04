@@ -10,11 +10,12 @@ def EkadhikenaSquare(scene, num, wait=5, fade=True):
     prev = int(sprev)
     assert snum[-1] == "5", "Only works with numbers ending in 5"
     text= [
-        f"<span color='TEAL'>Find the Square of </span><span color='yellow'>{snum}</span>",
-        f"Digit(s) before 5 are <span color='yellow'>{sprev}</span>",
-        f"One more than that is  <span color='yellow'>{prev+1}</span>",
-        f"Our answer is simply <span color='yellow'>{prev} times {prev+1}, suffixed with 25</span>",
-        f"Which is <span color='yellow'>{prev*(prev+1)}{25}</span>."]
+        f"<span color='Turquoise'>Find the Square of </span><span color='yellow'>{snum}</span>.",
+#        f"Digit(s) before 5 are <span color='yellow'>{sprev}</span>",
+#        f"One more than that is  <span color='yellow'>{prev+1}</span>",
+#        f"Our answer is simply <span color='yellow'>{prev} times {prev+1}, suffixed with 25</span>",
+#        f"Which is <span color='yellow'>{prev*(prev+1)}{25}</span>."
+    ]
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
     scene.next_section()
     ans = inum**2
@@ -29,13 +30,14 @@ def EkCom(scene, snum, snum2, prev, f1, f2, ans, wait=5, fade=True):
     ndig = 2
 
     g   = ShowOp(scene, snum, snum2, "×", "?", wait=1, fade=False)
+    gc = g.copy()
     g11   = ShowOp(scene, prev, "<span color='red'>"+str(prev+1)+"</span>", "×", lans, play=False)
     g12   = ShowOp(scene, f1, f2, "×", rans, play=False)
 
     ar = Text("_" * ndig, color='yellow').scale(1.2)
-    arf = Text(str(rans).zfill(ndig), color='yellow').scale(1.2)
+    arf = Text(str(rans).zfill(ndig), color='yellow', font='Cambria Math').scale(1.2)
     al = Text("_" * len(str(lans)), color='yellow').scale(1.2)
-    alf = Text(str(lans), color='yellow').scale(1.2)
+    alf = Text(str(lans), color='yellow', font='Cambria Math').scale(1.2)
     br = SurroundingRectangle(ar, buff=0.5)
     bl = SurroundingRectangle(al, buff=0.5)
     ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)
@@ -47,8 +49,10 @@ def EkCom(scene, snum, snum2, prev, f1, f2, ans, wait=5, fade=True):
     scene.wait()
     g11.next_to(ga[0], UP)
     g12.next_to(ga[1], UP)
+    scene.add(gc.move_to(4*LEFT))
     scene.play(Transform(g, g11))
     scene.add(g12)
+    scene.wait(1)
     t11 = MarkupText(Span(f"{prev} × ({prev}+1)", color="Teal")).scale(0.5)
     if f1 == f2:
         t12 = MarkupText(Span("Square of 5", color="Teal")).scale(0.5)
@@ -56,10 +60,13 @@ def EkCom(scene, snum, snum2, prev, f1, f2, ans, wait=5, fade=True):
         t12 = MarkupText(Span("Product of final digits", color="Teal")).scale(0.5)
     t11.next_to(bl, LEFT)
     t12.next_to(br, RIGHT)
-    scene.add(t11, t12)
+    scene.add(t11)
     scene.wait(2)
-    scene.play(Transform(ar, arf))
     scene.play(Transform(al, alf))
+    scene.wait(2)
+    scene.add(t12)
+    scene.wait(2)    
+    scene.play(Transform(ar, arf))
     scene.wait(2)
     #scene.play(FadeOut(g[1]))
     #scene.play(g12.animate.next_to(g[0], RIGHT, aligned_edge=UP))
@@ -70,7 +77,7 @@ def EkCom(scene, snum, snum2, prev, f1, f2, ans, wait=5, fade=True):
     scene.play(Transform(ga, g2))
     scene.wait(wait)
     if fade:
-        scene.play(FadeOut(ga))
+        scene.play(FadeOut(ga, gc))
     return ga
 
 def EkadhikenaMult(scene, num, num2, wait=5, fade=True):
@@ -91,14 +98,15 @@ def EkadhikenaMult(scene, num, num2, wait=5, fade=True):
     assert ans == prev*(prev+1)*100+fin*fin2
 
     text= [
-        f"<span color='TEAL'>Find the product of </span><span color='yellow'>{snum} and {snum2}</span>",
-        f"Final digits are <span color='yellow'>{snum[-1]} and {snum2[-1]}</span>",
-        f"Their product is <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
-        f"Pre-final Digit(s) are <span color='yellow'>{sprev}</span>",
-        f"One more than that is  <span color='yellow'>{prev+1}</span>",
-        f"As before, our answer begins with <span color='yellow'>{prev} times {prev+1}</span>",
-        f"It is now suffixed with <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
-        f"Which leads us to <span color='yellow'>{inum*inum2}</span>."]
+        f"<span color='Turquoise'>Find the product of </span><span color='yellow'>{snum} and {snum2}</span>.",
+#        f"Final digits are <span color='yellow'>{snum[-1]} and {snum2[-1]}</span>",
+#        f"Their product is <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
+#       f"Pre-final Digit(s) are <span color='yellow'>{sprev}</span>",
+#        f"One more than that is  <span color='yellow'>{prev+1}</span>",
+#        f"As before, our answer begins with <span color='yellow'>{prev} times {prev+1}</span>",
+#        f"It is now suffixed with <span color='yellow'>{int(snum[-1])*int(snum2[-1])}</span>",
+#        f"Which leads us to <span color='yellow'>{inum*inum2}</span>."
+    ]
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
     scene.next_section()
     return EkCom(scene, snum, snum2, prev, fin, fin2, ans, wait, fade)
@@ -138,13 +146,13 @@ def YavadunamMult(scene, num1, num2, wait=5, fade=True):
     assert ans == lans * 10**ndig + rans, f" {ans} != {lans * 10**ndig + rans}, {base, diff1, diff2, lans, ndig, rans}"
     
     text= [
-        f"<span color='TEAL'>Find the product of </span><span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span>",
-        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " zeros",
-        f"2. <span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span> are " + Span(str(abs(diff1)), color='orange') + f" {bdiff1} and " + Span(str(abs(diff2)), color='orange') +  f" {bdiff2} the base " + Span(str(base),color='red'),
-        "3.  The right part of the answer is " + Span(f"{abs(diff1)} * {abs(diff2)}", color='orange') + " = " + Span(str(rans).zfill(ndig), color='yellow'),
-        "4.  The left part of the answer is " + Span(snum1, color='yellow') + dirs1 + Span(str(abs(diff2)), color='orange') + " = " + Span(lans, color='yellow'),
-        ".. The left part of the answer can also be written as " + Span(snum2, color='yellow') + dirs2 + Span(str(abs(diff1)), color='orange') + " = " + Span(lans, color='yellow'),
-        f"5. Putting them together, <span color='yellow'>{snum1}×{snum2}</span> = " + Span(ans, color='yellow')
+        f"<span color='Turquoise'>Find the product of </span><span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span>.",
+#        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " zeros",
+#        f"2. <span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span> are " + Span(str(abs(diff1)), color='orange') + f" {bdiff1} and " + Span(str(abs(diff2)), color='orange') +  f" {bdiff2} the base " + Span(str(base),color='red'),
+#        "3.  The right part of the answer is " + Span(f"{abs(diff1)} * {abs(diff2)}", color='orange') + " = " + Span(str(rans).zfill(ndig), color='yellow'),
+#        "4.  The left part of the answer is " + Span(snum1, color='yellow') + dirs1 + Span(str(abs(diff2)), color='orange') + " = " + Span(lans, color='yellow'),
+#        ".. The left part of the answer can also be written as " + Span(snum2, color='yellow') + dirs2 + Span(str(abs(diff1)), color='orange') + " = " + Span(lans, color='yellow'),
+#        f"5. Putting them together, <span color='yellow'>{snum1}×{snum2}</span> = " + Span(ans, color='yellow')
     ]
     
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
@@ -170,12 +178,12 @@ def YavadunamSquare(scene, num, wait=5, fade=True):
     assert ans == lans * 10**ndig + rans, f" {ans} != {lans * 10**ndig + rans}, {base, diff, lans, ndig, rans}"
     
     text= [
-        f"<span color='TEAL'>Find the square of </span><span color='yellow'>{snum}</span>",
-        "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " zeros",
-        f"2. <span color='yellow'>{snum}</span> is " + Span(str(abs(diff)), color='orange') + f" {bdiff} the base " + Span(str(base),color='red'),
-        "3.  The right part of the answer is " + Span(str(abs(diff)), color='orange') + "² = " + Span(str(rans).zfill(ndig), color='yellow'),
-        "4.  The left part of the answer is " + Span(snum, color='yellow') + dirs + Span(str(abs(diff)), color='orange') + " = " + Span(lans, color='yellow'),
-        f"5. Putting them together: <span color='yellow'>{snum}</span>² = "  + Span(ans, color='yellow')
+        f"<span color='Turquoise'>Find the square of </span><span color='yellow'>{snum}</span>.",
+ #       "1.  The nearest power of 10 is: " + Span(str(base),color='red') + " with " + Span(str(ndig), color='green') + " zeros",
+ #       f"2. <span color='yellow'>{snum}</span> is " + Span(str(abs(diff)), color='orange') + f" {bdiff} the base " + Span(str(base),color='red'),
+ #       "3.  The right part of the answer is " + Span(str(abs(diff)), color='orange') + "² = " + Span(str(rans).zfill(ndig), color='yellow'),
+ #       "4.  The left part of the answer is " + Span(snum, color='yellow') + dirs + Span(str(abs(diff)), color='orange') + " = " + Span(lans, color='yellow'),
+ #       f"5. Putting them together: <span color='yellow'>{snum}</span>² = "  + Span(ans, color='yellow')
     ]
     
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
@@ -184,6 +192,9 @@ def YavadunamSquare(scene, num, wait=5, fade=True):
 
 def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, ndig, wait, fade):
     g   = ShowOp(scene, snum, snum2, "×", "?", wait=1, fade=False)
+
+    tb = MarkupText(f"Nearest base is <span color='red'>{base}</span>", color="Turquoise", font='Cambria Math')
+
     if negp1:
         g1 = ShowOp(scene, base, snum, "-", diff, play=False)
     else:
@@ -201,9 +212,9 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
     g4  = ShowOp(scene, snum, snum2, "×", ans, play=False)
 
     ar = Text("_" * ndig, color='yellow').scale(1.2)
-    arf = Text(str(rans).zfill(ndig), color='yellow').scale(1.2)
+    arf = Text(str(rans).zfill(ndig), color='yellow', font='Cambria Math').scale(1.2)
     al = Text("_" * len(snum), color='yellow').scale(1.2)
-    alf = Text(str(lans), color='yellow').scale(1.2)
+    alf = Text(str(lans), color='yellow', font='Cambria Math').scale(1.2)
     br = SurroundingRectangle(ar, buff=0.5)
     bl = SurroundingRectangle(al, buff=0.5)
     ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)    
@@ -220,8 +231,9 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
 
 
 
-    scene.add(g)
-    scene.wait(1)
+    scene.add(g.move_to(LEFT*4))
+    scene.add(tb.next_to(g, UP*3))
+    scene.wait(2)
     scene.add(ga)
     scene.wait(1)
     scene.add(g1)
@@ -233,20 +245,21 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
     scene.wait(1)
     scene.play(Transform(ar, arf))
     scene.wait(1)
-    scene.play(Transform(g, g2))
+    #scene.play(Transform(g, g2))
+    scene.add(g2)
     scene.wait(1)
     if diff != diff2:
-        scene.play(Transform(g, g22))
+        scene.play(Transform(g2, g22))
         scene.wait(1)
     scene.play(Transform(al, alf))
     scene.wait(2)
-    scene.play(FadeOut(g, g1))
+    scene.play(FadeOut(g2, g1))
     scene.wait(2)
     scene.remove(g1, g3)
     scene.play(Transform(ga, g4))
     scene.wait(wait)
     if fade:
-        scene.play(FadeOut(ga))
+        scene.play(FadeOut(ga, g, tb))
     return ga
 
 def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
@@ -388,7 +401,7 @@ class Ekadhikena(Scene):
 
         # Introduction
 
-        text = ["<span color='TEAL'>Simple multiplication and squaring</span>",
+        text = ["<span color='Turquoise'>Simple multiplication and squaring</span>",
                 "Before we introduce a general method for multiplication",
                 "We will look at special cases which are easier."]
 
@@ -396,7 +409,7 @@ class Ekadhikena(Scene):
         self.next_section()
 
         # Introduction
-        text = ["<span color='TEAL'>Our first method works for</span> ",
+        text = ["<span color='Turquoise'>Our first method works for</span> ",
                 "1. Squares of numbers ending in 5.",
                 "2. Products of numbers with last digits adding to 10   ",
                 "      and other digits identical."]
@@ -405,7 +418,7 @@ class Ekadhikena(Scene):
 
         # Sutra Scene
         t0 = "एकाधिकेन पूर्वेण"
-        t1 = ["एकाधिकेन", "पूर्वेणः"]
+        t1 = ["एकाधिकेन", "पूर्वेण"]
         t2 = ["<span size='smaller'>By one more than</span>", "<span size='smaller'>the previous</span>"]
         Sutra(self, t0, t1, t2, wait=3, scale=0.75, move=None, fade=True, font='Cambria Math')
         self.next_section()
@@ -416,26 +429,26 @@ class Ekadhikena(Scene):
         EkadhikenaSquare(self, 85)
         self.next_section()
 
+        # Introduction
+        text = ["<span color='Turquoise'>We can use this to multiply numbers that</span>",
+                "1. have identical digits barring the final one.",
+                "2. have their final digits adding up to 10."]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+        
         # Sutra Scene
         t0 = "अन्त्ययोर्दशकेऽपि"
         t1 = ["अन्त्ययोः", "दशके अपि"]
         t2 = ["<span size='smaller'>When the last</span>", "<span size='smaller'>sum to 10</span>"]
         Sutra(self, t0, t1, t2, wait=3, scale=0.75, move=None, fade=True, font='Cambria Math')
         self.next_section()
-
-        # Introduction
-        text = ["<span color='TEAL'>We can use this to multiply numbers that</span>",
-                "1. have identical digits barring the final one.",
-                "2. have their final digits adding up to 10."]
-        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
-        self.next_section()
-
+        
         EkadhikenaMult(self, 33, 37)
         self.next_section()
         
         EkadhikenaMult(self, 72, 78)
         self.next_section()
-
+        self.wait(5)
 
 class Yavadunam(Scene):
     ''' Multiplication with Yavadunam '''
@@ -446,12 +459,12 @@ class Yavadunam(Scene):
         self.next_section()
 
         # Introduction
-        text = [Span("This method works for", color='TEAL'),
+        text = [Span("This method works for", color='Turquoise'),
                 "1. Squares  of numbers near a power of 10. ",
                 "2. Products of numbers near a power of 10. ",
                 ]
         e = Explanation(self, text, font='Cambria Math', wait=0, fade=False, aligned_edge=LEFT)
-        t = DisplayText(self, Span("Powers of 10 are 10, 100, 1000, etc.", size='x-small', color='TEAL'), font='Cambria Math',
+        t = DisplayText(self, Span("Powers of 10 are 10, 100, 1000, etc.", size='x-small', color='Turquoise'), font='Cambria Math',
                         scale=0.75, move=(1.5, 1.5), wait=0, fade=False)
         self.wait(5)
         self.play(FadeOut(e, t))
@@ -467,7 +480,7 @@ class Yavadunam(Scene):
         self.next_section()
 
         text= [
-            f"<span color='TEAL'>To find the square of a number </span><span color='yellow'>n</span>",
+            f"<span color='Turquoise'>To find the square of a number </span><span color='yellow'>n</span>",
             "1. Find the nearest base <span color='red'>b</span>, and note its number of zeros <span color='green'>k</span>.",
             "2. Note if <span color='yellow'>n</span> is above or below <span color='red'>b</span>, and note the difference <span color='orange'>d</span>.",
             "3. We then divide the answer into two parts - left and right.",
@@ -489,12 +502,12 @@ class Yavadunam(Scene):
         
     
         text= [
-            f"<span color='TEAL'>To find the product of two numbers </span><span color='yellow'>n1</span> and <span color='yellow'>n2</span>.",
+            f"<span color='Turquoise'>To find the product of two numbers </span><span color='yellow'>n1</span> and <span color='yellow'>n2</span>.",
             "1. Find the nearest base <span color='red'>b</span>, and note its number of zeros <span color='green'>k</span>.",
             "2. Note if <span color='yellow'>n1</span> and <span color='yellow'>n2</span> are above or below <span color='red'>b</span>.",
             "3. Note the differences <span color='orange'>d1</span> and <span color='orange'>d2</span>.",
             "4. We then divide the answer into two parts - left and right.",
-            "5. The right part of the answer is <span color='orange'>d1*d2</span>, padded to " + Span("k", color='green') + " digits.",
+            "5. The right part of the answer is <span color='orange'>d1×d2</span>, padded to " + Span("k", color='green') + " digits.",
             "6. The left part of the answer is, ",
             "..  if n1 less than b    ⇒ <span color='yellow'>n1-</span><span color='orange'>d2</span>.",
             "..  if n1 greater than b ⇒ <span color='yellow'>n1+</span><span color='orange'>d2</span>.",
@@ -511,6 +524,7 @@ class Yavadunam(Scene):
 
         YavadunamMult(self, 997, 988)
         self.next_section()
+        self.wait(5)
 
 
 class Antyayoreva(Scene):
