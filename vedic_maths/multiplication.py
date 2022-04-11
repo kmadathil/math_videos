@@ -121,14 +121,20 @@ def findbase(num):
     return hbase if (hbase - inum) < hbase/2 else lbase
 
 
-def YavadunamMult(scene, num1, num2, wait=5, fade=True):
+def YavadunamMult(scene, num1, num2, wait=5, fade=True, base=None, pretend_base=None):
     snum1 = str(num1)
     inum1 = int(num1)
     snum2 = str(num2)
     inum2 = int(num2)
-    base = findbase(num1)  # Nearest power of 10
-    diff1 = (base - inum1)  # Difference from that
-    diff2 = (base - inum2)  # Difference from that
+    if base is None:
+        base = findbase(num1)  # Nearest power of 10
+        assert findbase(num2) == base, "{num1} and {num2} seem to be near different bases, force one by using base="
+    if pretend_base is not None:
+        pbase = pretend_base
+    else:
+        pbase = base
+    diff1 = (pbase - inum1)  # Difference from that
+    diff2 = (pbase - inum2)  # Difference from that
     ndig = len(str(base))-1   # Number of zeros in base
 
     rans = diff1 * diff2  # Right part of answer, has ndig digits
@@ -143,7 +149,7 @@ def YavadunamMult(scene, num1, num2, wait=5, fade=True):
     bdiff2 = "less than" if negp2 else "greater than"
 
     ans = inum1*inum2
-    assert ans == lans * 10**ndig + rans, f" {ans} != {lans * 10**ndig + rans}, {base, diff1, diff2, lans, ndig, rans}"
+    assert ans == lans * pbase/base * 10**ndig + rans, f" {ans} != {lans * pbase/base * 10**ndig + rans}, {base, pbase, diff, lans, ndig, rans}"
     
     text= [
         f"<span color='Turquoise'>Find the product of </span><span color='yellow'>{snum1}</span> and <span color='yellow'>{snum2}</span>.",
@@ -157,14 +163,19 @@ def YavadunamMult(scene, num1, num2, wait=5, fade=True):
     
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
     scene.next_section()
-    return YCom(scene, snum1, snum2, base, negp1, negp2, abs(diff1), abs(diff2), rans, lans, ans, ndig, wait, fade)
+    return YCom(scene, snum1, snum2, base, pbase, negp1, negp2, abs(diff1), abs(diff2), rans, lans, ans, ndig, wait, fade)
 
 
-def YavadunamSquare(scene, num, wait=5, fade=True):
+def YavadunamSquare(scene, num, wait=5, fade=True, base=None, pretend_base=None):
     snum = str(num)
     inum = int(num)
-    base = findbase(num)  # Nearest power of 10
-    diff = (base - inum)  # Difference from that
+    if base is None:
+        base = findbase(num)  # Nearest power of 10
+    if pretend_base is not None:
+        pbase = pretend_base
+    else:
+        pbase = base
+    diff = (pbase - inum)  # Difference from that
     negp = (diff > 0)     # Are we below base?
     ndig = len(str(base))-1   # Number of zeros in base
 
@@ -175,7 +186,7 @@ def YavadunamSquare(scene, num, wait=5, fade=True):
     bdiff = "less than" if negp else "greater than"
 
     ans = inum**2
-    assert ans == lans * 10**ndig + rans, f" {ans} != {lans * 10**ndig + rans}, {base, diff, lans, ndig, rans}"
+    assert ans == lans * pbase/base * 10**ndig + rans, f" {ans} != {lans * pbase/base * 10**ndig + rans}, {base, pbase, diff, lans, ndig, rans}"
     
     text= [
         f"<span color='Turquoise'>Find the square of </span><span color='yellow'>{snum}</span>.",
@@ -188,21 +199,28 @@ def YavadunamSquare(scene, num, wait=5, fade=True):
     
     Explanation(scene, text, font='Cambria Math', aligned_edge=LEFT)
     scene.next_section()
-    return YCom(scene, snum, snum, base, negp, negp, abs(diff), abs(diff), rans, lans, ans, ndig, wait, fade)
+    return YCom(scene, snum, snum, base, pbase, negp, negp, abs(diff), abs(diff), rans, lans, ans, ndig, wait, fade)
 
-def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, ndig, wait, fade):
+def YCom(scene, snum, snum2, base, pbase, negp1, negp2, diff, diff2,  rans, lans, ans, ndig, wait, fade):
     g   = ShowOp(scene, snum, snum2, "×", "?", wait=1, fade=False)
 
-    tb = MarkupText(f"Nearest base is <span color='red'>{base}</span>", color="Turquoise", font='Cambria Math')
-
+    factor = pbase/base
+    if factor>1:
+        factor = int(factor)
+        
+    if pbase != base:
+        tb = MarkupText(f"Pretend base is <span color='red'>{pbase}</span>, which is {factor} times  <span color='red'>{base}</span>", color="Turquoise", font='Cambria Math').scale(0.75)
+    else:
+        tb = MarkupText(f"Nearest base is <span color='red'>{base}</span>", color="Turquoise", font='Cambria Math')
+        
     if negp1:
-        g1 = ShowOp(scene, base, snum, "-", diff, play=False)
+        g1 = ShowOp(scene, pbase, snum, "-", diff, play=False)
     else:
-        g1 = ShowOp(scene, snum, base, "-", diff, play=False)
+        g1 = ShowOp(scene, snum, pbase, "-", diff, play=False)
     if negp2:
-        g12 = ShowOp(scene, base, snum2, "-", diff2, play=False)
+        g12 = ShowOp(scene, pbase, snum2, "-", diff2, play=False)
     else:
-        g12 = ShowOp(scene, snum2, base, "-", diff2, play=False)
+        g12 = ShowOp(scene, snum2, pbase, "-", diff2, play=False)
 
     op = "-" if negp2 else "+"
     g2 = ShowOp(scene, snum, diff2, op, lans, play=False)
@@ -215,6 +233,12 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
     arf = Text(str(rans).zfill(ndig), color='yellow', font='Cambria Math').scale(1.2)
     al = Text("_" * len(snum), color='yellow').scale(1.2)
     alf = Text(str(lans), color='yellow', font='Cambria Math').scale(1.2)
+    if pbase != base:
+        s_lans = lans*factor
+        if isinstance(s_lans, float) and s_lans.is_integer():
+            s_lans = int(s_lans) 
+        alf2 = Text(str(s_lans), color='yellow', font='Cambria Math').scale(1.2)
+        g23 = ShowOp(scene, lans, factor, "×", s_lans, play=False)
     br = SurroundingRectangle(ar, buff=0.5)
     bl = SurroundingRectangle(al, buff=0.5)
     ga = VGroup(VGroup(al, bl), VGroup(ar, br)).arrange(RIGHT)    
@@ -224,35 +248,41 @@ def YCom(scene, snum, snum2, base, negp1, negp2, diff, diff2,  rans, lans, ans, 
     alf.next_to(al, ORIGIN)
     arf.next_to(ar, ORIGIN)
     g2.next_to(ga[0], UP)
-    g22.move_to(LEFT)
+    g22.next_to(ga[0], UP)
     g1.next_to(ga[1], UP)
-    g12.next_to(g1, ORIGIN)
-    g3.next_to(g1, ORIGIN)
+    g12.next_to(g1, ORIGIN, aligned_edge=RIGHT)
+    g3.next_to(g1, ORIGIN, aligned_edge=RIGHT)
 
-
-
-    scene.add(g.move_to(LEFT*4))
-    scene.add(tb.next_to(g, UP*3))
+    scene.play(g.animate.move_to(LEFT*4))
+    scene.wait(1)
+    scene.add(tb.next_to(g, UP*3, aligned_edge=LEFT))
     scene.wait(2)
     scene.add(ga)
-    scene.wait(1)
+    scene.wait(3)
     scene.add(g1)
-    scene.wait(2)
+    scene.wait(3)
     if diff != diff2:
         scene.play(Transform(g1, g12))
-        scene.wait(2)
+        scene.wait(3)
     scene.play(Transform(g1, g3))
-    scene.wait(1)
+    scene.wait(3)
     scene.play(Transform(ar, arf))
-    scene.wait(1)
+    scene.wait(2)
     #scene.play(Transform(g, g2))
     scene.add(g2)
-    scene.wait(1)
+    scene.wait(3)
     if diff != diff2:
         scene.play(Transform(g2, g22))
-        scene.wait(1)
+        scene.wait()
     scene.play(Transform(al, alf))
     scene.wait(2)
+    if pbase != base:
+        g23.next_to(ga[0], UP)
+        scene.play(Transform(g2, g23))
+        scene.wait(4)
+        alf2.next_to(al, ORIGIN)
+        scene.play(Transform(al, alf2))
+        scene.wait(4)
     scene.play(FadeOut(g2, g1))
     scene.wait(2)
     scene.remove(g1, g3)
@@ -496,11 +526,12 @@ class Yavadunam(Scene):
         YavadunamSquare(self, 94)
         self.next_section()
 
-        YavadunamSquare(self, 1002)
+        YavadunamSquare(self, 1003)
         self.next_section()
 
+        YavadunamSquare(self, 89) 
+        self.next_section
         
-    
         text= [
             f"<span color='Turquoise'>To find the product of two numbers </span><span color='yellow'>n1</span> and <span color='yellow'>n2</span>.",
             "1. Find the nearest base <span color='red'>b</span>, and note its number of zeros <span color='green'>k</span>.",
@@ -524,6 +555,74 @@ class Yavadunam(Scene):
 
         YavadunamMult(self, 997, 988)
         self.next_section()
+
+        YavadunamMult(self, 88, 89) 
+        self.next_section()
+        
+        self.wait(5)
+
+class Anurupyena(Scene):
+    ''' Multiplication with Anurupyena '''
+    def construct(self):
+        # Title
+        Title(self, "आनुरूप्येण", "Squares and Products with Anurupyena",
+              move=(3, 5), wait=2)
+        self.next_section()
+
+        # Introduction
+        text = [Span("The Yavadunam method works for", color='Turquoise'),
+                "1. Squares  of numbers near a power of 10. ",
+                "2. Products of numbers near a power of 10. ",
+                "Wouldn't it be nice if we could extend it to other bases?",
+                Span("The Anurupyena method extends Yavadunam to do just that!", color='Turquoise')
+                ]
+        e = Explanation(self, text, font='Cambria Math', wait=0, fade=False, aligned_edge=LEFT)
+        self.wait(5)
+        self.play(FadeOut(e))
+        self.next_section()
+
+        # Sutra Scene
+        t0 = Span("आनुरूप्येण")
+        t1 = [Span("आनुरूप्येण")]
+        t2 = [Span("Proportionally")]
+        Sutra(self, t0, t1, t2, wait=3, scale=1, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
+        self.next_section()
+
+        text= [
+            f"<span color='Turquoise'>To find the square of a number </span><span color='yellow'>n</span>,",
+            "1. Find the nearest covenient pretend base <span color='red'>p</span>,",
+            "2. Note the nearest power of 10, <span color='red'>b</span> that <span color='red'>p</span> is a convenient factor or multiple of,",
+            "3. Note their ratio as <span color='turquoise'>f</span>,",
+            "4. Execute the Yavadunam method using the pretend base <span color='red'>p</span>,",
+            "5. Scale the left half (only) by <span color='turquoise'>f</span> before merging.",
+        ]
+    
+        Explanation(self, text, font='Cambria Math', scale=0.5, aligned_edge=LEFT)
+
+        YavadunamSquare(self, 44, pretend_base=50, base=100)
+        self.next_section()
+
+        YavadunamSquare(self, 503, pretend_base=500, base=1000)
+        self.next_section()
+        
+        YavadunamSquare(self, 208, pretend_base=200, base=100) 
+        self.next_section
+        
+        text= [
+            f"<span color='Turquoise'>A similar strategy works for products as well</span>",
+        ]
+    
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+
+        YavadunamMult(self, 42, 46, pretend_base=50, base=100)
+        self.next_section()
+
+        YavadunamMult(self, 504, 503, pretend_base=500, base=1000)
+        self.next_section()
+
+        YavadunamMult(self, 34, 35, pretend_base=30, base=10)
+        self.next_section()
+        
         self.wait(5)
 
 
