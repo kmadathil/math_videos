@@ -590,7 +590,7 @@ class Anurupyena(Scene):
 
         text= [
             f"<span color='Turquoise'>To find the square of a number </span><span color='yellow'>n</span>,",
-            "1. Find the nearest covenient pretend base <span color='red'>p</span>,",
+            "1. Find the nearest convenient pretend base <span color='red'>p</span>,",
             "2. Note the nearest power of 10, <span color='red'>b</span> that <span color='red'>p</span> is a convenient factor or multiple of,",
             "3. Note their ratio as <span color='turquoise'>f</span>,",
             "4. Execute the Yavadunam method using the pretend base <span color='red'>p</span>,",
