@@ -799,7 +799,7 @@ class Antyayoreva(Scene):
         by11(self, 7485)
         self.next_section()
 
-
+        
 class Sopantyadvayamantyam(Scene):
     ''' Antyayo eva '''
 
@@ -861,3 +861,131 @@ class Sopantyadvayamantyam(Scene):
 
         by12to19(self, 725, 17)
         self.next_section()
+
+class Urdhvatiryagbhyam(Scene):
+    ''' Urdhvatiryagbhyam Multiplication '''
+    def construct(self):
+        # Title
+        Title(self, "ऊर्ध्वतिर्यग्भ्याम्", "General Multiplication",
+              move=(3, 5), wait=2)
+        self.next_section()
+
+        text = ["What if the numbers to be multiplied do not match",
+                "any of the special sutras seen so far?",
+                "Fear not, because we have a general method",
+                "that works for any numbers!"]
+
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
+
+        # Introduction
+        text = ["<span color='Turquoise'>A General Method for Multiplication,</span>",
+                "which works for all cases,",
+                "and can be performed mentally!"]
+
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
+
+        ut(self, 123, 456)
+        self.next_section
+
+        text = ["<span color='Turquoise'>How did we do this?</span> ",
+                ""]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+        # Sutra Scene
+        t0 = "ऊर्ध्वतिर्यग्भ्याम्"
+        t1 = ["ऊर्ध्व-", "तिर्यग्भ्याम्"]
+        t2 = ["<span size='smaller'>By straight</span>",  "<span size='smaller'>and across</span>"]
+        Sutra(self, t0, t1, t2, wait=0, scale=1, move=None, fade=True, font='Cambria Math')
+        self.next_section()
+
+
+
+def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
+    ''' Urdhvatiryagbhyam helper function '''
+    sr = int(sn1)*int(sn2) # Result
+    n = max(len(str(sn1)), len(str(sn2)))
+    sop = "×"
+    # Zero fill multiplier/multiplicand as necessary
+    n1 = MarkupText(str(sn1).zfill(n), font='Cambria Math').arrange(buff=0.5)
+    n2 = MarkupText(str(sn2).zfill(n), font='Cambria Math').arrange(buff=0.5)
+    op = MarkupText(str(sop), font='Cambria Math')
+    res = MarkupText(str(sr), font='Cambria Math').arrange(buff=0.5)
+    if oplen==0:
+        oplen=res.width
+    ln = Line(start=array([-1 * oplen, 0, 0]), end=array([0, 0, 0])).set_color(YELLOW)
+    # First arrange as usual
+    g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
+    n1.next_to(n2, UP, buff=0.5, aligned_edge=RIGHT)  # Add some gap for ut lines
+    g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP) # Final assembly
+    g.move_to(UP * move[0] + RIGHT * move[1]) # move
+    lr = len(str(sr)) # Length of result
+    if play:
+        scene.play(FadeIn(n1, n2, ln, op))
+        lines = None
+        show = [] # Lines to display
+        for ix, x in enumerate(reversed(res)):
+            # Display ixth urdhvatiryagbhyam pattern
+            lines, show = utlines(scene, ix, n1, n2, lines, show)
+            n1.set_color(WHITE)
+            n2.set_color(WHITE)
+            # Only the digits relevant for this pattern are
+            # shown in yellow
+            for s in show:
+                n1[s].set_color(YELLOW)
+                n2[s].set_color(YELLOW)
+            # Previous result digit turned back to White
+            if ix > 0:  
+                res[lr-ix].set_color(WHITE)
+            # Add current result digit in Yellow
+            scene.add(x.set_color(YELLOW))
+            scene.wait(3)
+        if wait:
+            scene.wait(wait)
+        if fade:
+            scene.remove(*lines)
+            scene.play(FadeOut(g))
+    return g
+
+
+def utlines(scene, ix, n1, n2, lines=None, show=[]):
+    ''' Update and display connections for ixth urdhvatiryagbhyam pattern '''
+    n = len(n1) # Length of inputs
+    nit = 2*n-1  # Number of ut iterations
+    # Initialize lines if required
+    if lines is None:
+        lines =  [Line(n2[i].get_top(), [n2[-1].get_top()[0], n1[-1].get_bottom()[1], n1[-1].get_bottom()[2]]).set_color(YELLOW) for i in range(n)]
+    
+    def _display(show):
+        # list show is in the order of top vertices (eg: [5, 4, 3])
+        # bottom vertices will be the same reversed (eg: [3, 4, 5])
+        # We zip the two to get the connection iterator (eg [(3, 5), (4, 4), (5, 3)])
+        cnxns = zip(reversed(show), show)
+        for c in cnxns:
+            # Update line connections to get each urdhvatiryagbhyam pattern
+            lines[c[0]].put_start_and_end_on(n2[c[0]].get_top(), [n2[c[1]].get_top()[0], n1[c[1]].get_bottom()[1], n1[c[1]].get_bottom()[2]])
+            # This could have been (n2[c[0]].get_top(), [n2[c[1]].get_bottom())
+            # However, we see some lines not looking "straight"
+
+    if ix < n:
+        # For the first n iterations, add one line, starting from the right
+        scene.add(lines[n-1-ix])
+        show.append(n-1-ix)  # Append added line to the show list
+        # Update line display.
+        # Connections will be modified based on the show list
+        _display(show)
+    elif ix < nit:
+        # After the first n iterations
+        rx = ix-n
+        # Remove one line, starting from the first added
+        # (Last line added never gets removed)
+        scene.remove(lines[n-1-rx])  
+        show.pop(0)  # Remove line from show list
+        # Update line display
+        # Connections will be modified based on the show list
+        _display(show)
+    return lines, show
+  
+  
