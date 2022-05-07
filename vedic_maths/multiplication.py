@@ -292,14 +292,16 @@ def YCom(scene, snum, snum2, base, pbase, negp1, negp2, diff, diff2,  rans, lans
         scene.play(FadeOut(ga, g, tb))
     return ga
 
-def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
+
+def by12to19(scene, num, guNaka, wait=5, fade=True, scale=0.3, move=(3, 6)):
     snum = "0" + str(num) + "0"
     numdig = len(snum)
     n = numdig - 1
+    ld = str(guNaka)[-1]
 
     title = DisplayText(scene, Span("Examples", color="Turquoise"), scale=0.8, wait=0, move=(-3, -4), fade=False)
 
-    qs = ShowOp(scene, num, 11, "×", "?", move=(0, 0), play=False)
+    qs = ShowOp(scene, num, guNaka, "×", "?", move=(0, 0), play=False)
     qs.move_to(LEFT * 3)
     scene.add(qs)
     scene.wait(1)
@@ -309,14 +311,15 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
     n = numdig - 1
     i = 0
 
-    #numg = []
-    #while i <= n:
+    # numg = []
+    # while i <= n:
     #    dig1 = str(snum[i])
     #    numg.append(dig1)
     #    i = i + 1
     numg = [s for s in snum]
-    
-    t = DisplayText(scene, Span("1.Add zeroes at both ends of the number.", color="Turquoise"), scale=0.5, wait=0, move=(-2, 3),
+
+    t = DisplayText(scene, Span("1.Add zeros at both ends of the number.", color="Turquoise"), scale=0.5, wait=0,
+                    move=(-2, 3),
                     fade=False, font='Cambria Math')
 
     el = [MarkupText(x, font_size=130) for x in numg]
@@ -325,19 +328,145 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
 
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
-    scene.wait(1)
+    scene.wait(3)
 
-    #sp = []
-    #j = n
-    #while j > 0:
+    # sp = []
+    # j = n
+    # while j > 0:
     #    sum = int(snum[j])
     #    j = j-1
     #    sum = sum + int(snum[j])
     #    sp.append(str(sum))
-    sp = [str(int(snum[i])+int(snum[i+1])) for i in reversed(range(len(snum)-1))]
-    
+    sp = [str(int(snum[i]) * int(ld) + int(snum[i + 1])) for i in reversed(range(len(snum) - 1))]
+
     scene.play(FadeOut(t))
-    t = DisplayText(scene, Span("2. Add the last two digits to get one digit of the Answer.", color="Turquoise"), scale=0.5, wait=0, move=(-2, 3),
+    t = DisplayText(scene, Span("2. Penultimate digit x " + ld + " is added with final digit", color="Turquoise"),
+                    scale=0.5, wait=0, move=(-2.4, 3),
+                    fade=False, font='Cambria Math')
+    t4 = DisplayText(scene, Span("This makes each digit of answer.",
+                                 color="Turquoise"),
+                     scale=0.5, wait=0, move=(-2, 3),
+                     fade=False, font='Cambria Math')
+
+    spl = [MarkupText(x, font_size=130) for x in sp]
+    spg = VGroup(*spl).scale(scale).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    spg.next_to(eg, DOWN)
+
+    """
+    j = n
+    for _spl in spl:
+        scene.play(eg[j].animate.set_color(YELLOW))
+        j = j - 1
+        scene.play(eg[j].animate.set_color(YELLOW))
+        scene.play(AddTextLetterByLetter(_spl, time_per_letter=1))
+        scene.play(eg[j + 1].animate.set_color(RED))
+    scene.wait(1)
+    """
+
+    splen = len(sp)
+    carry = 0
+    fp = []
+    cy_found = False
+
+    for i in range(0, splen, 1):
+        if int(carry) > 0:
+            cy_found = True
+            curr_dig = int(sp[i]) + int(carry)
+        else:
+            curr_dig = int(sp[i])
+            cy_found = True
+
+        curr_dig_len = len(str(curr_dig))
+        str_currDig = str(curr_dig)
+
+        if i < splen - 1:
+            unitdig = str_currDig[curr_dig_len - 1]
+        else:
+            unitdig = curr_dig
+
+        if curr_dig_len > 1:
+            carry = str_currDig[:curr_dig_len - 1]
+        else:
+            carry = 0
+
+        fp.append(str(unitdig))
+
+    fpl = [MarkupText(x, font_size=130) for x in fp]
+    fpg = VGroup(*fpl).scale(scale).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    fpg.next_to(spg, DOWN)
+
+    j = 0
+    k = n
+    for _fpl in fpl:
+        scene.play(eg[k].animate.set_color(YELLOW_C))
+        scene.play(eg[k - 1].animate.set_color(PURE_RED))
+        scene.play(AddTextLetterByLetter(_fpl, time_per_letter=1))
+        scene.play(fpg[j].animate.set_color(ORANGE))
+        scene.wait(1)
+        scene.play(eg[k].animate.set_color(DARKER_GRAY))
+        j = j + 1
+        k = k - 1
+        scene.wait(2)
+    scene.wait(2)
+
+    g2 = ShowOp(scene, num, guNaka, "×", int(num) * guNaka, move=(0, 0), play=False)
+    g2.next_to(qs, ORIGIN, aligned_edge=RIGHT)
+    scene.play(Transform(qs, g2))
+    scene.wait(1)
+
+    scene.play(FadeOut(qs, eg, g2, fpg, title, t, t4))
+    scene.wait(2)
+    return g2
+
+
+def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
+    snum = "0" + str(num) + "0"
+    numdig = len(snum)
+    n = numdig - 1
+
+    title = DisplayText(scene, Span("Examples", color="Turquoise"), scale=0.8, wait=0, move=(-3, -4), fade=False)
+
+    qs = ShowOp(scene, num, 11, "×", "?", move=(0, 0), play=False, wait=1)
+    qs.move_to(LEFT * 3)
+    scene.add(qs)
+    scene.wait(2)
+    scene.next_section()
+
+    numdig = len(snum)
+    n = numdig - 1
+    i = 0
+
+    # numg = []
+    # while i <= n:
+    #    dig1 = str(snum[i])
+    #    numg.append(dig1)
+    #    i = i + 1
+    numg = [s for s in snum]
+
+    t = DisplayText(scene, Span("1.Add zeros at both ends of the number.", color="Turquoise"), scale=0.5, wait=1,
+                    move=(-2, 3),
+                    fade=False, font='Cambria Math')
+
+    el = [MarkupText(x, font_size=130) for x in numg]
+    eg = VGroup(*el).scale(scale).arrange(RIGHT * 2, aligned_edge=ORIGIN)
+    eg.move_to(UP + RIGHT * 4)
+
+    for _el in el:
+        scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
+    scene.wait(2)
+
+    # sp = []
+    # j = n
+    # while j > 0:
+    #    sum = int(snum[j])
+    #    j = j-1
+    #    sum = sum + int(snum[j])
+    #    sp.append(str(sum))
+    sp = [str(int(snum[i]) + int(snum[i + 1])) for i in reversed(range(len(snum) - 1))]
+
+    scene.play(FadeOut(t))
+    t = DisplayText(scene, Span("2. Add the last two digits to get one digit of the Answer.", color="Turquoise"),
+                    scale=0.5, wait=1, move=(-2, 3),
                     fade=False, font='Cambria Math')
 
     spl = [MarkupText(x, font_size=130) for x in sp]
@@ -347,11 +476,11 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
     j = n
     for _spl in spl:
         scene.play(eg[j].animate.set_color(YELLOW))
-        j = j-1
+        j = j - 1
         scene.play(eg[j].animate.set_color(YELLOW))
         scene.play(AddTextLetterByLetter(_spl, time_per_letter=1))
-        scene.play(eg[j+1].animate.set_color(RED))
-    scene.wait(1)
+        scene.play(eg[j + 1].animate.set_color(RED))
+    scene.wait(2)
 
     splen = len(sp)
     carry = 0
@@ -376,17 +505,17 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
 
         scene.play(FadeOut(t))
         t1 = DisplayText(scene, Span("3. Retain only the unit digit in each place...", color="Turquoise"),
-                        scale=0.5, wait=0, move=(-2.4, 3),
-                        fade=False, font='Cambria Math')
+                         scale=0.5, wait=1, move=(-2.4, 3),
+                         fade=False, font='Cambria Math')
         t2 = DisplayText(scene, Span("...  other digits are added to the digits to its left.",
-                                    color="Turquoise"),
-                        scale=0.5, wait=0, move=(-2, 3),
-                        fade=False, font='Cambria Math')
+                                     color="Turquoise"),
+                         scale=0.5, wait=1, move=(-2, 3),
+                         fade=False, font='Cambria Math')
 
         t3 = DisplayText(scene, Span("With more practice, we can do this directly in 2nd step",
-                                    color="Turquoise"),
-                        scale=0.5, wait=0, move=(2, 3),
-                        fade=False, font='Cambria Math')
+                                     color="Turquoise"),
+                         scale=0.5, wait=1, move=(2, 3),
+                         fade=False, font='Cambria Math')
 
         fpl = [MarkupText(x, font_size=130) for x in fp]
         fpg = VGroup(*fpl).scale(scale).arrange(LEFT * 2, aligned_edge=ORIGIN)
@@ -398,18 +527,18 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
             scene.play(AddTextLetterByLetter(_fpl, time_per_letter=1))
             scene.wait(1)
             scene.play(spg[j].animate.set_color(WHITE))
-            j = j+1
-            scene.wait(1)
+            j = j + 1
+            scene.wait(2)
 
-    scene.wait(1)
+    scene.wait(2)
 
     if cy_found == True:
-        scene.play(FadeOut(t1, t2,t3))
+        scene.play(FadeOut(t1, t2, t3))
 
-    g2 = ShowOp(scene, num, 11, "×", int(num)*11, move=(0, 0), play=False)
+    g2 = ShowOp(scene, num, 11, "×", int(num) * 11, move=(0, 0), play=False, wait=1)
     g2.move_to(LEFT * 2)
     scene.play(Transform(qs, g2))
-    scene.wait(1)
+    scene.wait(3)
 
     if cy_found == True:
         scene.play(FadeOut(fpg))
@@ -420,6 +549,7 @@ def by11(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
 
     scene.wait(2)
     return g2
+
 
 class Ekadhikena(Scene):
     ''' Ekadhikena Purvena '''
@@ -632,21 +762,21 @@ class Antyayoreva(Scene):
     def construct(self):
         # Title
 
-        Title(self, "अन्त्ययोरेव", "Multiply any number by 11 ", move=(3, 5), wait=2)
+        Title(self, "अन्त्ययोरेव", "Multiplication by 11 ", move=(3, 5), wait=2)
         self.next_section()
 
         # Introduction
-        text = ["<span color='TURQUOISE'>Multiplication by 11</span>",
-                "by applying the sutra Antyayoreva"]
+        text = ["<span color='TURQUOISE'>Multiply any number by 11</span>",
+                "by just adding the digits."]
 
-        Explanation(self, text, aligned_edge=LEFT)
+        Explanation(self, text, aligned_edge=LEFT,wait=1)
         self.next_section()
 
         # Sutra Scene
         t0 = "अन्त्ययोरेव"
         t1 = ["अन्त्ययोः", "एव"]
         t2 = ["<span size='smaller'>(Sum of) last digits</span>", "<span size='smaller'>only</span>"]
-        Sutra(self, t0, t1, t2, wait=3, scale=1, move=None, fade=True, font='Cambria Math')
+        Sutra(self, t0, t1, t2, wait=0, scale=1, move=None, fade=True)
         self.next_section()
 
         text = [
@@ -657,7 +787,7 @@ class Antyayoreva(Scene):
             f"2) Drop the right digit of the number",
             "repeat until no digits remain."]
 
-        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT, wait=2)
         self.next_section()
 
         by11(self, 123)
@@ -669,6 +799,68 @@ class Antyayoreva(Scene):
         by11(self, 7485)
         self.next_section()
 
+        
+class Sopantyadvayamantyam(Scene):
+    ''' Antyayo eva '''
+
+    def construct(self):
+        # Title
+
+        Title(self, "सोपान्त्यद्वयमन्त्यम्", "Multiplication by 12 ", move=(3, 5), wait=3)
+        self.next_section()
+
+        # Introduction
+        text = ["<span color='TURQUOISE'>To multiply any number by 12,</span>",
+                "by doubling and adding the digits"]
+
+        Explanation(self, text,font='Cambria Math', aligned_edge=LEFT, wait=2)
+        self.next_section()
+
+        # Sutra Scene
+        t0 = "सोपान्त्यद्वयमन्त्यम्"
+        t1 = ["उपान्त्यद्वयेन सह"," अन्त्यम्"]
+        t2 = ["<span size='smaller'>Twice the Penultimate </span>", "<span size='smaller'>with Final</span>"]
+        Sutra(self, t0, t1, t2, wait=3, scale=1, move=None, fade=True, font='Cambria Math')
+        self.next_section()
+
+        text = [
+            f"<span color='TURQUOISE'>To multiply any number by 12</span>",
+            f"Add zeros at both ends of the number.",
+            f"At each step,",
+            f"1) Multiply the penultimate digit by 2 ",
+            f"... and add it with the final digit. ",
+            f"2) Drop the right digit of the number and ",
+            f"... repeat until no digits remain."]
+
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+        by12to19(self, 182, 12)
+        self.next_section()
+
+        by12to19(self,534,12)
+        self.next_section()
+
+        by12to19(self, 1363,12)
+        self.next_section()
+
+        text = [
+            f"<span color='TURQUOISE'>Do more practice and we can do this mentally. </span>",
+            f"<span color='ORANGE'>We can extend this sutra where multiplier is any number from</span> <span color='RED'> 13-19 </span>",
+            f"Note the last digit of the multiplier as <span color='RED'> n </span> and at each step,",
+            f"1 Multiply the penultimate digit by <span color='RED'> n </span> ",
+            f"... and add it with the final digit. ",
+            f"2) Drop the right digit of the number and ",
+            f"... repeat until no digits remain."]
+
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+        by12to19(self, 231, 14)
+        self.next_section()
+
+        by12to19(self, 725, 17)
+        self.next_section()
 
 class Urdhvatiryagbhyam(Scene):
     ''' Urdhvatiryagbhyam Multiplication '''
@@ -795,3 +987,5 @@ def utlines(scene, ix, n1, n2, lines=None, show=[]):
         # Connections will be modified based on the show list
         _display(show)
     return lines, show
+  
+  
