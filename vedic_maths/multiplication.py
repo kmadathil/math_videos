@@ -712,6 +712,7 @@ class Urdhvatiryagbhyam(Scene):
 
 
 def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
+    ''' Urdhvatiryagbhyam helper function '''
     sr = int(sn1)*int(sn2) # Result
     n = max(len(str(sn1)), len(str(sn2)))
     sop = "×"
@@ -734,14 +735,19 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
         lines = None
         show = [] # Lines to display
         for ix, x in enumerate(reversed(res)):
+            # Display ixth urdhvatiryagbhyam pattern
             lines, show = utlines(scene, ix, n1, n2, lines, show)
             n1.set_color(WHITE)
             n2.set_color(WHITE)
+            # Only the digits relevant for this pattern are
+            # shown in yellow
             for s in show:
                 n1[s].set_color(YELLOW)
                 n2[s].set_color(YELLOW)
-            if ix > 0:
+            # Previous result digit turned back to White
+            if ix > 0:  
                 res[lr-ix].set_color(WHITE)
+            # Add current result digit in Yellow
             scene.add(x.set_color(YELLOW))
             scene.wait(3)
         if wait:
@@ -753,6 +759,7 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
 
 
 def utlines(scene, ix, n1, n2, lines=None, show=[]):
+    ''' Update and display connections for ixth urdhvatiryagbhyam pattern '''
     n = len(n1) # Length of inputs
     nit = 2*n-1  # Number of ut iterations
     # Initialize lines if required
@@ -765,14 +772,17 @@ def utlines(scene, ix, n1, n2, lines=None, show=[]):
         # We zip the two to get the connection iterator (eg [(3, 5), (4, 4), (5, 3)])
         cnxns = zip(reversed(show), show)
         for c in cnxns:
-            print(c)
+            # Update line connections to get each urdhvatiryagbhyam pattern
             lines[c[0]].put_start_and_end_on(n2[c[0]].get_top(), [n2[c[1]].get_top()[0], n1[c[1]].get_bottom()[1], n1[c[1]].get_bottom()[2]])
+            # This could have been (n2[c[0]].get_top(), [n2[c[1]].get_bottom())
+            # However, we see some lines not looking "straight"
 
     if ix < n:
         # For the first n iterations, add one line, starting from the right
         scene.add(lines[n-1-ix])
-        show.append(n-1-ix)
-        # Update line display
+        show.append(n-1-ix)  # Append added line to the show list
+        # Update line display.
+        # Connections will be modified based on the show list
         _display(show)
     elif ix < nit:
         # After the first n iterations
@@ -780,7 +790,8 @@ def utlines(scene, ix, n1, n2, lines=None, show=[]):
         # Remove one line, starting from the first added
         # (Last line added never gets removed)
         scene.remove(lines[n-1-rx])  
-        show.pop(0)
+        show.pop(0)  # Remove line from show list
         # Update line display
+        # Connections will be modified based on the show list
         _display(show)
     return lines, show
