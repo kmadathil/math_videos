@@ -866,13 +866,13 @@ class Urdhvatiryagbhyam(Scene):
     ''' Urdhvatiryagbhyam Multiplication '''
     def construct(self):
         # Title
-        Title(self, "ऊर्ध्वतिर्यग्भ्याम्", "General Multiplication",
+        Title(self, "ऊर्ध्वतिर्यग्भ्याम्", "Single-line Multiplication",
               move=(3, 5), wait=2)
         self.next_section()
 
         text = ["What if the numbers to be multiplied do not match",
                 "any of the special sutras seen so far?",
-                "Fear not, because we have a general method",
+                "We would like a general method",
                 "that works for any numbers!"]
 
         Explanation(self, text, aligned_edge=LEFT)
@@ -881,12 +881,13 @@ class Urdhvatiryagbhyam(Scene):
         # Introduction
         text = ["<span color='Turquoise'>A General Method for Multiplication,</span>",
                 "which works for all cases,",
+                "requires only a single line",
                 "and can be performed mentally!"]
 
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
 
-        ut(self, 123, 456)
+        ut(self, 12, 34, show_carry=True, explain=False)
         self.next_section
 
         text = ["<span color='Turquoise'>How did we do this?</span> ",
@@ -901,12 +902,86 @@ class Urdhvatiryagbhyam(Scene):
         Sutra(self, t0, t1, t2, wait=0, scale=1, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
+        text = ["This method is all about <span color='Turquoise'>patterns</span>.",
+                "Each pattern of <span color='Yellow'>straight</span> and  <span color='Yellow'>across lines</span>",
+                "gives us a collection of pairs of numbers.",
+                "Each of those  <span color='Turquoise'>pairs</span> is  <span color='Yellow'>multiplied</span>,",
+                "And then the  <span color='Turquoise'>products</span> are  <span color='Yellow'>added</span>.",
+                "One digit of this  <span color='Turquoise'>partial product</span> becomes a  <span color='Yellow'>digit of the answer</span>.",
+                "<span color='Turquoise'>Extra digits</span> become  <span color='Yellow'>carries</span> into the next digit,",
+                "and are <span color='Turquoise'>added</span> to the  <span color='Yellow'>next partial product</span>.",
+                "All of this can be done mentally."]
 
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
 
-def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
+        text = ["A few <span color='Turquoise'>examples</span> should make things clearer,",
+                "two-digit examples to start with."]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+
+        ut(self, 12, 24, move=(0, -2))
+        self.next_section
+
+        ut(self, 34, 57, move=(0, -2))
+        self.next_section
+
+        text = ["Three-digit examples"]
+
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
+
+        
+        ut(self, 123, 456, move=(0, -2))
+        self.next_section
+
+        ut(self, 534, 645, move=(0, -2))
+        self.next_section
+
+        
+        text = ["As you begin practicing this method,",
+                "you can write out each partial product.",
+                "With practice, you should be able to calculate them mentally.",
+                "Once you are comfortable calculating partial products mentally,",
+                "you should aim to write down just the answer digits,",
+                "and note the carries below and to the left.",
+                "This means multiplication happens in a single line!"]
+        
+        text = [Span(t, color='Turquoise') for t in text]
+        Explanation(self, text, scale=0.65, aligned_edge=LEFT)
+        self.next_section()
+
+        
+
+def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_carry=True, play=True, fade=True, oplen=0):
     ''' Urdhvatiryagbhyam helper function '''
+    def _explain():
+        ''' Step explanation '''
+        # Get the ordinal right - ix comes in starting with 0
+        _ord = {0: "1st", 1: "2nd", 2: "3rd"}
+        ord = _ord[ix] if ix in _ord else f"{ix+1}th"
+        etext = [f"The <span color='Turquoise'>{ord}</span> partial product is: <span color='Turquoise'>{_pp}</span>.",
+                 ]
+        if c_p:
+            etext.append(f"<span color='Turquoise'>{_pp}</span> + <span color='Turquoise'>{c_p.text}</span> (prev. carry) =  <span color='Turquoise'>{pp}</span>.")
+
+        if ix==(nit-1):
+            etext.append(f"We retain <span color='yellow'>{pp}</span> as the rest of the answer.")
+        else:
+            etext.append(f"We retain <span color='yellow'>{d}</span> as  digit of the answer.")
+            if c:
+                etext.append(f"<span color='yellow'>{c}</span> becomes the next carry.")
+
+        el = [MarkupText(x, font="Cambria Math") for x in etext]
+        eg = VGroup(*el).scale(0.5).arrange(DOWN, aligned_edge=LEFT).move_to(RIGHT*4)
+
+        for _el in eg:
+            scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
+        scene.wait(2)
+        return eg
+    
     sr = int(sn1)*int(sn2) # Result
     n = max(len(str(sn1)), len(str(sn2)))
+    nit = 2*n-1
     sop = "×"
     # Zero fill multiplier/multiplicand as necessary
     n1 = MarkupText(str(sn1).zfill(n), font='Cambria Math').arrange(buff=0.5)
@@ -926,9 +1001,13 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
         scene.play(FadeIn(n1, n2, ln, op))
         lines = None
         show = [] # Lines to display
-        for ix, x in enumerate(reversed(res)):
+        cl = []
+        c = 0
+        c_p = None
+        for ix in range(nit):
+            x = res[-1-ix]  # Reversed
             # Display ixth urdhvatiryagbhyam pattern
-            lines, show = utlines(scene, ix, n1, n2, lines, show)
+            lines, show, pp = utlines(scene, ix, n1, n2, lines, show)
             n1.set_color(WHITE)
             n2.set_color(WHITE)
             # Only the digits relevant for this pattern are
@@ -939,13 +1018,42 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, play=True, fade=True, oplen=0):
             # Previous result digit turned back to White
             if ix > 0:  
                 res[lr-ix].set_color(WHITE)
+            scene.wait(3)
+            if c_p is not None:
+                c_p.set_color(GREY)
+            _pp = pp # For display
+            pp += c  # Previous carry
+            d = int(str(sr)[-1-ix])  # ixth digit of the answer
+            c = (pp - d) // 10
+            if explain:
+               eg =  _explain()
             # Add current result digit in Yellow
             scene.add(x.set_color(YELLOW))
-            scene.wait(3)
+
+            # Display carry down and to the left
+            # Not done for the last step, because if there's a carry
+            # it just becomes an extra digit directly
+            if show_carry and c and (ix!=(nit-1)):
+                ct = Text(str(c)).scale(0.7).next_to(x, DOWN*0.5+LEFT*0.5)
+                scene.add(ct)
+                c_p = ct
+                cl.append(ct)
+            # At the last step, display remaining digits of answer too
+            if ix==(nit-1) and (lr>nit):
+                scene.add(res[:(lr-nit)].set_color(YELLOW))
+            scene.wait(d_wait)
+            if explain:
+                scene.play(FadeOut(eg))
+        scene.remove(*lines)  # Remove last u line
+        # Remove color emphasis
+        n1.set_color(WHITE)
+        n2.set_color(WHITE)
+        res.set_color(WHITE)
+        if show_carry:
+            scene.remove(*cl)
         if wait:
             scene.wait(wait)
         if fade:
-            scene.remove(*lines)
             scene.play(FadeOut(g))
     return g
 
@@ -965,10 +1073,19 @@ def utlines(scene, ix, n1, n2, lines=None, show=[]):
         cnxns = zip(reversed(show), show)
         for c in cnxns:
             # Update line connections to get each urdhvatiryagbhyam pattern
-            lines[c[0]].put_start_and_end_on(n2[c[0]].get_top(), [n2[c[1]].get_top()[0], n1[c[1]].get_bottom()[1], n1[c[1]].get_bottom()[2]])
+            lines[c[0]].put_start_and_end_on([n2[c[0]].get_top()[0], n2[c[0]].get_top()[1] + 0.05, n2[c[0]].get_top()[2]],
+                                             [n2[c[1]].get_top()[0], n1[c[1]].get_bottom()[1] - 0.05, n1[c[1]].get_bottom()[2]])
             # This could have been (n2[c[0]].get_top(), [n2[c[1]].get_bottom())
             # However, we see some lines not looking "straight"
 
+    def _pp(show):
+        ''' Partial Product '''
+        pp = 0
+        cnxns = zip(reversed(show), show)
+        for c in cnxns:
+            pp += int(n2.text[c[0]]) * int(n1.text[c[1]])
+        return pp
+    
     if ix < n:
         # For the first n iterations, add one line, starting from the right
         scene.add(lines[n-1-ix])
@@ -986,6 +1103,7 @@ def utlines(scene, ix, n1, n2, lines=None, show=[]):
         # Update line display
         # Connections will be modified based on the show list
         _display(show)
-    return lines, show
+    pp = _pp(show)
+    return lines, show, pp
   
   
