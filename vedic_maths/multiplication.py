@@ -1108,32 +1108,44 @@ def utlines(scene, ix, n1, n2, lines=None, show=[]):
     return lines, show, pp
   
 
-class Check_Answer(Scene):
+class Samuccaya(Scene):
     def construct(self):
         # Title
 
-        Title(self, "उत्तरपरिशोधनम्", "Result Verification", move=(3, 5), wait=2)
+        Title(self, "उत्तरपरिशोधनम्", "Checking Answers", move=(3, 5), wait=2)
         self.next_section()
         self.wait(2)
 
         # Introduction
         text = [Span("Verifying the results of", color='Turquoise'),
-                "Addition, Subtraction, ",
-                "Multiplication, Division... ",
+                "Addition, Subtraction, Multiplication, and Division.",
                 ]
-        e = Explanation(self, text, font='Cambria Math', wait=0, fade=False, aligned_edge=LEFT)
-        self.wait(2)
-        self.play(FadeOut(e))
+        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+        #self.wait(2)
+        #self.play(FadeOut(e))
+        self.next_section()
+        
+       # Introduction
+        text = ["Vedic Maths sutras help us calculate fast,",
+                "but how do we know we have not made a calculation mistake?",
+                "Calculation speed comes from confidence, and confidence is helped", 
+                "by being able to check the answer we calculate!"
+                ]
+        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+        #self.wait(2)
+        #self.play(FadeOut(e))
         self.next_section()
 
         text = [
-            f"<span color='TURQUOISE'>Using </span> <span color='PINK'>digitsum </span><span color='TURQUOISE'> technique, we can verify the results.</span>",
-            f"<span color='ORANGE'>Remainder</span><span color='TURQUOISE'> of any number, when </span><span color='ORANGE'>divided by 9, </span> ",
-               f"<span color='TURQUOISE'>is equal to it's</span> <span color='PINK'> digitsum. </span>",
+            f"<span color='TURQUOISE'>The <span color='PINK'>digitsum </span> technique helps us check our answers.</span>",
+            f"<span color='TURQUOISE'>The <span color='PINK'>digitsum </span> or <span color='PINK'>समुच्चयः</span> of a number is the sum of its digits.</span>",
+            f"<span color='TURQUOISE'>The digitsum of a number, also happens to be the <span color='ORANGE'>remainder</span>,</span>",
+            f"<span color='TURQUOISE'>when <span color='ORANGE'>divided by 9,</span></span>",
+            f"<span color='TURQUOISE'>and hence it is also called <span color='ORANGE'>नवशेषः/navashesha</span></span>.",
               ]
 
-        e = Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
-        self.wait(2)
+        e = Explanation(self, text, wait=2, aligned_edge=LEFT)
+        #self.wait(2)
         self.next_section()
 
         calcDigitsum(self, "257")
@@ -1146,117 +1158,84 @@ class Check_Answer(Scene):
         t0 = Span("गुणितसमुच्चयः समुच्चयगुणितः")
         t1 = [Span("गुणितसमुच्चयः"), Span("समुच्चयगुणितः")]
         t2 = [Span("The digitsum of the product is "),
-              Span("The product of the  digitsum(s) ")]
-        Sutra(self, t0, t1, t2, wait=3, scale=0.65, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
+              Span("The product of the  digitsums")]
+        Sutra(self, t0, t1, t2, wait=0, scale=0.65, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
         self.wait(2)
         self.next_section()
 
-        digitsumcheck(self, "98", "96", "x", "9608")
+        digitsumcheck(self, "998", "996", "×", "994008")
+        self.next_section()
+        
+        digitsumcheck(self, "232", "426", "×", "98832")
         self.next_section()
 
-        digitsumcheck(self, "232", "426", "x", "98832")
+        digitsumcheck(self, "98", "96", "×", "9608")
         self.next_section()
 
 
-def ShowOp9(scene, sn1, sn2, sop, eqs, sr, move=(0, 0), wait=3, play=True, fade=True):
-    ''' Helper function to display digitsum  '''
-    n1 = MarkupText(str(sn1), font='Cambria Math')
-    n2 = MarkupText(str(sn2), font='Cambria Math')
-
-    op = MarkupText(str(sop), font='Cambria Math')
-    res = MarkupText(str(sr), font='Cambria Math')
-    eqs1 = MarkupText(str(eqs), font='Cambria Math')
-
-    if sn2 == "0":
-        g = VGroup(n1, eqs1, res).arrange(RIGHT * 2, aligned_edge=UP)
-    else:
-        g = VGroup(n1, op, n2, eqs1, res).arrange(RIGHT * 2, aligned_edge=UP)
-    if play:
-        scene.play(Write(g.move_to(UP * move[0] + RIGHT * move[1])))
-        scene.wait(wait)
-        if fade:
-            scene.play(FadeOut(g))
-    return g
-
+def dsum(s):
+    n = int(s)
+    while n>9:
+        n = sum([int(s) for s in str(n)])
+    return n
 
 def digitsumcheck(scene, num1, num2, opr, ans, wait=5, fade=True, scale=0.3, move=(3, 6)):
-    title = DisplayText(scene, Span("Let's verify these", color="Turquoise"), scale=0.6, wait=0, move=(-3, -4),
-                        fade=False)
-
-    g2 = ShowOp9(scene, num1, num2, opr, "=", int(ans), move=(1, 0), play=True, fade=False)
-    scene.wait(1)
-
-    t1 = DisplayText(scene, Span("product of digitsums = digitsum of the product", color="yellow"), scale=0.5, wait=0,
-                     move=(-2, 0), fade=False, font='Cambria Math')
-    scene.wait(1)
-
-    num1REM = int(math.fmod(int(num1), 9))
-    num2REM = int(math.fmod(int(num2), 9))
-
-    if (opr == "x"):
-        resREM = int(math.fmod(int(ans), 9))
-        lhsREM = int(math.fmod(int(num1REM) * int(num2REM), 9))
-    else:
-        resREM = int(math.fmod(int(ans), 9))
-        lhsREM = int(math.fmod(int(num1REM) / int(num2REM), 9))
-
-    g3 = ShowOp9(scene, num1REM, num2REM, opr, "=", resREM, move=(0, 0), play=True, fade=False)
-
-    if (lhsREM == resREM):
-        g4 = ShowOp9(scene, lhsREM, "0", opr, "=", resREM, move=(-1, 0), play=True, fade=False)
-        t = DisplayText(scene, Span("correct answer", color="yellow"), scale=0.5, wait=0, move=(2, 0), fade=False,
-                        font='Cambria Math')
-        scene.wait(1)
-    else:
-        g4 = ShowOp9(scene, lhsREM, "0", opr, "!=", resREM, move=(-1, 0), play=True, fade=False)
-        t = DisplayText(scene, Span("wrong answer", color="yellow"), scale=0.5, wait=0, move=(2, 0), fade=False,
-                        font='Cambria Math')
-
-    scene.wait(2)
-    scene.play(FadeOut(t1, t, g2, g3, g4, title))
-    scene.next_section()
-    return g4
-
-
-def calcDigitsum(scene, num, wait=5, fade=True, scale=0.3, move=(3, 6)):
-    title = DisplayText(scene, Span("Let's calculate Digitsum of " + num, color="Turquoise", font='Cambria Math'),
-                        scale=0.6, wait=0, move=(-2, -2), fade=False)
-    digsum = []
-    digsum.append(int(num))
-
-    if int(num) < 9:
-        digsum.append(int(num))
-    else:
-        if int(num) == 9:
-            digsum.append(int(num) - 9)
+    ''' Digitsum Check '''
+    def _op(d1, d2):
+        if opr == "×":
+            return d1*d2
         else:
-            while len(str(num)) > 1:
-                num_s = [s for s in num]
-                num_int = [int(x) for x in num_s]
-                digsum.append(sum(num_int))
-                num = str(sum(num_int))
+            return eval(f"{d1}{opr}{d2}")
 
-    digsum = [str(x) for x in digsum]
-    digsum1 = []
-    for x in digsum:
-        if (len(x) > 1):
-            tmps1 = ""
-            for s in x:
-                tmps1 = tmps1 + s + ' + '
-            digsum1.append(tmps1[:-2])
-        else:
-            if x == "9":
-                digsum1.append(x)
-                digsum1.append("0")
-            else:
-                digsum1.append(x)
+    title = DisplayText(scene, Span("Check", color="Turquoise"), scale=0.8, wait=0, move=(-3, -4), fade=False)
+    g = ShowOp(scene, num1, num2, opr, ans, move=(0, -2), wait=2, fade=False)
+    d1 = dsum(num1)
+    d2 = dsum(num2)
+    d3 = dsum(ans)
+    td3 = Text(str(d3), font="Cambria Math").next_to(g, DOWN)
+    cans = _op(d1, d2)
+    tdans = dsum(cans)
+    g1 = ShowOp(scene, str(d1), str(d2), opr, cans, move=(0, 2), wait=0, fade=False)
+    t1 = Text("Digitsum").scale(0.5).next_to(g1, UP, aligned_edge=LEFT)
+    scene.add(t1)
+    t3 = Text(str(tdans), font="Cambria Math").next_to(g1[0], DOWN)
+    scene.add(t3)
+    scene.wait(3)
+    scene.add(td3)
+    scene.wait(1)
+    if tdans == d3:
+        t2 = MarkupText(Span("The answer is likely correct", color="green"))
+    else:
+        t2 = MarkupText(Span("The answer is wrong", color="red"))
+    t2.scale(0.8).move_to(2.5*DOWN)
+    scene.add(t2)
+    scene.wait(3)
+    scene.play(FadeOut(g, g1, t1, t2, t3, td3))  # td1, td2, td3, 
+    
+def calcDigitsum(scene, num, wait=5, fade=True, scale=0.75, move=(-2, -2)):
+    title = DisplayText(scene, Span("Let's calculate the digitsum of ", color="Turquoise", font='Cambria Math')+
+                        Span(num, color="Yellow", font='Cambria Math'),
+                        scale=scale, wait=0, move=move, fade=False)
+    n = int(num)
+    digsum_l = []
+    
+    # Loop until current sum is <=9
+    while n>9:
+        dsum = sum([int(s) for s in str(n)])  # Current sum of digits
+        digsum_l.append(f"{'+'.join([s for s in str(n)])} = {dsum}")  # Display current sum of digits
+        n = dsum  # Next step
+        
+    el = [MarkupText(x, font='Cambria Math') for x in digsum_l]
+    eg = VGroup(*el).scale(scale).arrange(DOWN, aligned_edge=LEFT)
 
-    el = [MarkupText(x, font_size=130, font='Cambria Math') for x in digsum1]
-    eg = VGroup(*el).scale(scale).arrange(DOWN, aligned_edge=ORIGIN)
-
+    t = MarkupText(Span(f"The digitsum of {num} is {n}", color="Turquoise", font='Cambria Math'))
+    t.scale(scale).next_to(eg, DOWN, buff=0.5)
+    
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
         scene.wait(3)
-
-    scene.play(FadeOut(eg, title))
+    scene.add(t)
+    scene.wait(2)
+    if fade:
+        scene.play(FadeOut(eg, title, t))
     return eg
