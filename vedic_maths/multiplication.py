@@ -915,18 +915,34 @@ class Urdhvatiryagbhyam(Scene):
 
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
-
-        text = ["A few <span color='Turquoise'>examples</span> should make things clearer,",
-                "two-digit examples to start with."]
+        
+        
+        text = ["<span color='Turquoise'>Two digit multiplication patterns</span>."]
         Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
 
+        utpatterns(self, 2)
+        self.next_section()
+        
+        
+        text = ["<span color='Turquoise'>A few two-digit examples should make things clearer. </span>"]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        
+        
         ut(self, 12, 24, move=(0, -2))
         self.next_section
 
         ut(self, 34, 57, move=(0, -2))
         self.next_section
 
-        text = ["Three-digit examples"]
+        text = ["<span color='Turquoise'>Three digit multiplication patterns</span>."]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+        utpatterns(self, 3)
+        self.next_section()
+
+        text = ["<span color='Turquoise'>Three-digit examples</span>."]
 
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
@@ -951,9 +967,14 @@ class Urdhvatiryagbhyam(Scene):
         Explanation(self, text, scale=0.65, aligned_edge=LEFT)
         self.next_section()
 
-        
 
-def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_carry=True, play=True, fade=True, oplen=0):
+def utpatterns(scene, n, wait=3, d_wait=1):
+    n1 = "1" * n
+    n2 = "2" * n
+    ut(scene, n1, n2, explain=False, show_res=False)
+
+def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_res=True,
+       show_carry=True, play=True, fade=True, oplen=0):
     ''' Urdhvatiryagbhyam helper function '''
     def _explain():
         ''' Step explanation '''
@@ -964,11 +985,10 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_carry
                  ]
         if c_p:
             etext.append(f"<span color='Turquoise'>{_pp}</span> + <span color='Turquoise'>{c_p.text}</span> (prev. carry) =  <span color='Turquoise'>{pp}</span>.")
-
         if ix==(nit-1):
             etext.append(f"We retain <span color='yellow'>{pp}</span> as the rest of the answer.")
         else:
-            etext.append(f"We retain <span color='yellow'>{d}</span> as  digit of the answer.")
+            etext.append(f"We retain <span color='yellow'>{d}</span> as a  digit of the answer.")
             if c:
                 etext.append(f"<span color='yellow'>{c}</span> becomes the next carry.")
 
@@ -1017,7 +1037,7 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_carry
                 n1[s].set_color(YELLOW)
                 n2[s].set_color(YELLOW)
             # Previous result digit turned back to White
-            if ix > 0:  
+            if show_res and (ix > 0):  
                 res[lr-ix].set_color(WHITE)
             scene.wait(3)
             if c_p is not None:
@@ -1028,19 +1048,20 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_carry
             c = (pp - d) // 10
             if explain:
                eg =  _explain()
-            # Add current result digit in Yellow
-            scene.add(x.set_color(YELLOW))
+            if show_res:
+                # Add current result digit in Yellow
+                scene.add(x.set_color(YELLOW))
 
             # Display carry down and to the left
             # Not done for the last step, because if there's a carry
             # it just becomes an extra digit directly
-            if show_carry and c and (ix!=(nit-1)):
+            if show_res and show_carry and c and (ix!=(nit-1)):
                 ct = Text(str(c)).scale(0.7).next_to(x, DOWN*0.5+LEFT*0.5)
                 scene.add(ct)
                 c_p = ct
                 cl.append(ct)
             # At the last step, display remaining digits of answer too
-            if ix==(nit-1) and (lr>nit):
+            if show_res and (ix==(nit-1)) and (lr>nit):
                 scene.add(res[:(lr-nit)].set_color(YELLOW))
             scene.wait(d_wait)
             if explain:
