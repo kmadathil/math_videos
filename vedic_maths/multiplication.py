@@ -967,6 +967,77 @@ class Urdhvatiryagbhyam(Scene):
         Explanation(self, text, scale=0.65, aligned_edge=LEFT)
         self.next_section()
 
+class Urdhvatiryagbhyam_45(Scene):
+    ''' Urdhvatiryagbhyam Multiplication for 4 and 5 digit numbers'''
+    def construct(self):
+        # Title
+        Title(self, "ऊर्ध्वतिर्यग्भ्याम् 4/5", "4/5 digit Multiplication",
+              move=(3, 5), wait=2)
+        self.next_section()
+
+        text = ["Can we use ऊर्ध्वतिर्यग्भ्याम् for numbers",
+                "with more than 3 digits?",
+                "Yes we can!"]
+
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
+        
+        text = ["<span color='Turquoise'>Four digit multiplication patterns</span>."]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+        utpatterns(self, 4)
+        self.next_section()
+        
+        
+        text = ["<span color='Turquoise'>Four digit examples</span>"]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        
+        
+        ut(self, 4312, 2435, move=(0, -3))
+        self.next_section
+
+        ut(self, 3457, 6312, move=(0, -3))
+        self.next_section
+
+        text = ["<span color='Turquoise'>Five digit multiplication patterns</span>."]
+        Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
+        self.next_section()
+
+        utpatterns(self, 5)
+        self.next_section()
+
+        text = ["<span color='Turquoise'>Five-digit examples</span>."]
+
+        Explanation(self, text, aligned_edge=LEFT)
+        self.next_section()
+
+        
+        ut(self, 12345, 87456, move=(0, -3))
+        self.next_section
+
+        ut(self, 53426, 61245, move=(0, -3))
+        self.next_section
+
+        
+        text = ["With practice, four and five digit multiplication",
+                "can be done mostly mentally too.",
+                "Aim to write down just the answer digits,",
+                "and note the carries below and to the left.",
+                "This means multiplication happens in a single line!"]
+        
+        text = [Span(t, color='Turquoise') for t in text]
+        Explanation(self, text, scale=0.65, aligned_edge=LEFT)
+        self.next_section()
+
+        
+        text = ["These patterns can be extended to",
+                "any number of digits, which means that",
+                "numbers of any size can be multiplied this way."]
+        
+        text = [Span(t, color='Turquoise') for t in text]
+        Explanation(self, text, scale=0.65, aligned_edge=LEFT)
+        self.next_section()
 
 def utpatterns(scene, n, wait=3, d_wait=1):
     n1 = "1" * n

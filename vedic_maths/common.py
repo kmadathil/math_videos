@@ -101,6 +101,7 @@ def ShowOp(scene, sn1, sn2, sop, sr, move=(0, 0), wait=3, play=True, fade=True, 
     res = MarkupText(str(sr), font='Cambria Math')
     g1 = VGroup(n1, n2, ln, res).arrange(DOWN, aligned_edge=RIGHT)
     g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP)
+    
     if play:
         scene.play(Write(g.move_to(UP * move[0] + RIGHT * move[1])))
         if wait:
