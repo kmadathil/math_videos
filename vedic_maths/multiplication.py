@@ -903,8 +903,8 @@ class Urdhvatiryagbhyam(Scene):
         Sutra(self, t0, t1, t2, wait=0, scale=1, move=None, fade=True, font='Cambria Math')
         self.next_section()
 
-        text = ["This method is all about <span color='Turquoise'>patterns</span>.",
-                "Each pattern of <span color='Yellow'>straight</span> and  <span color='Yellow'>across lines</span>",
+        text = ["This method is based on a group of <span color='Turquoise'>patterns</span>.",
+                "Each pattern of <span color='Yellow'>straight</span> and  <span color='Yellow'>across</span> lines",
                 "gives us a collection of pairs of numbers.",
                 "Each of those  <span color='Turquoise'>pairs</span> is  <span color='Yellow'>multiplied</span>,",
                 "And then the  <span color='Turquoise'>products</span> are  <span color='Yellow'>added</span>.",
@@ -967,6 +967,14 @@ class Urdhvatiryagbhyam(Scene):
         Explanation(self, text, scale=0.65, aligned_edge=LEFT)
         self.next_section()
 
+        text = ["Remember to check your answers",
+                "using the digitsum method as well.",
+                "This will give you confidence to multiply mentally."]
+        text = [Span(t, color='Turquoise') for t in text]
+        Explanation(self, text, scale=0.65, aligned_edge=LEFT)
+        self.next_section()
+        self.wait(5)
+
 class Urdhvatiryagbhyam_45(Scene):
     ''' Urdhvatiryagbhyam Multiplication for 4 and 5 digit numbers'''
     def construct(self):
@@ -975,9 +983,12 @@ class Urdhvatiryagbhyam_45(Scene):
               move=(3, 5), wait=2)
         self.next_section()
 
-        text = ["Can we use ऊर्ध्वतिर्यग्भ्याम् for numbers",
-                "with more than 3 digits?",
-                "Yes we can!"]
+        text = [
+            "Taking another look at ऊर्ध्वतिर्यग्भ्याम्,",
+            "Also known as तत्स्थ multiplication.",
+            "Can we use ऊर्ध्वतिर्यग्भ्याम् for numbers",
+            "with more than 3 digits?",
+            "Yes we can!"]
 
         Explanation(self, text, aligned_edge=LEFT)
         self.next_section()
@@ -1038,6 +1049,7 @@ class Urdhvatiryagbhyam_45(Scene):
         text = [Span(t, color='Turquoise') for t in text]
         Explanation(self, text, scale=0.65, aligned_edge=LEFT)
         self.next_section()
+        self.wait(5)
 
 def utpatterns(scene, n, wait=3, d_wait=1):
     n1 = "1" * n
@@ -1141,13 +1153,17 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_res=T
         # Remove color emphasis
         n1.set_color(WHITE)
         n2.set_color(WHITE)
-        res.set_color(WHITE)
+        if show_res:
+            res.set_color(WHITE)
         if show_carry:
             scene.remove(*cl)
         if wait:
             scene.wait(wait)
         if fade:
-            scene.play(FadeOut(g))
+            if show_res:
+                scene.play(FadeOut(g))
+            else:
+                scene.play(FadeOut(n1, n2, ln, op))
     return g
 
 
