@@ -1347,3 +1347,193 @@ def calcDigitsum(scene, num, wait=5, fade=True, scale=0.75, move=(-2, -2)):
     if fade:
         scene.play(FadeOut(eg, title, t))
     return eg
+
+class Samkalanavyavakalanaabhyaam(Scene):
+    def construct(self):
+        # Title
+
+
+        Title(self, "उत्तरपरिशोधनम्", "Checking Answers", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(2)
+
+
+        # Introduction
+        text = [
+            f"<span color='WHITE'>Hope you have seen our video on </span><span color='PINK'> digitsum technique.</span> ",
+            f"<span color='WHITE'>While practicing, have you ever come across a situation </span>",
+            f"<span color='WHITE'> in which you are not sure that the answer is correct?</span>",
+            f"<span color='TURQUOISE'>Let's see one such case.</span>"]
+
+        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+        self.wait(2)
+        self.next_section()
+
+        digitsumcheck2(self, "9", "45", "45", "×", "2025", "47", "45", "×", "2025")
+        self.next_section()
+
+
+        text = [
+          f"<span color='ORANGE'> Ekadashashesha </span><span color='WHITE'> can be used in such cases.</span> ",
+          f"<span color='WHITE'>It is the </span><span color='ORANGE'> remainder, </span><span color='WHITE'> when we </span><span color='ORANGE'>divide any number by 11.</span> ",
+          f"To compute the Ekadashashesha of any number, ",
+          f"alternately add and subtract its digits. ",
+          ]
+
+        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+        self.wait(2)
+        self.next_section()
+
+
+        # Sutra Scene
+        t0 = Span("संकलनव्यवकलनाभ्याम्")
+        t1 = [Span("संकलनव्यवकलनाभ्याम्")]
+        t2 = [Span("By Addition and by Subtraction ")]
+        Sutra(self, t0, t1, t2, wait=0, scale=0.65, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
+
+        self.next_section()
+
+        shesha11(self, "345")
+        shesha11(self, "4567")
+        shesha11(self, "691")
+
+        digitsumcheck2(self, "11","45", "45", "×", "2025", "47", "45", "×", "2025")
+        self.next_section()
+
+
+
+def dsum_911(s,shesha):
+
+    if shesha == "9":
+        n = int(s)
+        while n > 9:
+            n = sum([int(s) for s in str(n)])
+    else:
+        rev_num = s[::-1]
+        n = sum((int(rev_num[i]) * -1 if i % 2 else int(rev_num[i]) for i in range(len(rev_num))))
+
+    return n
+
+def digitsumcheck2(scene,shesha, num1, num2, opr, ans, num3, num4, opr2, ans2, wait=5, fade=True, scale=0.3, move=(3, 6)):
+    ''' Digitsum and 11 shesha check '''
+    def _op(d1, d2):
+        if opr == "×":
+            return d1*d2
+        else:
+            return eval(f"{d1}{opr}{d2}")
+
+    title = DisplayText(scene, Span("Check", color="Turquoise"), scale=0.8, wait=0, move=(-3, -4), fade=False)
+
+    g_9 = ShowOp(scene, num1, num2, opr, ans, move=(0, -5), wait=2, fade=False)
+    scene.wait(4)
+
+    d1_9 = dsum_911(num1,shesha)
+    d2_9 = dsum_911(num2,shesha)
+    d3_9 = dsum_911(ans,shesha)
+    cans_9 = _op(d1_9, d2_9)
+    tdans_9 = dsum_911(str(cans_9),shesha)
+
+    td3_9 = Text(str(d3_9), font="Cambria Math", color="ORANGE").next_to(g_9, DOWN)
+
+    gd_9 = ShowOp(scene, str(d1_9), str(d2_9), opr, cans_9, move=(0, -2), wait=0, fade=False)
+    scene.wait(5)
+
+    if shesha == "11":
+        t1_9 = Text("11 Shesha").scale(0.5).next_to(gd_9, UP, aligned_edge=LEFT)
+    else:
+        t1_9 = Text("Digitsum").scale(0.5).next_to(gd_9, UP, aligned_edge=LEFT)
+
+    scene.add(t1_9)
+
+
+
+    t3_9 = Text(str(tdans_9), font="Cambria Math", color="ORANGE").next_to(gd_9[0], DOWN)
+    scene.add(t3_9)
+    scene.wait(5)
+    scene.add(td3_9)
+    scene.wait(2)
+
+    if tdans_9 == d3_9:
+        t2_9 = MarkupText(Span("The answer is likely correct", color="green"))
+    else:
+        t2_9 = MarkupText(Span("The answer is wrong", color="red"))
+
+    t2_9.scale(0.6).move_to(2.5*DOWN + LEFT*3)
+    scene.add(t2_9)
+
+    ln = Line(start=array([0, 6, 1]), end=array([0, 0, 1])).set_color(PURE_GREEN)
+    l1 = VGroup(ln).arrange(DOWN, aligned_edge=RIGHT)
+    scene.add(l1)
+
+    g_11 = ShowOp(scene, num3, num4, opr, ans2, move=(0, 2), wait=2, fade=False)
+    scene.wait(4)
+    d1_11 = dsum_911(num3,shesha)
+    d2_11 = dsum_911(num4,shesha)
+    dans_11 = dsum_911(ans2,shesha)
+    td3_11 = Text(str(dans_11), font="Cambria Math", color="ORANGE").next_to(g_11, DOWN)
+    cans_11 = _op(d1_11, d2_11)
+
+    tdans_11 = dsum_911(str(cans_11),shesha)
+
+    gd_11 = ShowOp(scene, str(d1_11), str(d2_11), opr, cans_11, move=(0,5), wait=0, fade=False)
+    scene.wait(5)
+
+    t1_11 = Text("11 Shesha").scale(0.5).next_to(gd_11, UP, aligned_edge=LEFT)
+    scene.add(t1_11)
+
+    t3_11 = Text(str(tdans_11), font="Cambria Math", color="ORANGE").next_to(gd_11[0], DOWN)
+    scene.add(t3_11)
+    scene.wait(5)
+    scene.add(td3_11)
+    scene.wait(2)
+
+    if tdans_11 == dans_11:
+        t2_11 = MarkupText(Span("The answer is likely correct", color="green"))
+    else:
+        t2_11 = MarkupText(Span("The answer is wrong", color="red"))
+
+    t2_11.scale(0.5).move_to(2.5 * DOWN + RIGHT * 3)
+    scene.add(t2_11)
+    scene.wait(5)
+    scene.play(FadeOut(g_9,g_11 ,l1, title, gd_9,gd_11,t1_11,t1_9,t2_9,t2_11,t3_11,t3_9,td3_11,td3_9))
+
+    return t2_11
+
+def shesha11(scene, num, wait=5, fade=True, scale=0.75, move=(-2, -2)):
+    title = DisplayText(scene, Span("Let's calculate the ekadashashesha of ", color="Turquoise", font='Cambria Math') +
+                        Span(num, color="Yellow", font='Cambria Math'),
+                        scale=scale, wait=0, move=move, fade=False)
+    # sum according to the sutra
+
+    rev_num = num[::-1]
+    sum1 = dsum_911(num,"11")
+    #numOPR.extend((str(rev_num[i]) + "+") if i % 2 else (str(rev_num[i]) + "-") for i in range(len(rev_num)))
+
+    numOPR = []
+    for i in range(len(rev_num)):
+        if i % 2:
+            numOPR.extend(str(rev_num[i]) + "+")
+        else:
+            numOPR.extend(str(rev_num[i]) + "-")
+
+    numOPR.pop()
+    numOPR.extend("=" + str(sum1))
+
+    if sum1<0:
+        numOPR.append("+")
+        numOPR.append("11")
+        sum1 = sum1 + 11
+        numOPR.extend("=" + str(sum1))
+
+    el = [MarkupText(x, font='Cambria Math') for x in numOPR]
+    eg = VGroup(*el).scale(scale).arrange(RIGHT, aligned_edge=RIGHT)
+    eg.move_to(UP + RIGHT*2)
+
+    for _el in el:
+        scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
+        scene.wait(0.5)
+
+    scene.wait(1)
+
+    scene.play(FadeOut(eg, title))
+    return 0
