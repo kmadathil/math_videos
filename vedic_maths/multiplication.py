@@ -1006,10 +1006,10 @@ class Urdhvatiryagbhyam_45(Scene):
         
         
         ut(self, 4312, 2435, move=(0, -3))
-        self.next_section
+        self.next_section()
 
         ut(self, 3457, 6312, move=(0, -3))
-        self.next_section
+        self.next_section()
 
         text = ["<span color='Turquoise'>Five digit multiplication patterns</span>."]
         Explanation(self, text, font='Cambria Math', aligned_edge=LEFT)
@@ -1026,10 +1026,6 @@ class Urdhvatiryagbhyam_45(Scene):
         
         ut(self, 12345, 87456, move=(0, -3))
         self.next_section
-
-        ut(self, 53426, 61245, move=(0, -3))
-        self.next_section
-
         
         text = ["With practice, four and five digit multiplication",
                 "can be done mostly mentally too.",
