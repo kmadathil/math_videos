@@ -1349,34 +1349,62 @@ class Samkalanavyavakalanaabhyaam(Scene):
         # Title
 
 
-        Title(self, "उत्तरपरिशोधनम्", "Checking Answers", move=(3, 5), wait=2)
+        Title(self, "उत्तरपरिशोधनम् - २", "Answer Verification - 2", move=(3, 5), wait=2)
         self.next_section()
-        self.wait(2)
+        self.wait(1)
 
 
         # Introduction
-        text = [
-            f"<span color='WHITE'>Hope you have seen our video on </span><span color='PINK'> digitsum technique.</span> ",
-            f"<span color='WHITE'>While practicing, have you ever come across a situation </span>",
-            f"<span color='WHITE'> in which you are not sure that the answer is correct?</span>",
-            f"<span color='TURQUOISE'>Let's see one such case.</span>"]
 
-        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+        text = [
+            f"In the last lesson on <span color='orangered'>answer verification</span>, we saw <span color='LIGHTCORAL'>digitsum. </span>",
+            f"It is also known as <span color='CYAN'>नवशेष:</span> as it is the <span color='goldenrod'>remainder, </span>",
+            f" when any number is <span color='goldenrod'> divided by <span font='Cambria Math'> 9.</span> </span>",
+            f"Only difference is that,",
+            f"if <span color='LIGHTCORAL'>digitsum </span> is <span font='Cambria Math'>9</span>,<span color='CYAN'> नवशेष: </span> will be <span font='Cambria Math'> 0 </span>.",
+            f"The reason is obvious - remainder is always less than the divisor. "]
+
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        # font='Cambria Math',
+
+        #self.wait(1)
+        self.next_section
+
+        calcDigitsum(self, "48", 1)
+        self.next_section()
+
+        calcDigitsum(self, "27", 1)
+        self.next_section()
+
+        self.wait(1)
+
+
+        text = [
+            f"While verifying the answer, ",
+            f"we say that the <span color='LIME'>answer is likely correct, </span>if <span color='CYAN'> नवशेष: </span>is same.",
+            f"Else we decide that the <span color='RED'> answer is wrong. </span>",
+            f"But there are some cases in which we can't make a correct decision. ",
+            f"<span color='YELLOW'>Let's see an example.</span>"]
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
         self.wait(2)
         self.next_section()
+
 
         digitsumcheck2(self, "9", "45", "45", "×", "2025", "47", "45", "×", "2025")
         self.next_section()
 
-
+        self.wait(2)
         text = [
-          f"<span color='ORANGE'> Ekadashashesha </span><span color='WHITE'> can be used in such cases.</span> ",
+          f"<span color='ORANGE' > एकादशशेष: </span><span color='WHITE'> can be used in such cases.</span> ",
           f"<span color='WHITE'>It is the </span><span color='ORANGE'> remainder, </span><span color='WHITE'> when we </span><span color='ORANGE'>divide any number by 11.</span> ",
-          f"To compute the Ekadashashesha of any number, ",
-          f"alternately add and subtract its digits. ",
+          f"To compute the <span color='ORANGE'> एकादशशेष: </span> of any number, ",
+          f"alternately add and subtract its digits, from right to left. ",
           ]
 
-        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
         self.wait(2)
         self.next_section()
 
@@ -1404,6 +1432,9 @@ def dsum_911(s,shesha):
         n = int(s)
         while n > 9:
             n = sum([int(s) for s in str(n)])
+
+        if n==9:
+            n=0
     else:
         rev_num = s[::-1]
         n = sum((int(rev_num[i]) * -1 if i % 2 else int(rev_num[i]) for i in range(len(rev_num))))
@@ -1435,9 +1466,9 @@ def digitsumcheck2(scene,shesha, num1, num2, opr, ans, num3, num4, opr2, ans2, w
     scene.wait(5)
 
     if shesha == "11":
-        t1_9 = Text("11 Shesha").scale(0.5).next_to(gd_9, UP, aligned_edge=LEFT)
+        t1_9 = Text("एकादशशेष:").scale(0.5).next_to(gd_9, UP, aligned_edge=LEFT)
     else:
-        t1_9 = Text("Digitsum").scale(0.5).next_to(gd_9, UP, aligned_edge=LEFT)
+        t1_9 = Text("नवशेष:").scale(0.5).next_to(gd_9, UP, aligned_edge=LEFT)
 
     scene.add(t1_9)
 
@@ -1454,8 +1485,12 @@ def digitsumcheck2(scene,shesha, num1, num2, opr, ans, num3, num4, opr2, ans2, w
     else:
         t2_9 = MarkupText(Span("The answer is wrong", color="red"))
 
+
+
     t2_9.scale(0.6).move_to(2.5*DOWN + LEFT*3)
     scene.add(t2_9)
+
+    scene.wait(2)
 
     ln = Line(start=array([0, 6, 1]), end=array([0, 0, 1])).set_color(PURE_GREEN)
     l1 = VGroup(ln).arrange(DOWN, aligned_edge=RIGHT)
@@ -1475,6 +1510,12 @@ def digitsumcheck2(scene,shesha, num1, num2, opr, ans, num3, num4, opr2, ans2, w
     scene.wait(5)
 
     t1_11 = Text("11 Shesha").scale(0.5).next_to(gd_11, UP, aligned_edge=LEFT)
+
+    if shesha == "11":
+        t1_11 = Text("एकादशशेष:").scale(0.5).next_to(gd_11, UP, aligned_edge=LEFT)
+    else:
+        t1_11 = Text("नवशेष:").scale(0.5).next_to(gd_11, UP, aligned_edge=LEFT)
+
     scene.add(t1_11)
 
     t3_11 = Text(str(tdans_11), font="Cambria Math", color="ORANGE").next_to(gd_11[0], DOWN)
@@ -1488,17 +1529,21 @@ def digitsumcheck2(scene,shesha, num1, num2, opr, ans, num3, num4, opr2, ans2, w
     else:
         t2_11 = MarkupText(Span("The answer is wrong", color="red"))
 
-    t2_11.scale(0.5).move_to(2.5 * DOWN + RIGHT * 3)
+    t2_11.scale(0.6).move_to(2.5 * DOWN + RIGHT * 3)
     scene.add(t2_11)
-    scene.wait(5)
+    scene.wait(3)
     scene.play(FadeOut(g_9,g_11 ,l1, title, gd_9,gd_11,t1_11,t1_9,t2_9,t2_11,t3_11,t3_9,td3_11,td3_9))
+
+
 
     return t2_11
 
 def shesha11(scene, num, wait=5, fade=True, scale=0.75, move=(-2, -2)):
-    title = DisplayText(scene, Span("Let's calculate the ekadashashesha of ", color="Turquoise", font='Cambria Math') +
+    title = DisplayText(scene, Span("Let's calculate the एकादशशेष: of ", color="Turquoise") +
                         Span(num, color="Yellow", font='Cambria Math'),
                         scale=scale, wait=0, move=move, fade=False)
+
+    scene.wait(2)
     # sum according to the sutra
 
     rev_num = num[::-1]
@@ -1514,12 +1559,17 @@ def shesha11(scene, num, wait=5, fade=True, scale=0.75, move=(-2, -2)):
 
     numOPR.pop()
     numOPR.extend("=" + str(sum1))
+    add11 = False
 
     if sum1<0:
         numOPR.append("+")
         numOPR.append("11")
         sum1 = sum1 + 11
+        add11 = True
         numOPR.extend("=" + str(sum1))
+        t11 = MarkupText(Span("Here the answer is negative. So 11 is added.", font='Cambria Math', color="yellow"))
+
+
 
     el = [MarkupText(x, font='Cambria Math') for x in numOPR]
     eg = VGroup(*el).scale(scale).arrange(RIGHT, aligned_edge=RIGHT)
@@ -1527,9 +1577,336 @@ def shesha11(scene, num, wait=5, fade=True, scale=0.75, move=(-2, -2)):
 
     for _el in el:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
-        scene.wait(0.5)
+        scene.wait(1.5)
+    if add11:
+        t11.scale(0.6).move_to(RIGHT * 2)
+        scene.add(t11)
 
     scene.wait(1)
 
     scene.play(FadeOut(eg, title))
-    return 0
+    if add11:
+        scene.play(FadeOut(t11))
+    return
+
+def find_Norm_form(scene, num):
+    # converting to Normal form
+    vinc = False
+    frag = ""
+    vincD = []
+    dig_lef_dec = False
+    for s in num:
+        frag = frag + s
+        if int(s) < 0:
+            if vinc == False:
+                vinc = True
+                vincD.append(str(10 + int(s)))
+            else:
+                vincD.append(str(9 + int(s)))
+        else:
+            if (vinc == True):
+                vincD.append(str(int(s) - 1))
+                dig_lef_dec = True
+                frag = ""
+                vinc = False
+            else:
+                vincD.append(str(int(s)))
+    if dig_lef_dec == False:
+        vincD.append("1")
+
+    return vincD
+
+def find_vinc_form(scene, num):
+    # converting to vinculum form  as fragments
+    vinc = False
+    frag = ""
+    vincD = []
+    dig_lef_inc = False
+
+    for s in num[::-1]:
+        frag = frag + s
+        if int(s) > 5:
+            if vinc == False:
+                vinc = True
+                vincD.append(str(-1 * (10 - int(s))))
+            else:
+                vincD.append(str(-1 * (9 - int(s))))
+        if (int(s)< 6):
+            if (vinc == True):
+                vincD.append(str(int(s) + 1))
+                dig_lef_inc = True
+                frag = ""
+                vinc = False
+            else:
+                vincD.append(str(int(s)))
+    if dig_lef_inc == False:
+        vincD.append("1")
+    return vincD
+
+def ToNormal(scene, num):
+    # Displaying num in Normal form
+    # find_Norm_form - converts the number to normal form
+
+    vincD = find_vinc_form(scene,num)
+    el1 = [MathTex("\overline{" + str(abs(int(x))) + "}") if (int(x) < 0) else MathTex(x) for x in vincD]
+    eg1 = VGroup(*el1).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg1.next_to(eg1, UP*2)
+
+    for _el1 in el1:
+        scene.play(AddTextLetterByLetter(_el1, time_per_letter=1))
+    scene.wait(1)
+
+    normD = find_Norm_form(scene, vincD)
+    el = [MathTex(x) for x in normD]
+    eg = VGroup(*el).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg.next_to(eg1, DOWN)
+
+    for _el in el:
+        scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
+    scene.wait(1)
+    scene.play(FadeOut(eg,eg1))
+    return eg
+
+def Tovinculum(scene, num):
+    # Displaying the vinculum form
+    # find_vinc_form - converts the num to vinculum form  as fragments
+    vincD = find_vinc_form(scene, num)
+
+    el1 = [MathTex(x) for x in num[::-1]]
+    eg1 = VGroup(*el1).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg1.move_to(UP*2)
+
+    for _el1 in el1:
+        scene.play(AddTextLetterByLetter(_el1, time_per_letter=1))
+    scene.wait(1)
+
+    el = [MathTex("\overline{" + str(abs(int(x))) + "}") if (int(x) < 0) else MathTex(x) for x in vincD]
+    eg = VGroup(*el).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg.next_to(eg1, DOWN)
+
+    for _el in el:
+        scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
+    scene.wait(1)
+    scene.play(FadeOut(eg,eg1))
+    return eg
+
+
+def ut_vinc3dig(scene,sn1,sn2):
+    ''' UT 3 Digit multiplication of Vinculum Numbers '''
+
+    res= str(int(sn1)*int(sn2))
+    t = DisplayText(scene, "Multiplication Example", scale=0.7, wait=0, move=(-2, 0),
+                    fade=False, font='Cambria Math')
+
+    el1 = [MathTex(x) for x in sn1[::-1]]
+    eg1 = VGroup(*el1).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg1.next_to(t, LEFT*2 + DOWN*2)
+
+    for _el1 in el1:
+        scene.play(AddTextLetterByLetter(_el1, time_per_letter=1))
+    scene.wait(1)
+
+
+    el2 = [MathTex(x) for x in sn2[::-1]]
+    eg2 = VGroup(*el2).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg2.next_to(eg1, DOWN)
+
+    for _el2 in el2:
+        scene.play(AddTextLetterByLetter(_el2, time_per_letter=1))
+    scene.wait(1)
+
+    ln1 = Line(start=array([0, 4,0]), end=array([2, 4, 0])).set_color(YELLOW)
+    l1 = VGroup(ln1).arrange(RIGHT, aligned_edge=RIGHT)
+    l1.next_to(eg1, DOWN*4)
+    scene.add(l1)
+    scene.wait(1)
+
+    ans1 = [MathTex(x) for x in res[::-1]]
+    ans1g = VGroup(*ans1).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    ans1g.next_to(l1, DOWN*2)
+
+    for _ans1 in ans1:
+        scene.play(AddTextLetterByLetter(_ans1, time_per_letter=1))
+    scene.wait(1)
+
+    vincD1 = find_vinc_form(scene,sn1)
+
+    el3 = [MathTex("\overline{" + str(abs(int(x))) + "}") if (int(x) < 0) else MathTex(x) for x in vincD1]
+    eg3 = VGroup(*el3).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg3.next_to(eg1, RIGHT*14)
+
+    for _el3 in el3:
+        scene.play(AddTextLetterByLetter(_el3, time_per_letter=1))
+    scene.wait(1)
+
+    vincD2 = find_vinc_form(scene,sn2)
+    el4 = [MathTex("\overline{" + str(abs(int(x))) + "}") if (int(x) < 0) else MathTex(x) for x in vincD2]
+    eg4 = VGroup(*el4).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg4.next_to(eg3, DOWN)
+
+    for _el4 in el4:
+        scene.play(AddTextLetterByLetter(_el4, time_per_letter=1))
+    scene.wait(1)
+
+    ln2 = Line(start=array([0,4,0]), end=array([2,4, 0])).set_color(RED)
+    l2 = VGroup(ln2).arrange(RIGHT, aligned_edge=RIGHT)
+    l2.next_to(eg3, DOWN*4)
+    scene.add(l2)
+    scene.wait(1)
+
+    ans =[]
+    ans.append(str(int(vincD1[0]) * int(vincD2[0])))
+    ans.append(str((int(vincD1[0]) * int(vincD2[1])) + ((int(vincD1[1]) * int(vincD2[0])))))
+    ans.append(str((int(vincD1[0]) * int(vincD2[2])) + (int(vincD1[1]) * int(vincD2[1])) + (int(vincD1[2]) * int(vincD2[0]))))
+    ans.append(str((int(int(vincD1[1]) * int(vincD2[2])) + (int(vincD1[2]) * int(vincD2[1])))))
+    ans.append(str(int(vincD1[2]) * int(vincD2[2])))
+
+    el5 = [MathTex("\overline{" + str(abs(int(x))) + "}") if (int(x) < 0) else MathTex(x) for x in ans]
+    eg5 = VGroup(*el5).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg5.next_to(l2, DOWN*2)
+
+    for _el5 in el5:
+        scene.play(AddTextLetterByLetter(_el5, time_per_letter=1))
+    scene.wait(1)
+
+    vincD = find_Norm_form(scene,ans)
+
+    el6 = [MathTex("\overline{" + str(abs(int(x))) + "}") if (int(x) < 0) else MathTex(x) for x in vincD]
+    eg6 = VGroup(*el6).scale(1).arrange(LEFT * 2, aligned_edge=ORIGIN)
+    eg6.next_to(eg5, DOWN*2)
+
+    for _el6 in el6:
+        scene.play(AddTextLetterByLetter(_el6, time_per_letter=1))
+    scene.wait(1)
+
+    scene.play(FadeOut(t,eg1, eg2, eg3, eg4,eg5,eg6,ans1g, l1, l2))
+    return eg1
+
+class Rekhitasamkhyaa(Scene):
+    def construct(self):
+        # Vinculum numbers  24 06 2022
+        # Title
+
+        Title(self, "रेखितसङ्ख्याः", "Vinculum Numbers", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(1)
+        # Introduction
+
+        text = [
+            f"We all are familiar with +ve and -ve numbers.",
+            f"Have you seen a number in which ",
+            f"<span color = 'CYAN'>some digits are +ve and some are -ve?</span>",
+            f"After all, what is the use of such a representation?",
+            f"Quite interesting right?",
+            f"Yes! Today's lesson is all about such special numbers."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"A number that is represented ",
+            f"<span color ='YELLOW'>partly as positive and partly negative </span> is called a ",
+            f"<span color = 'CYAN'>Vinculum number or रेखितसङ्ख्या. </span>",
+            f"A <span color = 'LIGHTCORAL'>vinculum </span> (overbar) is used to indicate <span color='ORANGE'>negative digits.</span>",
+            f"This gives the number an easier form to deal with ",
+            f"the techniques that we learned before."
+        ]
+        e = Explanation(self, text,wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"How do we understand the value of the number <span color='CYAN'>18</span>? ",
+            f"<span color='ORANGE'> 8</span> added with <span color='ORANGE' >10</span> is <span color='CYAN'> 18</span>",
+            f"Is there any other way to get the value <span color='CYAN'> 18</span>?",
+            f"Yes, <span color='CYAN'> 18 </span>is <span color='ORANGE'>2</span> subtracted from <span color='ORANGE' > 20</span> ",
+            f"So, how can write that? " ]
+
+        e1 = Explanation(self, text,font = "Cambria Math", wait=2, fade=False , aligned_edge=LEFT)
+
+        t = MathTex("2", "\overline{2}")
+
+        t.move_to(DOWN*1.2 )
+        self.wait(1)
+        self.add(t)
+        self.wait(5)
+
+        self.play(FadeOut(e1))
+        self.remove(e1)
+        self.remove(t)
+        self.wait(2)
+
+        # Sutra Scene
+        t0 = Span("निखिलं नवतश्चरमं दशत:")
+        t1 = [Span("निखिलं नव त:, चरमं दश त:")]
+        t2 = [Span("All from 9, last from 10 ")]
+        Sutra(self, t0, t1, t2, wait=0, scale=0.65, move=None, fade=True, font='Cambria Math', dir1=DOWN, dir2=DOWN)
+        self.wait(2)
+
+        text = [
+            f"How to convert a number to <span color = 'CYAN'> vinculum? </span> ",
+            f"For every sequence of digits > 5,  ",
+            f"use <span color ='YELLOW'>Nikhilam</span> method.",
+            f"Increase the previous digit by 1.",
+        ]
+        e = Explanation(self, text, font='Cambria Math',wait=2, fade=True, aligned_edge=LEFT)
+
+        t = DisplayText(self, "Let's see some Examples - Normal to Vinculum", scale=0.7, wait=0, move=(-3, -1),
+                        fade=False, font='Cambria Math')
+
+        Tovinculum(self, "38")
+        Tovinculum(self, "68")
+        Tovinculum(self, "3768")
+        Tovinculum(self, "278186")
+
+        self.play(FadeOut(t))
+
+        text = [
+            f"How to convert a Vinculum number to <span color = 'CYAN'>Normal</span> Notation? ",
+            f"For every vinculum digit,  ",
+            f"use <span color ='YELLOW'>Nikhilam</span> method.",
+            f"Reduce the previous digit by 1.",
+        ]
+        e = Explanation(self, text, font='Cambria Math', wait=2, fade=True, aligned_edge=LEFT)
+
+        t = DisplayText(self, "Let's see some Examples -  Vinculum to Normal", scale=0.7, wait=0, move=(-3, -1),
+                        fade=False, font='Cambria Math')
+
+        ToNormal(self, "38")
+        ToNormal(self, "68")
+        ToNormal(self, "3768")
+        ToNormal(self, "278186")
+
+        self.play(FadeOut(t))
+
+        text = [
+            f"What is the actual benefit of the  <span color = 'CYAN'>Vinculum</span> notation? ",
+            f"Sometimes we feel that mathematical operations ",
+            f"with digits like 6,7,8,9 are bit hard.",
+            f"Digits upto 5 are really easy to handle.",
+            f"So,in the  <span color = 'CYAN'>Vinculum</span> form of numbers, these <span color='YELLOW'>digits >5</span> ",
+            f"<span color='YELLOW'>are converted with face value 4,3,2,1. </span>"
+        ]
+        e = Explanation(self, text, font='Cambria Math',wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If we have a clear idea about  <span color = 'YELLOW'>negative number handling</span>,",
+            f" <span color = 'CYAN'>Vinculum</span> Numbers can really help us."
+              ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"And please note that,",
+            f"this is  <span color = 'ORANGE'>strictly not necessary</span> for any of the ",
+            f"Vedic Mathematics methods. ",
+            f"But it does <span color = 'LIGHTCORAL'> make things easier</span> in some cases."
+              ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f" <span color = 'CYAN'>Vinculum</span> notation is useful when there are  <span color = 'YELLOW'>large digits.</span> ",
+            f"If we convert them into vinculum digits,",
+            f"mathematical operations becomes really easy ",
+            f"as the <span color = 'YELLOW'>face value of the digits are decreased.</span>",
+              ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        ut_vinc3dig(self, "189","197")
+        self.next_section
