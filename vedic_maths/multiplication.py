@@ -1079,6 +1079,7 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_res=T
         scene.wait(2)
         return eg
 
+    sr = int(sn1)*int(sn2) # Result
     n = max(len(str(sn1)), len(str(sn2)))
     nit = 2*n-1
     sop = "×"
@@ -1089,7 +1090,6 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_res=T
     res = MarkupText(str(sr), font='Cambria Math').arrange(buff=0.5)
     if oplen==0:
         oplen=res.width
-    lr = len(str(sr)) # Length of result
 
     ln = Line(start=array([-1 * oplen, 0, 0]), end=array([0, 0, 0])).set_color(YELLOW)
     # First arrange as usual
@@ -1097,6 +1097,7 @@ def ut(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_res=T
     n1.next_to(n2, UP, buff=0.5, aligned_edge=RIGHT)  # Add some gap for ut lines
     g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP) # Final assembly
     g.move_to(UP * move[0] + RIGHT * move[1]) # move
+    lr = len(str(sr)) # Length of result
 
     if play:
         scene.play(FadeIn(n1, n2, ln, op))
