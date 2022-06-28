@@ -42,11 +42,15 @@ def ut_vinc(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_
     sr = int(sn1)*int(sn2) # Result
     sop = "×"
 
+    n = max(len(str(sn1)), len(str(sn2)))
+    n1 = MathTex(str(sn1).zfill(n), color=YELLOW).arrange(buff=0.5)
+    n2 = MathTex(str(sn2).zfill(n), color=YELLOW).arrange(buff=0.5)
+
+    
     # First pass, find max length of vinculum form
     vn1 = find_vinc_form(scene, sn1)
     vn2 = find_vinc_form(scene, sn2)
     n = max(len(vn1), len(vn2))
-    #n = max(len(str(sn1)), len(str(sn2)))
     nit = 2*n-1
     
     # Recompute with proper zero padding
@@ -54,8 +58,8 @@ def ut_vinc(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_
     vn2 = list(reversed(find_vinc_form(scene, str(sn2).zfill(n))))
 
     # Zero fill multiplier/multiplicand as necessary
-    n1  =_vf(str(sn1).zfill(n))
-    n2 = _vf(str(sn2).zfill(n))
+    n11  =_vf(str(sn1).zfill(n))
+    n21  = _vf(str(sn2).zfill(n))
     op = MarkupText(str(sop), font='Cambria Math')
     res = _vf(str(sr))  # Placeholder for later replacement
     res2 = MathTex(str(sr), color="Yellow") # Final result
@@ -71,9 +75,16 @@ def ut_vinc(scene, sn1, sn2,  move=(0, 0), wait=3, d_wait=1, explain=True, show_
     g = VGroup(g1, op).arrange(RIGHT, aligned_edge=UP) # Final assembly
     g.move_to(UP * move[0] + RIGHT * move[1]) # move
     res2.next_to(res, DOWN*2, aligned_edge=RIGHT)
+    n11.next_to(n1, ORIGIN, aligned_edge=RIGHT)
+    n21.next_to(n2, ORIGIN, aligned_edge=RIGHT)
     
     if play:
         scene.play(FadeIn(n1, n2, ln, op))
+        scene.wait(2)
+        scene.play(Transform(n1, n11))
+        scene.wait(1)
+        scene.play(Transform(n2, n21))
+        scene.wait(1)
         lines = None
         show = [] # Lines to display
         cl = []
