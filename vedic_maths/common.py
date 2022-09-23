@@ -114,3 +114,16 @@ def Span(t, **kwargs):
     ''' Helper function for generating text with span tag '''
     return "<span " + " ".join([f"{k}='{v}'" for k,v in kwargs.items()]) + f">{t}</span>"
     
+
+def NComp(num):
+    ''' Nikhilam Complement of a number '''
+    num = str(num)
+    comp = ""
+    for ix,s in enumerate(num):
+        if ix == len(num)-1:
+            # caramam dashataH
+            comp += str(10-int(s))
+        else:
+            # nikhilaM navataH
+            comp += str(9-int(s))
+    return comp
