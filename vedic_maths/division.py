@@ -48,7 +48,9 @@ def MTV(snum, color="Yellow"):
 class Divop:
     def __init__(self, scene, dividend, divisor, divisor_xform,
                  dividend_xform=None,
-                 subs=[], carries=[], answer=None, ansplaces=0, wait=1):
+                 subs=[], carries=[], answer=None, ansplaces=0,
+                 vertical = False, nikhilam=False,
+                 wait=1):
         '''
         Division operator
 
@@ -73,10 +75,16 @@ class Divop:
         self.rx  = MT(dividend_xform)
         self.divisor_x = MT(divisor_xform, color='Lime') # Transformed divisor
         self.e_dividend = MT(dividend_xform).arrange(buff=1)  # Dividend
-        #self.e_divisor = MTV(divisor_xform, color='Lime').scale(0.6)  # Transformed Divisor, vertical
-        self.e_divisor = MT(divisor_xform, color='Lime')  # Transformed Divisor
-        #self.vln = Line(self.e_divisor[0], self.e_divisor[-1])  # Vertical Line
-        self.vln = Text("|")
+        if vertical:
+                self.e_divisor = MTV(divisor_xform, color='Lime').scale(0.6)  # Transformed Divisor, vertical
+                self.e_divisor[0].set_color(YELLOW)
+                self.vln = Line(self.e_divisor[0], self.e_divisor[-1])  # Vertical Line
+        else:
+                self.e_divisor = MT(divisor_xform, color='Lime')  # Transformed Divisor
+                self.vln = Text("|")
+
+        self.flag = not nikhilam
+
         # Setup future subparts
         self.subs = subs
         self.answer  = MT(answer)
@@ -186,7 +194,10 @@ class Divop:
                 # Show the next flag carries
                 if n <= len(self.subs):
                         self.scene.play(Indicate(self.answer[n-1]))
-                        self.scene.play(Indicate(self.e_divisor))
+                        if self.flag:
+                                self.scene.play(Indicate(self.e_divisor[1:]))
+                        else:
+                                self.scene.play(Indicate(self.e_divisor))
                         scene.wait(0.5)
                         g2 -= self.ga
                         g2 -= self.hln
@@ -215,6 +226,7 @@ class NikhikamDivison(Scene):
                       subs = ["24", "36"],
                       carries = "00",
                       answer = "2388",
+                      nikhilam = True,
                       ansplaces = 2)
             d.step_all(wait=3)
             d.clear()
@@ -228,7 +240,8 @@ class NikhikamDivison(Scene):
                       subs = ["26", "13"],
                       carries = "00",
                       answer = "2174",
-                      ansplaces = 2)
+                      nikhilam = True,
+                     ansplaces = 2)
             d.step_all(wait=3)
             d.clear()
             self.next_section()
@@ -242,7 +255,23 @@ class NikhikamDivison(Scene):
                       subs = ["21'", "00", "4'2"],
                       carries = "00",
                       answer = "102'7'5",
+                      nikhilam = True,
                       ansplaces = 3)
+            d.step_all(wait=3)
+            d.clear()
+            self.next_section()
+       
+
+class ParavartyaDivison(Scene):
+    def construct(self):
+            # 12321 / 11 
+            # Subs = 1', 1', 2'
+            # q = 1120, r=1
+            d = Divop(self, "12321", "11","11'",
+                      subs = ["1'", "1'", "2'"],
+                      carries = "00",
+                      answer = "11201",
+                      ansplaces = 4)
             d.step_all(wait=3)
             d.clear()
             self.next_section()
