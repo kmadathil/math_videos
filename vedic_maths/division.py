@@ -93,7 +93,9 @@ class Divop:
 
     def clear(self):
             self.scene.remove(self.g1, self.gc, self.ga, self.g2, self.vln)
-            self.scene.remove(self.e_divisor)
+            if self.flag:
+                    for e in self.e_divisor:
+                            self.scene.remove(e)
             
     def step_all(self, wait=3):
             ''' Run all steps '''
