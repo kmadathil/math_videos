@@ -92,7 +92,8 @@ class Divop:
         self.ansplaces = ansplaces
 
     def clear(self):
-            self.scene.remove(self.g1, self.gc)
+            self.scene.remove(self.g1, self.gc, self.ga, self.g2, self.vln)
+            self.scene.remove(self.e_divisor)
             
     def step_all(self, wait=3):
             ''' Run all steps '''
@@ -124,18 +125,19 @@ class Divop:
         if n==0:
                 # Display raw division statement
                 scene.add(self.raw)
-                scene.wait(1)
+                scene.wait(3)
+
 
                 # Transform division sign and divisor
                 _t = Text("..").move_to(self.raw[1])
                 self.divisor_x.move_to(self.raw[2])
                 self.raw[1].become(_t)
                 scene.play(Transform(self.raw[2], self.divisor_x))
-                scene.wait(1)
+                scene.wait(4)
                 if self.dividend_xformp:
                         self.rx.move_to(self.raw[0])
                         scene.play(Transform(self.raw[0], self.rx))
-                        scene.wait(1)
+                        scene.wait(4)
                         
                 # Remove transformed division sign
                 scene.remove(self.raw[1])
@@ -152,7 +154,7 @@ class Divop:
                 # The dividend and transformed divisor as we want to see them
                 scene.play(ReplacementTransform(self.raw[2], self.e_divisor))
                 scene.play(ReplacementTransform(self.raw[0], self.e_dividend))
-                scene.wait(1)
+                scene.wait(4)
 
                 # Add rest of division operation to scene
                 scene.add(g1, gc)
@@ -171,6 +173,7 @@ class Divop:
                 g2 = self.g2
                 g1 = self.g1
 
+
                 # First, show the next answer bit
                 ga += self.answer[n-1]
                 if n > self.ansplaces:
@@ -178,7 +181,7 @@ class Divop:
                 else:
                         self.answer[n-1].set_color(GREEN_C)
                 _realign()
-                self.scene.wait(1)
+                self.scene.wait(4)
 
                 # Next, show the next carry
                 # Only nonzero carries are visible
@@ -188,7 +191,7 @@ class Divop:
                         gc += MT(c, color=_col)
                         _realign()
                         if int(c):
-                                self.scene.wait(1)
+                                self.scene.wait(4)
 
                 
                 # Show the next flag carries
@@ -198,7 +201,7 @@ class Divop:
                                 self.scene.play(Indicate(self.e_divisor[1:]))
                         else:
                                 self.scene.play(Indicate(self.e_divisor))
-                        scene.wait(0.5)
+                        scene.wait(4)
                         g2 -= self.ga
                         g2 -= self.hln
                         s = self.subs[n-1]
@@ -216,21 +219,173 @@ class Divop:
                 
                 
                 
-class NikhikamDivison(Scene):
+class NikhilamDivision(Scene):
     def construct(self):
+            Title(self, "हरणम् ", "Division", move=(3, 5), wait=2)
+            self.next_section()
+            self.wait(1)
+
+            # Introduction
+
+            text = [
+                f"When we <span color='cyan'>divide </span> a <span color='cyan'>Dividend </span> by a <span color='cyan'>Divisor</span>, ",
+                f"we <span color='cyan'>subtract/ remove </span> the <span color='cyan'>Divisor </span>from the <span color='cyan'>Dividend.</span>",
+                f"But, <span color='cyan'>how many </span> times?",
+                f"The answer is the <span color='cyan'>Quotient.</span> ",
+                f"And what's left over from subtraction is the <span color='cyan'>Remainder.</span>",
+                f"All division processes are merely easy ways of doing",
+                f" <span color='cyan'>repeated subtraction fast.</span>"]
+
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"For example, <span color='cyan'>256÷8 = 32 </span> with <span color='cyan'>Zero Remainder.</span> ",
+                f"From 256, <span color='yellow'>8 </span>can be removed <span color='yellow'>32</span> times.",
+                f"And you'll be left with <span color='yellow'>Zero.</span>"]
+
+            e = Explanation(self, text, font="Cambria Math",wait=2, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"Another one, <span color='cyan'>260÷8 = 32 </span> with <span color='cyan'>Remainder=4. </span>",
+                f"From 260, <span color='yellow'>8 </span>can be removed <span color='yellow'>32</span> times.",
+                f"And you'll be left with <span color='yellow'>4.</span>",
+                f"(which is less than <span color='yellow'>8</span>, so you can't remove one more <span color='yellow'>8.</span>)"
+                ]
+
+            e = Explanation(self, text, font="Cambria Math",wait=2, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"In <span color='crimson'>Vedic Maths,</span>",
+                f"just like <span color='cyan'> Multiplication</span>, for <span color='cyan'> Division </span>also, ",
+                f"there are some <span color='cyan'> specific methods </span> that are  <span color='cyan'>best </span> in <span color='cyan'>some cases.</span>",
+                f"And there is a <span color='cyan'> general method </span> also.",
+                f"To begin with, let's look at the <span color='cyan'>special methods.</span>"]
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"First one is <span color='red'>Nikhilam </span> method.",
+                f"Here, we use the <span color='cyan'>Complement </span> of the <span color='cyan'> Divisor </span> for <span color='cyan'>Division.</span>",
+                f"The process is :",
+                f"<span color='cyan'>Scale the Complement of the Divisor, </span>",
+                f"<span color='cyan'>Shift and add to the Dividend.</span>"
+               ]
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+
+            text = [
+                f"<span color='cyan'>Before </span> the actual <span color='cyan'>division process,</span> ",
+                f"let's assess the <span color='cyan'>number of digits </span> in the <span color='cyan'> Quotient.</span>",
+                f"For example, we want to <span color='cyan'>divide </span> <span color='cyan'> 2031 by 89.</span>",
+                f"If we multiply <span color='yellow'>89</span> by <span color='yellow'>10</span>, the result <span color='yellow'>890</span> is less than <span color='yellow'>2031.</span>",
+                f"And if we do, <span color='yellow'>89</span> x <span color='yellow'>100 </span>, the result <span color='yellow'>8900 </span> is greater than <span color='yellow'>2031.</span>",
+                f"From this, we are sure that the <span color='cyan'>answer </span> is a <span color='yellow'> 2 digit number. </span>"]
+
+            e = Explanation(self, text,font="Cambria Math", wait=2, fade=True, aligned_edge=LEFT)
+
+            self.wait(3)
+
+            text = [
+                f"1.Replace the <span color='cyan'>Divisor</span> by its <span color='cyan'> Complement. </span> ",
+                f"2.Bring down the <span color='cyan'>1st digit </span> of the <span color='cyan'> Dividend </span> as " ,
+                f"  the <span color='cyan'>1st Digit </span> of the <span color='cyan'> Quotient.</span>",
+                f"3.<span color='cyan'>Multiply </span> this digit by the <span color='cyan'>Divisor complement </span>digits ",
+                f"  and write the product <span color='cyan'>below</span> the succeeding <span color='cyan'>Dividend</span> digits.",
+                f"4.To obtain the next  <span color='cyan'> Quotient Digit,</span> ",
+                f"  add the <span color='cyan'>product </span>  in <span color='cyan'> step 3 </span> with  <span color='cyan'>Dividend digit.</span>",
+                f"5.Repeat until we obtain all the <span color='cyan'>Quotient digits.</span> ",
+                f"6.Add the remaining <span color='cyan'>Dividend </span>digits to the digits below them ",
+                f" to obtain the <span color='cyan'>Remainder. </span>"]
+
+            e = Explanation(self, text,font="Cambria Math", wait=2, fade=True, aligned_edge=LEFT)
+
+            self.wait(1)
+
+            # 2031 / 89
+            # DC = 11
+            # Subs = 22, 22
+            # q = 22, r=73
+
+            title_h1 = DisplayText(self, Span("Divide 2031 by 89: ", color="Turquoise"),
+                                scale=0.6, wait=0, move=(-3.5, -1), fade=False)
+            title_h2 = DisplayText(self, Span("By assessment, Number of Quotient digits=2 ", color="pink"),
+                                 scale=0.5, wait=0, move=(-3, -1), fade=False)
+
+            self.wait(3)
+
+            d = Divop(self, "2031", "89", "11",
+                      subs = ["22", "22"],
+                      carries = "00",
+                      answer = "2273",
+                      nikhilam = True,
+                      ansplaces = 2)
+
+            d.step_all(wait=4)
+
+            title1 = DisplayText(self, Span("So Quotient =22 and Remainder=73", color="Turquoise"),
+                                 scale=0.5, wait=0, move=(2.5, -1),
+                                 fade=False)
+
+            self.wait(3)
+            self.play(FadeOut(title1,title_h1,title_h2 ))
+
+            d.clear()
+            self.next_section()
+
+            self.wait(2)
             # 2112 / 88
             # DC = 12
             # Subs = 24, 36
             # q = 23, r=88
+
+            title_h1 = DisplayText(self, Span("Divide 2112 by 88: ", color="Turquoise"),
+                                   scale=0.6, wait=0, move=(-3.5, -1), fade=False)
+            self.wait(1)
+            title_h2 = DisplayText(self, Span("By assessment, Number of Quotient digits=2 ", color="pink"),
+                                   scale=0.5, wait=0, move=(-3, -1), fade=False)
+
+            self.wait(1)
+
+
             d = Divop(self, "2112", "88", "12",
                       subs = ["24", "36"],
                       carries = "00",
                       answer = "2388",
                       nikhilam = True,
                       ansplaces = 2)
-            d.step_all(wait=3)
+
+            d.step_all(wait=5)
+
+
+
+            title1 = DisplayText(self, Span("In this case, remainder=divisor.So, once more we can divide it.", color="Turquoise"), scale=0.5, wait=0, move=(2, -1),
+                                fade=False)
+            self.wait(3)
+            title2 = DisplayText(self, Span("So Quotient becomes 23+1=24 and Remainder=0", color="Turquoise"), scale=0.5, wait=0, move=(2.5, -1),
+                                fade=False)
+
+            self.wait(3)
+            self.play(FadeOut(title1, title2,title_h1,title_h2))
             d.clear()
             self.next_section()
+
+
+            text = [
+                f"<span color='red'>Nikhilam </span> method is relatively easy when below cases are true:",
+                f"<span color='cyan'>Face values </span> of digits in the <span color='cyan'>Divisor Complement </span> are<span color='cyan'> small.</span>",
+                f"<span color='cyan'>Face values </span> of digits in the <span color='cyan'>Dividend </span> are <span color='cyan'>small.</span>",
+                f"<span color='cyan'>Works best</span> when <span color='cyan'>number of digits</span> in the <span color='cyan'>Quotient</span> is <span color='cyan'>not more than 2.</span>"]
+
+            e = Explanation(self, text, font="Cambria Math", wait=2, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"We can use <span color='cyan'>vinculum numbers </span>" ,
+                f"<span color='cyan'>to force some of these conditions </span>if necessary.",
+                f"In our next video, we can see such cases too."]
+
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+            """
+            
             # 1901 / 87 = 21'01 / 87
             # DC = 13
             # Subs = 26, 13
@@ -260,13 +415,244 @@ class NikhikamDivison(Scene):
             d.step_all(wait=3)
             d.clear()
             self.next_section()
-       
+            """
 
-class ParavartyaDivison(Scene):
+
+class NikhilamDivisionVinculum(Scene):
     def construct(self):
-            # 12321 / 11 
+
+        Title(self, "हरणम् 2", "Division 2", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(1)
+
+        text = [
+            f"In the last video, we learned <span color='cyan'>division</span> using <span color='red'>Nikhilam.</span>",
+            f"Also, we saw that ",
+            f"if the face values of <span color='cyan'>Dividend Digits</span> and " ,
+            f"<span color='cyan'>Divisor Complement</span> are <span color='cyan'>small</span>,<span color='red'> Nikhilam Method</span> is really easy.",
+            f"So what if these conditions are not met?",
+            f"Let's workout some problems."]
+
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Let's begin with a problem in which the",
+            f"<span color='cyan'>face values </span>of <span color='yellow'>some digits </span>in the <span color='cyan'>Dividend </span>are <span color='cyan'>large.</span>",
+            f"In this case, we convert the <span color='cyan'>Dividend</span> to its <span color='cyan'>vinculum form</span>",
+            f"and continue the division as we did in the last video."]
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        title_h1 = DisplayText(self,
+                               Span("Divide ", color="Turquoise") +
+                               Span("1901 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("87: ", color="yellow", font="cambria math"),
+                               scale=0.6, wait=0, move=(-3.5, -1), fade=False)
+        self.wait(1)
+        title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                               Span("2", color="yellow", font="cambria math"),
+                               scale=0.5, wait=0, move=(-3, -1), fade=False)
+        self.wait(1)
+
+
+        # 1901 / 87 = 21'01 / 87
+        # DC = 13
+        # Subs = 26, 13
+        # q = 21, r=74
+        d = Divop(self, 1901, "87", NComp(87),
+                  dividend_xform="21'01",
+                  subs = ["26", "13"],
+                  carries = "00",
+                  answer = "2174",
+                  nikhilam = True,
+                 ansplaces = 2)
+        d.step_all(wait=3)
+
+        #Span("Thus, the Quotient is 21 and remainder is 74", color="Turquoise")
+
+
+        title1 = DisplayText(self,Span("Thus, the Quotient is ", color="Turquoise") +
+                             Span("21 ", color="yellow", font="cambria math")+
+                             Span("and Remainder is ", color="Turquoise")+ Span("74", color="yellow", font="cambria math"),
+                             scale=0.5, wait=0, move=(2, -1),
+                             fade=False)
+        self.wait(3)
+
+        d.clear()
+        self.next_section()
+
+        self.play(FadeOut(title1))
+        self.play(FadeOut(title_h1,title_h2))
+
+
+        text = [
+            f"Now let's see another example where",
+            f"the <span color='cyan'>face values </span>of <span color='yellow'>some digits </span>in the <span color='cyan'>Divisor Complement </span>are<span color='cyan'> large.</span>",
+            f"In this case, ",
+            f"we convert the <span color='cyan'>Divisor Complement</span> to its <span color='cyan'>vinculum form</span>",
+            f"and do the division."]
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise")+
+                               Span("2231 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("91: ", color="yellow", font="cambria math"),
+                               scale=0.6, wait=0, move=(-3.5, -1), fade=False)
+        self.wait(1)
+        title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                               Span("2", color="yellow", font="cambria math"),
+                               scale=0.5, wait=0, move=(-3, -1), fade=False)
+
+        self.wait(2)
+        title_h3 = DisplayText(self,  Span("Complement of the divisor,", color="pink") +
+                               Span("91", color="yellow", font="cambria math") +
+                               Span("=", color="pink")+
+                               Span("09", color="yellow", font="cambria math"),
+                               scale=0.5, wait=0, move=(-2.5, -1), fade=False)
+
+        self.wait(2)
+
+
+        # 2231 / 91 = 2231 / 91
+        # DC = 09 = 11'
+        # Subs = 22', 44'
+        # q = 24, r=53'
+        d = Divop(self, "2231", "91","11'",
+                  subs = ["22'", "44'"],
+                  carries = "00",
+                  answer = "2453'",
+                  nikhilam = True,
+                  ansplaces = 2)
+        d.step_all(wait=3)
+
+        title1 = DisplayText(self,
+                             Span("Thus, the Quotient is ", color="Turquoise") +
+                             Span("24 ", color="yellow", font="cambria math") +
+                             Span("and Remainder is ", color="Turquoise") +
+                             Span("47", color="yellow", font="cambria math"),
+                             scale=0.5, wait=0, move=(2, -1),
+                             fade=False)
+
+        self.wait(4)
+
+        d.clear()
+        self.next_section()
+
+        self.play(FadeOut(title1))
+
+        self.play(FadeOut(title_h1, title_h2,title_h3))
+
+
+        text = [
+            f"Now let's see another division using the",
+            f"vinculum form of both <span color='cyan'>Dividend </span>and <span color='cyan'>Divisor Complement.</span>"]
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                               Span("7873 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("81:", color="yellow", font="cambria math"),
+                               scale=0.6, wait=0, move=(-3.5, -1), fade=False)
+        self.wait(1)
+        title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                               Span("2 ", color="yellow", font="cambria math"),
+                               scale=0.5, wait=0, move=(-3, -1), fade=False)
+
+        self.wait(2)
+        title_h3 = DisplayText(self,  Span("Complement of the divisor,", color="pink") +
+                               Span("81", color="yellow", font="cambria math") +
+                               Span("=", color="pink")+
+                               Span("19", color="yellow", font="cambria math"),
+                               scale=0.5, wait=0, move=(-2.5, -1), fade=False)
+
+        self.wait(2)
+
+
+        # 7873 / 81 = 12'1'3'3 / 81
+        # DC = 19 = 21'
+        # Subs = 21', 00, 4'2
+        # q = 21, r=74
+        d = Divop(self, 7873, "81","21'",
+                  dividend_xform="12'1'3'3",
+                  subs = ["21'", "00", "4'2"],
+                  carries = "00",
+                  answer = "102'7'5",
+                  nikhilam = True,
+                  ansplaces = 3)
+        d.step_all(wait=3)
+
+
+
+
+        title1 = DisplayText(self,
+                             Span("Since the remainder is -ve, we add divisor(", color="Turquoise") +
+                             Span("81", color="white", font="cambria math") +
+                             Span(") to it and subtract ", color="Turquoise") +
+                             Span("1 ", color="white", font="cambria math") +
+                             Span("from Quotient", color="Turquoise"),
+                             scale=0.5, wait=4, move=(2, -1),
+                             fade=False)
+        self.wait(4)
+
+        title2 = DisplayText(self,
+                             Span("Thus, Final values are: Quotient = ", color="Turquoise") +
+                             Span("97 ", color="yellow", font="cambria math") +
+                             Span("and Remainder = ", color="Turquoise") +
+                             Span("16", color="yellow", font="cambria math"), scale=0.5,
+                             wait=4, move=(2.5, -1),
+                             fade=False)
+
+        self.wait(1)
+        
+        d.clear()
+        self.next_section()
+
+
+
+
+        self.play(FadeOut(title1, title2))
+
+        self.play(FadeOut(title_h1, title_h2,title_h3))
+        self.next_section()
+
+
+
+
+class ParavartyaDivision(Scene):
+    def construct(self):
+            Title(self, "हरणम् 3", "Division 3", move=(3, 5), wait=2)
+            self.next_section()
+            self.wait(1)
+
+            text = [
+                f"Today we are learning a new method of division called <span color='cyan'>परावर्त्य</span> ",
+                f"Instead of the complement of the divisor,",
+                f"the <span color='cyan'>divisor itself is used here.</span> ",
+                f"This method is useful when <span color='cyan'>the first digit of the divisor is 1.</span> "
+                ]
+
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"In this method, first digit (which is always 1)",
+                f"is not involved in the division process.",
+                f"The sign of the other digits are altered and ",
+                f"the division is done just like Nikhilam",
+                f"Let's view the process through an example."
+            ]
+
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+
+            # 12321 / 11
             # Subs = 1', 1', 2'
             # q = 1120, r=1
+
+
             d = Divop(self, "12321", "11","11'",
                       subs = ["1'", "1'", "2'"],
                       carries = "00",
@@ -275,4 +661,39 @@ class ParavartyaDivison(Scene):
             d.step_all(wait=3)
             d.clear()
             self.next_section()
+
+            """
+
+            d = Divop(self, "2818", "14", "14'",
+                      subs=["2", "0", "1"],
+                      carries="00",
+                      answer="2014",
+                      ansplaces=3)
+            d.step_all(wait=3)
+            d.clear()
+           
+            self.next_section()
+            """
+
+            text = [
+                f"Just like <span color='cyan'>Nikhilam Division,</span> in <span color='cyan'>Paravartya</span> also, ",
+                f"we can use the <span color='cyan'>vinculum notation</span> for the further digits",
+                f"while the <span color='yellow'>first digit remains as 1</span>"]
+
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+
+            titleL1 = DisplayText(self,
+                                  Span("Thank you for watching the video.", color="lawngreen"), scale=0.7, wait=1,
+                                  move=(-2, -1), fade=False)
+            titleL2 = DisplayText(self,
+                                  Span("Don't forget to Subscribe,Like,Share and Comment.", color="lawngreen"), scale=0.6,
+                                  wait=1, move=(-1, -1),
+                                  fade=False)
+            titleL3 = DisplayText(self,
+                                  Span("And press the Bell Icon too.", color="lawngreen"), scale=0.6, wait=1, move=(0, -1),
+                                  fade=False)
+
+            self.wait(1)
+            self.play(FadeOut(titleL3, titleL2, titleL1))
        
