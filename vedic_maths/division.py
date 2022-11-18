@@ -734,7 +734,7 @@ class ParavartyaDivision(Scene):
             self.wait(2)
 
             d = Divop(self, "2818", "14", "14'",
-                      subs=["2", "0", "1"],
+                      subs=["8'", "0", "4'"],
                       carries="00",
                       answer="2014",
                       ansplaces=3)
