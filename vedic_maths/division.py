@@ -73,9 +73,14 @@ class Divop:
                 
         self.raw = MathTex(dividend, "\divisionsymbol", divisor, color="White")  # Raw divisor
         self.rx  = MT(dividend_xform)
-        self.divisor_x = MT(divisor_xform, color='Lime') # Transformed divisor
         self.e_dividend = MT(dividend_xform).arrange(buff=1)  # Dividend
-
+        if divisor_xform2 is not None:
+                self.divisor_x2 = MT(divisor_xform2, color='Lime') # Transformed divisor
+                self.divisor_x = MT(divisor_xform)
+                self.divisor_x2p = True
+        else:
+                self.divisor_x = MT(divisor_xform, color='Lime') # Transformed divisor
+                self.divisor_x2p = False
         self.scene.wait(1)
 
         if vertical:
@@ -146,6 +151,10 @@ class Divop:
                 self.divisor_x.move_to(self.raw[2])
                 self.raw[1].become(_t)
                 scene.play(Transform(self.raw[2], self.divisor_x))
+                if self.divisor_x2p:
+                        scene.wait(2)
+                        self.divisor_x2.move_to(self.raw[2])
+                        scene.play(Transform(self.raw[2], self.divisor_x2))
                 scene.wait(4)
                 if self.dividend_xformp:
                         self.rx.move_to(self.raw[0])
@@ -804,7 +813,7 @@ class ParavartyaDivisionVinculum(Scene):
 
 
             text = [
-                f"By now, we all know the <span color='yellow'>benefit</span> of <span color='cyan'>Vinculum numbers.</span>",
+                f"By now, we know the <span color='yellow'>benefit</span> of <span color='cyan'>Vinculum numbers.</span>",
                 f"<span color='cyan'>Face value</span> of the number is <span color='cyan'>reduced</span> in the <span color='cyan'>vinculum </span>form ",
                 f"and this makes the <span color='yellow'>mathematical operations much easier.</span>",
                 f"And if we are good in <span color='cyan'>negative number handling</span>,",
@@ -826,7 +835,8 @@ class ParavartyaDivisionVinculum(Scene):
 
             self.wait(2)
             
-            d = Divop(self, "2412", "108", "11'2'", divisor_xform2="11'2",
+            d = Divop(self, "2412", "108",
+                      divisor_xform="112'", divisor_xform2="11'2",
                       subs=["2'4", "2'4"],
                       carries="00",
                       answer="2236",
@@ -857,7 +867,8 @@ class ParavartyaDivisionVinculum(Scene):
             self.wait(2)
 
 
-            d = Divop(self, "1298", "12", "12'",
+            d = Divop(self, "1298", "12",
+                      divisor_xform="12'",
                       subs=["2'", "2'","4"],
                       carries="00",dividend_xform="1302'",
                       answer="112'2",
