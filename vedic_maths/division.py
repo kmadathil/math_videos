@@ -244,18 +244,18 @@ class Divop:
 
 def lastscene(self):
     titleL1 = DisplayText(self,
-            Span("Thank you for watching this video.", color="lawngreen"), scale=0.7, wait=1,
+            Span("Thank you for watching this video.", color="yellow"), scale=0.7, wait=1,
             move=(-2.5, -1), fade=False)
     titleL2 = DisplayText(self,
-                Span("Please let us know your feedback by your Likes and Comments.", color="lawngreen"),
+                Span("Please let us know your feedback by your Likes and Comments.", color="yellow"),
                         scale=0.6, wait=2, move=(-1.5, -1),fade=False)
     titleL2 = DisplayText(self,
             Span("Share the video with your friends too.",
-            color="lawngreen"),scale=0.6,wait=3, move=(-1, -1), fade=False)
+            color="yellow"),scale=0.6,wait=3, move=(-1, -1), fade=False)
     self.wait(2)
 
     titleL3 = DisplayText(self,
-                              Span("Kindly subscribe to our Channel and press the Bell Icon too.", color="lawngreen"),
+                              Span("Kindly subscribe to our Channel and press the Bell Icon too.", color="yellow"),
                               scale=0.6, wait=2, move=(0, -1),
                               fade=False)
 
@@ -805,8 +805,8 @@ class ParavartyaDivisionVinculum(Scene):
 
             text = [
                 f"Let's continue <span color='cyan'>Paravartya(परावर्त्य) division.</span> ",
-                f"In this video,we learn to solve some problems",
-                f"in which the dividend or divisor is in the vinculum form.",
+                f"In this video, we learn to solve some problems",
+                f"in which the dividend or divisor is in the <span color='cyan'>vinculum form.</span>",
             ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
@@ -817,8 +817,28 @@ class ParavartyaDivisionVinculum(Scene):
                 f"<span color='cyan'>Face value</span> of the number is <span color='cyan'>reduced</span> in the <span color='cyan'>vinculum </span>form ",
                 f"and this makes the <span color='yellow'>mathematical operations much easier.</span>",
                 f"And if we are good in <span color='cyan'>negative number handling</span>,",
-                f"Vinculum form of a number will surely <span color='yellow'>save our time.</span>"
+                f"<span color='cyan'>Vinculum form </span>of a number will surely <span color='yellow'>save our time.</span>"
             ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"Let's recap the <span color='cyan'>Paraavartya</span> Method.",
+                f"We use this method only when the <span color='cyan'>first digit of the divisor is 1</span>",
+                f"and <span color='cyan'>divisor</span> itself is <span color='cyan'>used for the Division Process</span>.",
+                f"<span color='cyan'>First digit</span> of the <span color='cyan'>divisor</span> is <span color='cyan'>not used </span>in the Division.",
+                f"Rest of the digits are marked as <span color='cyan'>negative.</span>"
+            ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"In our first example,",
+                f"we are doing the division with <span color='cyan'>vinculum of Divisor</span>.",
+                f"So, <span color='cyan'>first we convert the divisor</span> to its <span color='cyan'>Vinculum</span> form.",
+                f"Then we alter the <span color='cyan'>sign of all digits </span><span color='yellow'>except </span> <span color='cyan'>the first digit.</span>",
+                f"Let's see the process in detail. "
+                            ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
