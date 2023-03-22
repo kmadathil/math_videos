@@ -30,6 +30,26 @@ def vinc_list(l):
                 v = l   # Directly run vinc_str on elements
         return [vinc_str(x) for x in v]
 
+def vinc_int(l):
+        if isinstance(l, str) and "'" in l:
+                # String with ' for vinculum
+                # We will transform this into a list of digits
+                v = []  # This will contain the result
+                for l_ in l:
+                        # If you see a ', the last digit is negative
+                        if l_ == "'":
+                                v[-1] = -1 * v[-1]
+                        else:
+                                # Slurp in next digit
+                                v.append(int(l_))
+                i = 0
+                for _v in v:
+                    i = i*10+_v
+                return i
+        else:
+                v = int(l)   
+                return v
+
 def MT(snum, color="Yellow"):
     ''' Wrapper - MathTex(*vinc_list(snum)) '''
     el = vinc_list(snum)
@@ -50,6 +70,9 @@ class Divop:
                  dividend_xform=None, divisor_xform2 = None,
                  subs=[], carries=[], answer=None, ansplaces=0,
                  vertical = False, nikhilam=False,
+                 backtrackp = False, backtrack_en=[],
+                 backtrack_subs=[], backtrack_carries=[], backtrack_answer=None,
+                 backtrack_next_answer=None,
                  wait=1):
         '''
         Division operator
@@ -103,10 +126,32 @@ class Divop:
 
         # Setup future subparts
         self.subs = subs
-        self.answer  = MT(answer)
+        if isinstance(answer, list):
+                a_ = [MT(a) for a in answer]
+                self.answer = VGroup(*a_)
+        else:
+                self.answer  = MT(answer)
         self.carries = carries
         self.ansplaces = ansplaces
 
+        self.backtrackp = backtrackp
+        self.backtrack_subs = backtrack_subs
+        if backtrack_answer is not None:
+                if isinstance(backtrack_answer, list):
+                        a_ = [MT(a) for a in backtrack_answer]
+                        self.backtrack_answer = VGroup(*a_)
+                else:
+                        self.backtrack_answer  = MT(backtrack_answer)
+        if backtrack_next_answer is not None:
+                if isinstance(backtrack_next_answer, list):
+                        a_ = [MT(a) for a in backtrack_next_answer]
+                        self.backtrack_next_answer = VGroup(*a_)
+                else:
+                        self.backtrack_next_answer  = MT(backtrack_next_answer)
+        self.backtrack_carries = backtrack_carries
+        self.backtrack_en = backtrack_en
+
+        
     def clear(self):
             self.scene.remove(self.g1, self.gc, self.ga, self.g2, self.vln)
             if self.flag:
@@ -119,7 +164,7 @@ class Divop:
                     self.step(i)
             self.scene.wait(wait)
                     
-    def step(self, n=0, wait=1):
+    def step(self, n=0, wait=1, is_backtracking=False):
         ''' Single step (nth)
         
             n: integer
@@ -132,13 +177,22 @@ class Divop:
         def _realign():   # Update alignments after redisplay
                 gc.arrange(RIGHT, buff=1)
                 ga.arrange(RIGHT, buff=1)
+                # Answer pre-alignment
+                for i, ax in enumerate(g2[-1]):
+                        ax.next_to(g2[0][i], DOWN, aligned_edge=RIGHT)
                 g2.arrange(DOWN, aligned_edge=LEFT)
                 g1.arrange(RIGHT, aligned_edge=UP)
                 # We do this instead of prepending gc to g2
                 # to keep the divisor and vline alignment right
-                gc.next_to(g2, UP, aligned_edge=LEFT)
+                for i, gcx in enumerate(gc):
+                        gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT)
+                # Loop over subs for horizontal alignment
+                for i in range(1, len(g2)-2):
+                        for j, fcx in enumerate(g2[i]):
+                                # sub alignment wrt previous row
+                                fcx.next_to(g2[i-1][j], DOWN, aligned_edge=RIGHT)
                 
-                
+
         scene = self.scene
         if n==0:
                 # Display raw division statement
@@ -189,14 +243,18 @@ class Divop:
                 self.g2 = g2
                 self.gc = gc
                 self.ga = ga
-        else:
+        elif ((not self.backtrackp) or (not self.backtrack_en[n-1]) or is_backtracking):
+                # Normal, or recursive call after backtracking
                 ga = self.ga
                 gc=self.gc
                 g2 = self.g2
                 g1 = self.g1
 
                 # First, show the next answer bit
-                ga += self.answer[n-1]
+                if is_backtracking:
+                        ga[-1].become(self.answer[n-1])
+                else:
+                        ga += self.answer[n-1]
 
                 if n > self.ansplaces:
                         self.answer[n-1].set_color(RED)
@@ -211,16 +269,87 @@ class Divop:
                 # Only nonzero carries are visible
                 if n <= len(self.carries):
                         c = self.carries[n-1]
-                        _col = "Grey" if int(c) else "Black"
-                        gc += MT(c, color=_col)
+                        _col = "Grey" if vinc_int(c) else "Black"
+                        ct = MT(c, color=_col)
+                        if is_backtracking:
+                                gc[-1].become(ct)
+                        else:
+                                gc += ct
                         _realign()
-                        if int(c):
+                        if vinc_int(c):
                                 self.scene.wait(4)
 
                 
-                # Show the next flag carries
+                # Show the next flag carries / subs
                 if n <= len(self.subs):
-                        self.scene.play(Indicate(self.answer[n-1]))
+                        dlen = len(self.e_dividend)
+                        self.scene.play(Indicate(ga[-1]))
+                        if self.flag:
+                                self.scene.play(Indicate(self.e_divisor[1:]))
+                        else:
+                                self.scene.play(Indicate(self.e_divisor))
+
+                        scene.wait(4)
+                        s = self.subs[n-1]
+                        s_ = VGroup()
+                        # We pad the subs on both sides with invisible 0s
+                        # to get the alignment right later
+                        for i in range(n):
+                                s_ += MT("0", color='Black')
+                        if isinstance(s, list):
+                                for sx in s:
+                                        s_ += MT(sx, color='White')
+                        else:
+                                st = MT(s, color='White')
+                                for sx in st:
+                                        s_ += sx
+                        for i in range(dlen-len(s_)):
+                                s_ += MT("0", color='Black')
+                        if is_backtracking:
+                                g2[-3].become(s_)
+                        else:
+                                g2 -= self.ga
+                                g2 -= self.hln
+                                g2 += s_
+                                g2 += self.hln
+                                g2 += self.ga
+                        _realign()
+                        self.scene.wait(wait)
+        else:
+                # Need backtracking
+                ga = self.ga
+                gc=self.gc
+                g2 = self.g2
+                g1 = self.g1
+
+                # First, show the next answer bit, which we will later backtrack
+                ga += self.backtrack_answer[n-1]
+
+                if n > self.ansplaces:
+                        self.backtrack_answer[n-1].set_color(RED)
+                else:
+                        self.backtrack_answer[n-1].set_color(GREEN)
+
+                _realign()
+
+                self.scene.wait(4)
+
+                # Next, show the next carry that will be backtracked
+                # Only nonzero carries are visible
+                if n <= len(self.backtrack_carries):
+                        c = self.backtrack_carries[n-1]
+                        _col = "Grey" if vinc_int(c) else "Black"
+                        c_ = MT(c, color=_col)
+                        gc += c_
+                        _realign()
+                        if vinc_int(c):
+                                self.scene.wait(4)
+
+                
+                # Show the next backtracking flag carries
+                if n <= len(self.backtrack_subs):
+                        dlen = len(self.e_dividend)
+                        self.scene.play(Indicate(self.backtrack_answer[n-1]))
                         if self.flag:
                                 self.scene.play(Indicate(self.e_divisor[1:]))
                         else:
@@ -229,19 +358,47 @@ class Divop:
                         scene.wait(4)
                         g2 -= self.ga
                         g2 -= self.hln
-                        s = self.subs[n-1]
-                        # Prepend dots so we align to the
-                        # correct divisor digit
-                        s_ = MT("0"*n + s, color='White').arrange(buff=1)
-                        # Set the prepended digits color to black to hide it
-                        # FIXME: find a more elegant solution
-                        s_[0:n].set_color(BLACK)
+                        s = self.backtrack_subs[n-1]
+                        s_ = VGroup()
+                        # We pad the subs on both sides with invisible 0s
+                        # to get the alignment right later
+                        for i in range(n):
+                                s_ += MT("0", color='Black')
+                        if isinstance(s, list):
+                                for sx in s:
+                                        s_ += MT(sx, color='White')
+                        else:
+                                st = MT(s, color='White')
+                                for sx in st:
+                                        s_ += sx
+                        for i in range(dlen-len(s_)):
+                                s_ += MT("0", color='Black')
                         g2 += s_
                         g2 += self.hln
                         g2 += self.ga
                         _realign()
-                        self.scene.wait(wait)
+                        self.scene.wait(4)
+                        
+                # Show the next answer bit, so we can establish the need to backtrack
+                ga += self.backtrack_next_answer[n-1]
 
+                self.backtrack_next_answer[n-1].set_color(GREY)
+                _realign()
+                self.scene.wait(2)
+                self.backtrack_answer[n-1].set_color(GREY)
+                if n <= len(self.backtrack_carries):
+                        c_.set_color(BLACK)
+                if n <= len(self.backtrack_subs):
+                        s_[n:n+len(s)].set_color(GREY)
+                self.scene.wait(4)
+                
+                # Now we have established the need to backtrack
+                ## Remove next answer
+                ga -= self.backtrack_next_answer[n-1]
+                # Now we recursively call step with backtracking enabled.
+                self.step(n, wait=wait, is_backtracking=True)
+
+                
 def lastscene(self):
     titleL1 = DisplayText(self,
             Span("Thank you for watching this video.", color="yellow"), scale=0.7, wait=1,
@@ -904,7 +1061,34 @@ class ParavartyaDivisionVinculum(Scene):
 
             lastscene(self)
 
+class TestVilokanam(Scene):
+        def construct(self):
+            Title(self, "Vilokanam", "Test", move=(3, 5), wait=2)
+            self.next_section()
+            self.wait(1)
+            d = Divop(self, "23276", "81", "21'",
+                      subs = ["42'", ["14", "7'"], ["28", "1'4'"]],
+                      carries = "00",
+                      answer = ["2","7","14", "28", "8'"],
+                      nikhilam = True,
+                      ansplaces = 3)
+            
+            d.step_all(wait=4)
+            d.clear()
+            d = Divop(self, "23276", "81", "21'",
+                       subs = ["42'", ["16", "8'"], ["14", "7'"]],
+                       carries = ["0","1'0'", "1'0'", "10"],
+                       answer = "28729",
+                       backtrack_subs = ["42'", ["14", "7'"], ["12", "6'"]],
+                       backtrack_carries = "0000",
+                       backtrack_answer = ["2","7","6", "3", "8"],
+                       backtrack_next_answer = ["7","14", "11", "1'"],
+                       backtrack_en=[False, True, True, True, False],
+                       nikhilam = True,
+                       backtrackp = True,
+                       ansplaces = 3)
 
+            d.step_all(wait=4)
 
 
 
