@@ -414,7 +414,7 @@ def lastscene(self):
     self.wait(2)
 
     titleL3 = DisplayText(self,
-                              Span("Kindly subscribe to our Channel and press the Bell Icon too.", color="yellow"),
+                              Span("Do Subscribe to our Channel and press the Bell Icon!", color="yellow"),
                               scale=0.6, wait=2, move=(0, -1),
                               fade=False)
 
@@ -1067,7 +1067,7 @@ class Vilokanam(Scene):
     def Iqr(self, quotient, remainder):
         q1 = MarkupText("Thus, the Quotient is").scale(0.65).set_color(TEAL_C).move_to(2 * LEFT + DOWN * 2)
         q2 = MarkupText(str(quotient)).scale(0.65).set_color(YELLOW).next_to(q1, RIGHT)
-        r1 = MarkupText("and Remainder is").scale(0.65).set_color(TEAL_C).next_to(q2, RIGHT)
+        r1 = MarkupText("and the Remainder is").scale(0.65).set_color(TEAL_C).next_to(q2, RIGHT)
         r2 = MarkupText(str(remainder)).scale(0.65).set_color(YELLOW).next_to(r1, RIGHT)
         self.play(FadeIn(q1, q2, r1, r2))
         self.play(Indicate(q2))
@@ -1081,31 +1081,33 @@ class Vilokanam(Scene):
             self.wait(1)
 
             text = [
-                f"In this video,",
-                f"we learn the advanced level of division ",
-                f"by the sutra <span color='cyan'>Vilokanam.</span> ",
-                f"First, let's check the <span color='yellow'>difficulty in the basic level</span>",
-                f"and then we solve it by <span color='cyan'>Vilokanam.</span>"
+                    f"In this video,",
+                    f"we learn to make division simpler",
+                    f"using the sutra <span color='cyan'>Vilokanam.</span> ",
+                    f"First, let's note a <span color='yellow'>problem with the basic method</span>",
+                    f"and then we solve it by <span color='cyan'>Vilokanam.</span>"
             ]
-
+            
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
           
             text = [
-                f"During division,",
-                f"quotient or remainder digits may be >10 causing a 2 digit number.",
-                f"Of course, we can continue with this and write the final answer by",
-                f"by choosing the unit digit and treating the remaining digits as carry.",
-                f"But if we control each digit to be single, ",
-                f"the division process will be rather easy."
+                    f"During division, quotient or remainder digits may be >10,",
+                    f"causing a 2 digit number where we want only a single digit.",
+                    f"As we have seen, we can continue forward",
+                    f"and assemble the final answer",
+                    f"by keeping the unit digits and treating the remaining digits as carry.",
+                    f"But if we control each digit to be single,",
+                    f"the division process will be even easier."
                 ]
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
             text = [
-                f"So, how can we do this?",
-                f"We fix the current digit after overseeing the value of the next digit.",
-                f"If the next digit won't be single,",
-                f"we take a part of the current digit as carry to next digit ",
-                f"so that next digit will be single."
+                    f"So, how can we do this?",
+                    f"We fix the current digit after looking ahead",
+                    f"to the value of the next digit.",
+                    f"If the next digit won't be single,",
+                    f"we take a part of the current digit as carry to next digit ",
+                    f"so that next digit will be single."
             ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)           
@@ -1120,7 +1122,7 @@ class Vilokanam(Scene):
 
             title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
                                    Span("3", color="yellow", font="cambria math")+
-                                   Span(" and Complement of the divisor,", color="pink") +
+                                   Span(" and Complement of the divisor, ", color="pink") +
                                    Span("81", color="yellow", font="cambria math") +
                                    Span("=", color="pink") +
                                    Span("19", color="yellow", font="cambria math"),
@@ -1212,13 +1214,12 @@ class Vilokanam(Scene):
 
             text = [
                 f"Using the same procedure, ",
-                f"we can simplify the Paravartya division also.",
-                f"Let's see an example of that too."
+                f"we can simplify Paravartya division also.",
+                f"Let's see an example of that."
             ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
-            """
             d = Divop(self, "3458", "13",
                        divisor_xform="13'",
                        subs = ["6'", ["1'8'"], ["1'8'"]],
@@ -1227,14 +1228,17 @@ class Vilokanam(Scene):
                        backtrack_subs = [["9'"],["2'4'"],["2'1'"]],
                        backtrack_carries = "0000",
                        backtrack_answer = ["3","8","7","0"],
-                       backtrack_next_answer = ["5'",["1'9'"],["1'3'"]],
+                       backtrack_next_answer = ["5'","1'9'","1'3'"],
                        backtrack_en=[True, True, True,False],
                        backtrackp = True,
                        ansplaces = 3)
 
             d.step_all(wait=4)
+            
+            (q1, q2, r1, r2) = self.Iqr(266, 0)
+            self.wait(1)
+
             d.clear()
-            """
             lastscene(self)
 
 
