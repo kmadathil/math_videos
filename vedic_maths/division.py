@@ -97,6 +97,7 @@ class Divop:
         self.raw = MathTex(dividend, "\divisionsymbol", divisor, color="White")  # Raw divisor
         self.rx  = MT(dividend_xform)
         self.e_dividend = MT(dividend_xform).arrange(buff=1)  # Dividend
+
         if divisor_xform2 is not None:
                 self.divisor_x2 = MT(divisor_xform2, color='Lime') # Transformed divisor
                 self.divisor_x = MT(divisor_xform)
@@ -131,6 +132,7 @@ class Divop:
                 self.answer = VGroup(*a_)
         else:
                 self.answer  = MT(answer)
+
         self.carries = carries
         self.ansplaces = ansplaces
 
@@ -150,7 +152,6 @@ class Divop:
                         self.backtrack_next_answer  = MT(backtrack_next_answer)
         self.backtrack_carries = backtrack_carries
         self.backtrack_en = backtrack_en
-
         
     def clear(self):
             self.scene.remove(self.g1, self.gc, self.ga, self.g2, self.vln)
@@ -184,15 +185,16 @@ class Divop:
                 g1.arrange(RIGHT, aligned_edge=UP)
                 # We do this instead of prepending gc to g2
                 # to keep the divisor and vline alignment right
+
                 for i, gcx in enumerate(gc):
                         gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT)
                 # Loop over subs for horizontal alignment
+                 
                 for i in range(1, len(g2)-2):
                         for j, fcx in enumerate(g2[i]):
                                 # sub alignment wrt previous row
                                 fcx.next_to(g2[i-1][j], DOWN, aligned_edge=RIGHT)
                 
-
         scene = self.scene
         if n==0:
                 # Display raw division statement
@@ -401,18 +403,18 @@ class Divop:
                 
 def lastscene(self):
     titleL1 = DisplayText(self,
-            Span("Thank you for watching this video.", color="lawngreen"), scale=0.7, wait=1,
+            Span("Thank you for watching this video.", color="yellow"), scale=0.7, wait=1,
             move=(-2.5, -1), fade=False)
     titleL2 = DisplayText(self,
-                Span("Please let us know your feedback by your Likes and Comments.", color="lawngreen"),
+                Span("Please let us know your feedback by your Likes and Comments.", color="yellow"),
                         scale=0.6, wait=2, move=(-1.5, -1),fade=False)
     titleL2 = DisplayText(self,
             Span("Share the video with your friends too.",
-            color="lawngreen"),scale=0.6,wait=3, move=(-1, -1), fade=False)
+            color="yellow"),scale=0.6,wait=3, move=(-1, -1), fade=False)
     self.wait(2)
 
     titleL3 = DisplayText(self,
-                              Span("Kindly subscribe to our Channel and press the Bell Icon too.", color="lawngreen"),
+                              Span("Kindly subscribe to our Channel and press the Bell Icon too.", color="yellow"),
                               scale=0.6, wait=2, move=(0, -1),
                               fade=False)
 
@@ -962,8 +964,8 @@ class ParavartyaDivisionVinculum(Scene):
 
             text = [
                 f"Let's continue <span color='cyan'>Paravartya(परावर्त्य) division.</span> ",
-                f"In this video,we learn to solve some problems",
-                f"in which the dividend or divisor is in the vinculum form.",
+                f"In this video, we learn to solve some problems",
+                f"in which the dividend or divisor is in the <span color='cyan'>vinculum form.</span>",
             ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
@@ -974,8 +976,28 @@ class ParavartyaDivisionVinculum(Scene):
                 f"<span color='cyan'>Face value</span> of the number is <span color='cyan'>reduced</span> in the <span color='cyan'>vinculum </span>form ",
                 f"and this makes the <span color='yellow'>mathematical operations much easier.</span>",
                 f"And if we are good in <span color='cyan'>negative number handling</span>,",
-                f"Vinculum form of a number will surely <span color='yellow'>save our time.</span>"
+                f"<span color='cyan'>Vinculum form </span>of a number will surely <span color='yellow'>save our time.</span>"
             ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"Let's recap the <span color='cyan'>Paraavartya</span> Method.",
+                f"We use this method only when the <span color='cyan'>first digit of the divisor is 1</span>",
+                f"and <span color='cyan'>divisor</span> itself is <span color='cyan'>used for the Division Process</span>.",
+                f"<span color='cyan'>First digit</span> of the <span color='cyan'>divisor</span> is <span color='cyan'>not used </span>in the Division.",
+                f"Rest of the digits are marked as <span color='cyan'>negative.</span>"
+            ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"In our first example,",
+                f"we are doing the division with <span color='cyan'>vinculum of Divisor</span>.",
+                f"So, <span color='cyan'>first we convert the divisor</span> to its <span color='cyan'>Vinculum</span> form.",
+                f"Then we alter the <span color='cyan'>sign of all digits </span><span color='yellow'>except </span> <span color='cyan'>the first digit.</span>",
+                f"Let's see the process in detail. "
+                            ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
@@ -1041,11 +1063,72 @@ class ParavartyaDivisionVinculum(Scene):
 
             lastscene(self)
 
-class TestVilokanam(Scene):
-        def construct(self):
-            Title(self, "Vilokanam", "Test", move=(3, 5), wait=2)
+class Vilokanam(Scene):
+    def Iqr(self, quotient, remainder):
+        q1 = MarkupText("Thus, the Quotient is").scale(0.65).set_color(TEAL_C).move_to(2 * LEFT + DOWN * 2)
+        q2 = MarkupText(str(quotient)).scale(0.65).set_color(YELLOW).next_to(q1, RIGHT)
+        r1 = MarkupText("and Remainder is").scale(0.65).set_color(TEAL_C).next_to(q2, RIGHT)
+        r2 = MarkupText(str(remainder)).scale(0.65).set_color(YELLOW).next_to(r1, RIGHT)
+        self.play(FadeIn(q1, q2, r1, r2))
+        self.play(Indicate(q2))
+        self.play(Indicate(r2))
+        return (q1, q2, r1, r2)
+
+    def construct(self):
+
+            Title(self, "विलोकनेन हरणम्  ", "Division by Observation ", move=(3, 5), wait=2)
             self.next_section()
             self.wait(1)
+
+            text = [
+                f"In this video,",
+                f"we learn the advanced level of division ",
+                f"by the sutra <span color='cyan'>Vilokanam.</span> ",
+                f"First, let's check the <span color='yellow'>difficulty in the basic level</span>",
+                f"and then we solve it by <span color='cyan'>Vilokanam.</span>"
+            ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+          
+            text = [
+                f"During division,",
+                f"quotient or remainder digits may be >10 causing a 2 digit number.",
+                f"Of course, we can continue with this and write the final answer by",
+                f"by choosing the unit digit and treating the remaining digits as carry.",
+                f"But if we control each digit to be single, ",
+                f"the division process will be rather easy."
+                ]
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            text = [
+                f"So, how can we do this?",
+                f"We fix the current digit after overseeing the value of the next digit.",
+                f"If the next digit won't be single,",
+                f"we take a part of the current digit as carry to next digit ",
+                f"so that next digit will be single."
+            ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)           
+
+
+            title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                                   Span("23276 ", color="yellow", font="cambria math") +
+                                   Span("by ", color="Turquoise") +
+                                   Span("81:", color="yellow", font="cambria math"),
+                                   scale=0.4, wait=0, move=(-3, -1), fade=False)
+            self.wait(1)
+
+            title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                                   Span("3", color="yellow", font="cambria math")+
+                                   Span(" and Complement of the divisor,", color="pink") +
+                                   Span("81", color="yellow", font="cambria math") +
+                                   Span("=", color="pink") +
+                                   Span("19", color="yellow", font="cambria math"),
+                                   scale=0.4, wait=0, move=(-2.5, -1), fade=False)
+
+            self.wait(2)
+
+
             d = Divop(self, "23276", "81", "21'",
                       subs = ["42'", ["14", "7'"], ["28", "1'4'"]],
                       carries = "00",
@@ -1054,14 +1137,23 @@ class TestVilokanam(Scene):
                       ansplaces = 3)
             
             d.step_all(wait=4)
+
+
+            (q1, q2, r1, r2) = self.Iqr(287,29)
+            self.wait(1)
+
             d.clear()
+            self.play(FadeOut(title_h1, title_h2))
+            self.play(FadeOut(q1, q2, r1, r2))
+
+            
             d = Divop(self, "23276", "81", "21'",
                        subs = ["42'", ["16", "8'"], ["14", "7'"]],
                        carries = ["0","1'0'", "1'0'", "10"],
                        answer = "28729",
                        backtrack_subs = ["42'", ["14", "7'"], ["12", "6'"]],
                        backtrack_carries = "0000",
-                       backtrack_answer = ["2","7","6", "3", "8"],
+                       backtrack_answer = ["2","7","6", "3", "1'"],
                        backtrack_next_answer = ["7","14", "11", "1'"],
                        backtrack_en=[False, True, True, True, False],
                        nikhilam = True,
@@ -1071,9 +1163,80 @@ class TestVilokanam(Scene):
             d.step_all(wait=4)
 
 
+            (q1, q2, r1, r2) = self.Iqr(287, 29)
+            self.wait(1)
+
+            d.clear()
+            self.play(FadeOut(title_h1, title_h2))
+            self.play(FadeOut(q1, q2, r1, r2))
+
+            title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                                   Span("32458 ", color="yellow", font="cambria math") +
+                                   Span("by ", color="Turquoise") +
+                                   Span("88:", color="yellow", font="cambria math"),
+                                   scale=0.4, wait=0, move=(-3, -1), fade=False)
+            self.wait(1)
+
+            title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                                   Span("3", color="yellow", font="cambria math")+
+                                   Span(" and Complement of the divisor,", color="pink") +
+                                   Span("88", color="yellow", font="cambria math") +
+                                   Span("=", color="pink") +
+                                   Span("02", color="yellow", font="cambria math"),
+                                   scale=0.4, wait=0, move=(-2.5, -1), fade=False)
+
+            self.wait(2)
+
+
+            d = Divop(self, "32458", "88", "12",
+                       subs = ["36", ["6", "12"], ["8", "16"]],
+                       carries = ["0","1'0'", "2'0'", "2'0'"],
+                       answer = "36874",
+                       backtrack_subs = ["36", ["5", "10"], ["6", "12"]],
+                       backtrack_carries = "0000",
+                       backtrack_answer = ["3","5","6", "5", "24"],
+                       backtrack_next_answer = ["5","15", "23", "24"],
+                       backtrack_en=[False, True, True, True, False],
+                       nikhilam = True,
+                       backtrackp = True,
+                       ansplaces = 3)
+
+            d.step_all(wait=4)
+
+            (q1, q2, r1, r2) = self.Iqr(368,74)
+            self.wait(1)
+
+            d.clear()
+            self.play(FadeOut(title_h1, title_h2))
+            self.play(FadeOut(q1, q2, r1, r2))
+
+            text = [
+                f"Using the same procedure, ",
+                f"we can simplify the Paravartya division also.",
+                f"Let's see an example of that too."
+            ]
+
+            e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            """
+            d = Divop(self, "3458", "13",
+                       divisor_xform="13'",
+                       subs = ["6'", ["1'8'"], ["1'8'"]],
+                       carries = ["10", "20", "10"],
+                       answer = "2660",
+                       backtrack_subs = [["9'"],["2'4'"],["2'1'"]],
+                       backtrack_carries = "0000",
+                       backtrack_answer = ["3","8","7","0"],
+                       backtrack_next_answer = ["5'",["1'9'"],["1'3'"]],
+                       backtrack_en=[True, True, True,False],
+                       backtrackp = True,
+                       ansplaces = 3)
+
+            d.step_all(wait=4)
+            d.clear()
+            """
+            lastscene(self)
 
 
 
 
-
-       
