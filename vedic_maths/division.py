@@ -1235,7 +1235,6 @@ class Vilokanam(Scene):
             d.step_all(wait=4)
             d.clear()
             """
-
             lastscene(self)
 
 
