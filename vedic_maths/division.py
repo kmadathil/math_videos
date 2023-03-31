@@ -73,7 +73,7 @@ class Divop:
                  backtrackp = False, backtrack_en=[],
                  backtrack_subs=[], backtrack_carries=[], backtrack_answer=None,
                  backtrack_next_answer=None,
-                 wait=1):
+                 wait=2):
         '''
         Division operator
 
@@ -208,14 +208,14 @@ class Divop:
                 self.raw[1].become(_t)
                 scene.play(Transform(self.raw[2], self.divisor_x))
                 if self.divisor_x2p:
-                        scene.wait(2)
+                        scene.wait(4)
                         self.divisor_x2.move_to(self.raw[2])
                         scene.play(Transform(self.raw[2], self.divisor_x2))
                 scene.wait(4)
                 if self.dividend_xformp:
                         self.rx.move_to(self.raw[0])
                         scene.play(Transform(self.raw[0], self.rx))
-                        scene.wait(4)
+                        scene.wait(5)
                         
                 # Remove transformed division sign
                 scene.remove(self.raw[1])
@@ -232,7 +232,7 @@ class Divop:
                 # The dividend and transformed divisor as we want to see them
                 scene.play(ReplacementTransform(self.raw[2], self.e_divisor))
                 scene.play(ReplacementTransform(self.raw[0], self.e_dividend))
-                scene.wait(4)
+                scene.wait(5)
 
                 # Add rest of division operation to scene
                 scene.add(g1, gc)
@@ -265,7 +265,7 @@ class Divop:
 
                 _realign()
 
-                self.scene.wait(4)
+                self.scene.wait(5)
 
                 # Next, show the next carry
                 # Only nonzero carries are visible
@@ -279,7 +279,7 @@ class Divop:
                                 gc += ct
                         _realign()
                         if vinc_int(c):
-                                self.scene.wait(4)
+                                self.scene.wait(5)
 
                 
                 # Show the next flag carries / subs
@@ -291,7 +291,7 @@ class Divop:
                         else:
                                 self.scene.play(Indicate(self.e_divisor))
 
-                        scene.wait(4)
+                        scene.wait(5)
                         s = self.subs[n-1]
                         s_ = VGroup()
                         # We pad the subs on both sides with invisible 0s
@@ -334,7 +334,7 @@ class Divop:
 
                 _realign()
 
-                self.scene.wait(4)
+                self.scene.wait(5)
 
                 # Next, show the next carry that will be backtracked
                 # Only nonzero carries are visible
@@ -345,7 +345,7 @@ class Divop:
                         gc += c_
                         _realign()
                         if vinc_int(c):
-                                self.scene.wait(4)
+                                self.scene.wait(5)
 
                 
                 # Show the next backtracking flag carries
@@ -357,7 +357,7 @@ class Divop:
                         else:
                                 self.scene.play(Indicate(self.e_divisor))
 
-                        scene.wait(4)
+                        scene.wait(5)
                         g2 -= self.ga
                         g2 -= self.hln
                         s = self.backtrack_subs[n-1]
@@ -379,7 +379,7 @@ class Divop:
                         g2 += self.hln
                         g2 += self.ga
                         _realign()
-                        self.scene.wait(4)
+                        self.scene.wait(5)
                         
                 # Show the next answer bit, so we can establish the need to backtrack
                 ga += self.backtrack_next_answer[n-1]
@@ -411,7 +411,6 @@ def lastscene(self):
     titleL2 = DisplayText(self,
             Span("Share the video with your friends too.",
             color="yellow"),scale=0.6,wait=3, move=(-1, -1), fade=False)
-    self.wait(2)
 
     titleL3 = DisplayText(self,
                               Span("Do Subscribe to our Channel and press the Bell Icon!", color="yellow"),
@@ -1065,7 +1064,7 @@ class ParavartyaDivisionVinculum(Scene):
 
 class Vilokanam(Scene):
     def Iqr(self, quotient, remainder):
-        q1 = MarkupText("Thus, the Quotient is").scale(0.65).set_color(TEAL_C).move_to(2 * LEFT + DOWN * 2)
+        q1 = MarkupText("Thus, the Quotient is").scale(0.65).set_color(TEAL_C).move_to(2 * LEFT + DOWN * 2.5)
         q2 = MarkupText(str(quotient)).scale(0.65).set_color(YELLOW).next_to(q1, RIGHT)
         r1 = MarkupText("and the Remainder is").scale(0.65).set_color(TEAL_C).next_to(q2, RIGHT)
         r2 = MarkupText(str(remainder)).scale(0.65).set_color(YELLOW).next_to(r1, RIGHT)
@@ -1073,6 +1072,8 @@ class Vilokanam(Scene):
         self.play(Indicate(q2))
         self.play(Indicate(r2))
         return (q1, q2, r1, r2)
+
+
 
     def construct(self):
 
@@ -1082,7 +1083,7 @@ class Vilokanam(Scene):
 
             text = [
                     f"In this video,",
-                    f"we learn to make division simpler",
+                    f"we learn to make <span color='yellow'>division simpler </span>",
                     f"using the sutra <span color='cyan'>Vilokanam.</span> ",
                     f"First, let's note a <span color='yellow'>problem with the basic method</span>",
                     f"and then we solve it by <span color='cyan'>Vilokanam.</span>"
@@ -1092,21 +1093,21 @@ class Vilokanam(Scene):
           
             text = [
                     f"During division, quotient or remainder digits may be >10,",
-                    f"causing a 2 digit number where we want only a single digit.",
+                    f"causing a 2 digit number where we want only a <span color='cyan'>single digit.</span>",
                     f"As we have seen, we can continue forward",
                     f"and assemble the final answer",
-                    f"by keeping the unit digits and treating the remaining digits as carry.",
-                    f"But if we control each digit to be single,",
-                    f"the division process will be even easier."
+                    f"by <span color='yellow'>keeping the unit digits </span> and treating the <span color='yellow'>remaining digits as carry.</span>",
+                    f"But <span color='cyan'> if we control each digit to be single,</span>",
+                    f"<span color='cyan'>the division process will be even easier.</span>"
                 ]
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
             text = [
                     f"So, how can we do this?",
-                    f"We fix the current digit after looking ahead",
-                    f"to the value of the next digit.",
+                    f"We <span color='cyan'>fix the current digit after looking ahead</span>",
+                    f"<span color='cyan'>to the value of the </span><span color='yellow'>next digit.</span>",
                     f"If the next digit won't be single,",
-                    f"we take a part of the current digit as carry to next digit ",
+                    f"we <span color='cyan'> take a part of the current digit as carry to</span> <span color='yellow'>next digit </span> ",
                     f"so that next digit will be single."
             ]
 
@@ -1140,13 +1141,33 @@ class Vilokanam(Scene):
             
             d.step_all(wait=4)
 
+            self.wait(2)
 
+            title_h3 = DisplayText(self, Span("284", color="YELLOW", font="cambria math") ,
+                                   scale=0.7, wait=0, move=(2.5, -1), fade=False)
+
+            self.wait(5)
+
+            title_h4 = DisplayText(self, Span("272", color="YELLOW")+
+                                   Span("       3 | 29 ", color="YELLOW", font="cambria math"),
+                                   scale=0.7, wait=0, move=(2.5, 2.5), fade=False)
+
+            self.wait(11)
+
+            self.play(FadeOut(title_h3, title_h4))
+           
             (q1, q2, r1, r2) = self.Iqr(287,29)
-            self.wait(1)
+
 
             d.clear()
             self.play(FadeOut(title_h1, title_h2))
             self.play(FadeOut(q1, q2, r1, r2))
+
+            text = [
+                    f"Now, let's do the same process with <span color='cyan'>Vilokanam</span>"
+            ]
+
+            e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
             
             d = Divop(self, "23276", "81", "21'",
@@ -1162,7 +1183,7 @@ class Vilokanam(Scene):
                        backtrackp = True,
                        ansplaces = 3)
 
-            d.step_all(wait=4)
+            d.step_all(wait=1)
 
 
             (q1, q2, r1, r2) = self.Iqr(287, 29)
@@ -1184,7 +1205,7 @@ class Vilokanam(Scene):
                                    Span(" and Complement of the divisor,", color="pink") +
                                    Span("88", color="yellow", font="cambria math") +
                                    Span("=", color="pink") +
-                                   Span("02", color="yellow", font="cambria math"),
+                                   Span("12", color="yellow", font="cambria math"),
                                    scale=0.4, wait=0, move=(-2.5, -1), fade=False)
 
             self.wait(2)
@@ -1203,7 +1224,7 @@ class Vilokanam(Scene):
                        backtrackp = True,
                        ansplaces = 3)
 
-            d.step_all(wait=4)
+            d.step_all(wait=1)
 
             (q1, q2, r1, r2) = self.Iqr(368,74)
             self.wait(1)
@@ -1214,11 +1235,24 @@ class Vilokanam(Scene):
 
             text = [
                 f"Using the same procedure, ",
-                f"we can simplify Paravartya division also.",
+                f"we can simplify <span color='cyan'>Paravartya</span> division also.",
                 f"Let's see an example of that."
             ]
 
             e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+            title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                                   Span("3458 ", color="yellow", font="cambria math") +
+                                   Span("by ", color="Turquoise") +
+                                   Span("13:", color="yellow", font="cambria math"),
+                                   scale=0.4, wait=0, move=(-3, -1), fade=False)
+            self.wait(1)
+
+            title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                                   Span("3", color="yellow", font="cambria math"),
+                                   scale=0.4, wait=0, move=(-2.5, -1), fade=False)
+
+            self.wait(2)
 
             d = Divop(self, "3458", "13",
                        divisor_xform="13'",
@@ -1233,13 +1267,17 @@ class Vilokanam(Scene):
                        backtrackp = True,
                        ansplaces = 3)
 
-            d.step_all(wait=4)
+            d.step_all(wait=1)
             
             (q1, q2, r1, r2) = self.Iqr(266, 0)
             self.wait(1)
 
             d.clear()
+
+            self.play(FadeOut(title_h1, title_h2))
+            self.play(FadeOut(q1, q2, r1, r2))
             lastscene(self)
+            
 
 
 
