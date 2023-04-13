@@ -15,7 +15,9 @@ def vinc_list(l):
                a) vinc_list([1, 2, -3, 9, -8])
                b) vinc_list("123'98'")
         '''
-        if isinstance(l, str) and "'" in l:
+        if isinstance(l, int):
+                v = str(l)
+        elif isinstance(l, str) and "'" in l:
                 # String with ' for vinculum
                 # We will transform this into a list of digits
                 v = []  # This will contain the result
