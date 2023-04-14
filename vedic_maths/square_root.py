@@ -157,8 +157,18 @@ class SqRootOp:
             self.dop_start = 2 
             self.neven=1
     def clear(self):
-            self.scene.remove(self.g1, self.gc, self.ga, self.g2, self.vln, self.gs)
-
+        ''' Remove everything from scene'''
+        for i in self.gc:
+              self.scene.remove(i)
+        for i in self.gs:    
+              self.scene.remove(i)
+        for i in self.ga:  
+              self.scene.remove(i)
+        for i in self.g2:
+              self.scene.remove(i)
+        for i in self.g1:
+              self.scene.remove(i)
+    
     def step_all(self, wait=3):
             ''' Run all steps '''
             for i in range(len(self.answer)+1):
@@ -278,9 +288,9 @@ class SqRootOp:
                 gs = self.gs
                 dop_start = self.dop_start
                 if self.carries[n-2]:
-                    self.scene.play(Indicate(self.gc[-1]))
+                    self.scene.play(Indicate(self.gc[n-1+self.neven]))
                 self.scene.play(Indicate(self.g2[0][n-1+self.neven]))
-                self.scene.play(Indicate(self.g2[1][-1]), color=RED)
+                self.scene.play(Indicate(self.g2[1][n-1+self.neven]), color=RED)
                 self.scene.play(Indicate(self.e_divisor))
 
                 # First, show the next answer bit
@@ -325,7 +335,7 @@ class SqRootOp:
                         gs += gd[-1]
                     gs[-1].set_color(WHITE)
                     _realign()
-                    scene.remove(*gd[1:3], *lines) 
+                    scene.remove(*gd[1:], *lines) 
                 self.scene.wait(wait)
         else:
                 # Need backtracking
@@ -348,7 +358,7 @@ class SqRootOp:
                         self.backtrack_answer[n-1].set_color(RED)
                 else:
                         self.backtrack_answer[n-1].set_color(GREEN)
-
+                scene.add(ga[-1])
                 _realign()
 
                 self.scene.wait(wait)
@@ -390,6 +400,7 @@ class SqRootOp:
                 ga += self.backtrack_next_answer[n-1]
 
                 self.backtrack_next_answer[n-1].set_color(GREY)
+                scene.add(ga[-1])
                 _realign()
                 self.scene.wait(2)
                 self.backtrack_answer[n-1].set_color(GREY)
@@ -401,6 +412,7 @@ class SqRootOp:
                 
                 # Now we have established the need to backtrack
                 ## Remove next answer
+                scene.remove(ga[-1])
                 ga -= self.backtrack_next_answer[n-1]
                 # Now we recursively call step with backtracking enabled.
                 self.step(n, wait=wait, is_backtracking=True)
@@ -409,28 +421,28 @@ class SqRootOp:
 
 class SqOpTest(Scene):
     def construct(self):
-        # s = SqRootOp(self, 2025, 8,
-        #          subs = [25],
-        #          carries=[40, 20],
-        #          answer=[4, 5, 0],
-        #          ansplaces=2,
-        #          backtrackp=False,
-        #          wait=5)
-        # s.step_all()
-        # self.wait(5)
-        # s.clear()
-        # self.next_section() 
-        # s = SqRootOp(self, 14641, 2,
-        #          subs = [4, 4, 1],
-        #          carries=[0, 0, 0, 0],
-        #          answer=[1, 2, 1, 0, 0],
-        #          ansplaces=3,
-        #          backtrackp=False,
-        #          wait=5)
-        # s.step_all()
-        # self.wait(5)
-        # s.clear()
-        # self.next_section() 
+        s = SqRootOp(self, 2025, 8,
+                  subs = [25],
+                  carries=[40, 20],
+                  answer=[4, 5, 0],
+                  ansplaces=2,
+                  backtrackp=False,
+                  wait=5)
+        s.step_all()
+        self.wait(5)
+        s.clear()
+        self.next_section() 
+        s = SqRootOp(self, 14641, 2,
+                 subs = [4, 4, 1],
+                 carries=[0, 0, 0, 0],
+                 answer=[1, 2, 1, 0, 0],
+                 ansplaces=3,
+                 backtrackp=False,
+                 wait=5)
+        s.step_all()
+        self.wait(5)
+        s.clear()
+        self.next_section() 
         s = SqRootOp(self, 16129, 2,
                      subs = [4, 28, 49],
                      carries=[0, 20, 30, 40],
