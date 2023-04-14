@@ -21,7 +21,7 @@ def DOp(scene, num,  wait=0):
     n1 = MT(num)    # Initial number
     sr = DOpVal(num)     # D Operator result
     # Arrange number and lines
-    g1, lines = DOp_(n1, sr)   
+    g1, lines = DOp_(n1, sr, scene)   
     # Add to scene
     scene.add(g1)
     scene.add(*lines)
@@ -30,7 +30,7 @@ def DOp(scene, num,  wait=0):
     return g1, lines
 
 
-def DOp_(n1, sr):
+def DOp_(n1, sr, scene):
     ''' D Operator Internal (num)
        
         Copies num MathTex object, places the copy below original object
@@ -324,7 +324,7 @@ class SqRootOp:
 
                 # DOP
                 if n < len(self.answer):
-                    gd, lines = DOp_(ga[dop_start:], self.subs[n-2])
+                    gd, lines = DOp_(ga[dop_start:], self.subs[n-2], self.scene)
                     scene.add(gd)
                     scene.add(*lines)
                     scene.wait(2)
@@ -376,7 +376,7 @@ class SqRootOp:
 
                 # DOP
                 if n < len(self.answer):
-                    gd, lines = DOp_(ga[dop_start:], self.backtrack_subs[n-2])
+                    gd, lines = DOp_(ga[dop_start:], self.backtrack_subs[n-2], self.scene)
                     scene.add(gd)
                     scene.add(*lines)
                     scene.wait(2)
