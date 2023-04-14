@@ -135,3 +135,6 @@ media/
 # VS Code
 .vs/
 .vscode/
+
+# Emacs backup
+*~
