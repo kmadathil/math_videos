@@ -63,7 +63,7 @@ def MTV(snum, color="Yellow"):
     ''' Wrapper - MT + vertical rendering '''
     # syntax {{x}} for MathTex substrings
     # To get than in an f string, we need this
-    el = [f'{{{{&{x}}}}}\\\\' for x in vinc_list(snum)]
+    el = [f'{{{{&{x}}}}}\\\\' for x in reversed(vinc_list(snum))]
     eg = MathTex(" ".join(el), color=color)
     return eg
 
@@ -110,20 +110,24 @@ class Divop:
                 self.divisor_x2p = False
         self.scene.wait(1)
 
+        self.is_vertical = False
         if vertical:
+                self.is_vertical = True
                 if divisor_xform2 is None:
-                    self.e_divisor = MTV(divisor_xform, color='Lime').scale(0.6)  # Transformed Divisor, vertical
+                    self.e_divisor = MTV(divisor_xform, color='Lime')  # Transformed Divisor, vertical
                 else:
-                    self.e_divisor = MTV(divisor_xform2, color='Lime').scale(0.6)  # Transformed Divisor, vertical
+                    self.e_divisor = MTV(divisor_xform2, color='Lime')  # Transformed Divisor, vertical
 
-                self.e_divisor[0].set_color(YELLOW)
+                if not nikhilam:
+                       self.e_divisor[-2].set_color(YELLOW)
                 self.vln = Line(self.e_divisor[0], self.e_divisor[-1])  # Vertical Line
         else:
                 if divisor_xform2 is None:
                     self.e_divisor = MT(divisor_xform, color='Lime')  # Transformed Divisor
                 else:
                     self.e_divisor = MT(divisor_xform2, color='Lime')  # Transformed Divisor
-
+                if not nikhilam:
+                       self.e_divisor[0].set_color(YELLOW)
                 self.vln = Text("|")
 
         self.flag = not nikhilam
@@ -186,6 +190,8 @@ class Divop:
                         ax.next_to(g2[0][i], DOWN, aligned_edge=RIGHT)
                 g2.arrange(DOWN, aligned_edge=LEFT)
                 g1.arrange(RIGHT, aligned_edge=UP)
+                if self.is_vertical:
+                       self.e_divisor.next_to(self.vln, LEFT, aligned_edge=DOWN)
                 # We do this instead of prepending gc to g2
                 # to keep the divisor and vline alignment right
 
@@ -229,7 +235,9 @@ class Divop:
                 g2 = VGroup(self.e_dividend)  # Setup group for later filling
                 # Top group that will contain all elements
                 g1 = VGroup(self.e_divisor, self.vln, g2).arrange(RIGHT, aligned_edge=UP)
-                g1.arrange(RIGHT, aligned_edge=UP)
+                #g1.arrange(RIGHT, aligned_edge=UP)
+                if self.is_vertical:
+                       self.e_divisor.next_to(self.vln, LEFT, aligned_edge=DOWN)
 
                 # Transform dividend and divisor display. This shows only
                 # The dividend and transformed divisor as we want to see them
@@ -290,7 +298,11 @@ class Divop:
                         dlen = len(self.e_dividend)
                         self.scene.play(Indicate(ga[-1]))
                         if self.flag:
-                                self.scene.play(Indicate(self.e_divisor[1:]))
+                                if self.is_vertical:
+                                        self.scene.play(Indicate(self.e_divisor[:-2]))
+
+                                else: 
+                                        self.scene.play(Indicate(self.e_divisor[1:]))
                         else:
                                 self.scene.play(Indicate(self.e_divisor))
 
@@ -356,7 +368,10 @@ class Divop:
                         dlen = len(self.e_dividend)
                         self.scene.play(Indicate(self.backtrack_answer[n-1]))
                         if self.flag:
-                                self.scene.play(Indicate(self.e_divisor[1:]))
+                                if self.is_vertical:
+                                        self.scene.play(Indicate(self.e_divisor[:-2]))
+                                else: 
+                                        self.scene.play(Indicate(self.e_divisor[1:]))
                         else:
                                 self.scene.play(Indicate(self.e_divisor))
 
@@ -1332,7 +1347,8 @@ class StraightDivision(Scene):
                   backtrack_next_answer=["", "", "", ""],
                   backtrack_en=[True, True, True, False],
                   backtrackp=True,
-                  ansplaces=2)
+                  ansplaces=2,
+                  vertical=False)
 
         d.step_all(wait=1)
 
