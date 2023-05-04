@@ -1,3 +1,4 @@
+
 from manim import *
 from numpy import array
 from common import *
@@ -1014,7 +1015,7 @@ class ParavartyaDivisionVinculum(Scene):
                                    scale=0.5, wait=0, move=(-2.5, -1), fade=False)
 
             self.wait(2)
-            
+             
             d = Divop(self, "2412", "108",
                       divisor_xform="112'", divisor_xform2="11'2",
                       subs=["2'4", "2'4"],
@@ -1022,6 +1023,8 @@ class ParavartyaDivisionVinculum(Scene):
                       answer="2236",
                       ansplaces=2)
             d.step_all(wait=3)
+
+             
 
             (q1, q2, r1, r2) = self.Iqr(22, 36)
             self.wait(1)
@@ -1046,20 +1049,20 @@ class ParavartyaDivisionVinculum(Scene):
 
             self.wait(2)
 
-
             d = Divop(self, "1298", "12",
                       divisor_xform="12'",
                       subs=["2'", "2'","4"],
                       carries="00",dividend_xform="1302'",
                       answer="112'2",
                       ansplaces=3)
+                      
             d.step_all(wait=3)
 
             (q1, q2, r1, r2) = self.Iqr(108,2)
             self.wait(1)
 
             d.clear()
-            self.play(FadeOut(title_h1, title_h2))
+            #self.play(FadeOut(title_h1, title_h2))
             self.play(FadeOut(q1, q2, r1, r2))
 
             lastscene(self)
@@ -1270,7 +1273,7 @@ class Vilokanam(Scene):
                        ansplaces = 3)
 
             d.step_all(wait=1)
-            
+
             (q1, q2, r1, r2) = self.Iqr(266, 0)
             self.wait(1)
 
@@ -1279,7 +1282,57 @@ class Vilokanam(Scene):
             self.play(FadeOut(title_h1, title_h2))
             self.play(FadeOut(q1, q2, r1, r2))
             lastscene(self)
+
             
+class dhvajaHaranam(Scene):
+    def construct(self):
+        #straight division
+        d = Divop(self, "3393", "24",
+                  divisor_xform="23'",
+                  subs=["4", ["16"], "4"],
+                  carries="111",
+                  answer="1419",
+                  ansplaces=3)
+
+        d.step_all(wait=3)
+
+        self.wait(1)
+
+        d.clear()
+
+        #straight division with observation
+        d = Divop(self, "7468", "38",
+                  divisor_xform="38'",
+                  subs=[["8'"], ["7'2'"], ["4'8'"]],
+                  carries=["4", "9", "6"],
+                  answer=["1", "9", "6", "20"],
+                  backtrack_subs=[["1'6'"], ["9'6'"], ["6'4'"]],
+                  backtrack_carries=["1", "0", "0"],
+                  backtrack_answer=["2", "12", "8", "20"],
+                  backtrack_next_answer=["", "", "", "9"],
+                  backtrack_en=[True, True, True, False],
+                  backtrackp=True,
+                  ansplaces=3)
+
+        d.step_all(wait=1)
+
+        #straight division with observation 3 digit divisor
+
+        d = Divop(self, "7172", "246",
+                  divisor_xform="24'6'",
+                  subs=[["8'"], ["4'8'"], ["5'4'"]],
+                  carries=["3", "5", "6"],
+                  answer=["2", "9", "3", "8"],
+                  backtrack_subs=[["1'2'"], [""], ["5'4'"]],
+                  backtrack_carries=["1", "1", "0"],
+                  backtrack_answer=["3", "11", "9", ""],
+                  backtrack_next_answer=["", "", "", ""],
+                  backtrack_en=[True, True, True, False],
+                  backtrackp=True,
+                  ansplaces=2)
+
+        d.step_all(wait=1)
+
 
 
 
