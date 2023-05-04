@@ -1284,15 +1284,16 @@ class Vilokanam(Scene):
             lastscene(self)
 
             
-class dhvajaHaranam(Scene):
+class StraightDivision(Scene):
     def construct(self):
         #straight division
         d = Divop(self, "3393", "24",
-                  divisor_xform="23'",
-                  subs=["4", ["16"], "4"],
-                  carries="111",
+                  divisor_xform="24'",
+                  subs=["4'", ["1'6'"], "4'"],
+                  carries=["10","10","10"],
                   answer="1419",
-                  ansplaces=3)
+                  ansplaces=3,
+                  vertical=False)
 
         d.step_all(wait=3)
 
@@ -1304,10 +1305,10 @@ class dhvajaHaranam(Scene):
         d = Divop(self, "7468", "38",
                   divisor_xform="38'",
                   subs=[["8'"], ["7'2'"], ["4'8'"]],
-                  carries=["4", "9", "6"],
+                  carries=["40", "90", "60"],
                   answer=["1", "9", "6", "20"],
                   backtrack_subs=[["1'6'"], ["9'6'"], ["6'4'"]],
-                  backtrack_carries=["1", "0", "0"],
+                  backtrack_carries=["10", "0", "0"],
                   backtrack_answer=["2", "12", "8", "20"],
                   backtrack_next_answer=["", "", "", "9"],
                   backtrack_en=[True, True, True, False],
@@ -1315,16 +1316,18 @@ class dhvajaHaranam(Scene):
                   ansplaces=3)
 
         d.step_all(wait=1)
+        self.wait(3)
+        d.clear()
 
         #straight division with observation 3 digit divisor
 
         d = Divop(self, "7172", "246",
                   divisor_xform="24'6'",
-                  subs=[["8'"], ["4'8'"], ["5'4'"]],
-                  carries=["3", "5", "6"],
+                  subs=[["8'", "1'2'"], ["3'6'", "5'4'"]],
+                  carries=["30", "50", "60"],
                   answer=["2", "9", "3", "8"],
-                  backtrack_subs=[["1'2'"], [""], ["5'4'"]],
-                  backtrack_carries=["1", "1", "0"],
+                  backtrack_subs=[["1'2'", "1'8'"], [""]],
+                  backtrack_carries=["10", "10", "0"],
                   backtrack_answer=["3", "11", "9", ""],
                   backtrack_next_answer=["", "", "", ""],
                   backtrack_en=[True, True, True, False],
