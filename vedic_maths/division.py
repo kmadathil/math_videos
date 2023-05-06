@@ -1318,7 +1318,7 @@ class StraightDivision(Scene):
         text = [
             f"In the previous videos,",
             f"we saw division using <span color='yellow'>Nikhilam</span> and <span color='yellow'>Paravartya.</span>",
-            f"These two were really easy methods,",
+            f"These methods are quite easy,",
             f"but can be applied only when  <span color='yellow'>certain conditions are met.</span>",
         ]
 
@@ -1326,40 +1326,40 @@ class StraightDivision(Scene):
 
 
         text = [
-            f"Today we are learning <span color='yellow'>Straight Division,</span>",
+            f"Today we learn <span color='yellow'>Straight Division,</span>",
             f"the <span color='yellow'>Universal Method</span> of division. ",
-            f"Let's first understand this division process",
-            f"and then we shall <span color='yellow'>simplify</span> the same by <span color='yellow'>observation.</span>",
+            f"Let's first understand this process",
+            f"and then we shall <span color='yellow'>simplify</span> it by <span color='yellow'>observation.</span>",
         ]
 
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"Straight Division is almost same like <span color='yellow'>Paravartya</span>",
-            f"but the <span color='yellow'>first digit of the divisor</span> also takes part in division. ",
-            f"In the process, it is named as <span color='yellow'>temporary divisor.</span>",
-            f"Actually the division is performed only by the <span color='yellow'>temporary divisor.</span>"
+            f"Straight Division is similar to <span color='yellow'>Paravartya</span>",
+            f"except that the <span color='yellow'>first digit of the divisor</span> also takes part in division. ",
+            f"In the process, it is referred to as the <span color='yellow'>temporary divisor.</span>",
+            f"Any division problem can be solved using this method."
             ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"Let's see the process in detail--",
+            f"Let's see the process in detail:",
             f"1.Just like <span color='yellow'>Nikhilam</span> and <span color='yellow'>Paravartya</span>",
             f"  first we estimate the <span color='yellow'>number of Quotient Digits.</span>",
             f"2.Divisor digits except the first are marked as <span color='yellow'>negative.</span>",
             f"  (Digits in the Vinculum form will become normal). ",
             f"3.The <span color='yellow'>first digit of the dividend </span>is divided by the <span color='yellow'>temporary divisor.</span>",
-            f"  <span color='cyan'>Quotient</span> of this division is the <span color='yellow'>first answer digit</span>",
+            f"  The <span color='cyan'>Quotient</span> of this division is the <span color='yellow'>first answer digit</span>",
             f"  and the <span color='cyan'>carry</span> if any <span color='yellow'>is multiplied by 10</span> ",
             f"  and is written <span color='yellow'>above the next dividend digit.</span>"
             ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT) 
 
         text = [
-            f"4.Then this first <span color='yellow'>Quotient digit</span> is multiplied with <span color='yellow'>flag digit(s)</span>",
+            f"4.The <span color='yellow'>Quotient digit</span> is multiplied with <span color='yellow'>flag digit(s)</span>",
             f"  and the <span color='yellow'>products</span> are written in the <span color='yellow'>next columns.</span>",
-            f"5.Then the <span color='yellow'>digits in the 2nd column</span>",
-            f"   <span color='cyan'>-carry if any, dividend digit and products from last step</span> ",
+            f"5.Next, the <span color='yellow'>digits in the 2nd column:</span>",
+            f"   <span color='cyan'>carry if any, dividend digit and products from last step</span> ",
             f"   are added and the <span color='yellow'>result is divided by temporary divisor.</span>",
             f"Steps 3-5 are repeated until all the result digits are obtained."
         ]
@@ -1367,6 +1367,7 @@ class StraightDivision(Scene):
 
         text = [
             f"If we want the answer in <span color='cyan'>decimal form,</span> ",
+            f"(not quotient and remainder)",
             f"the result of <span color='cyan'>addition</span> in the columns for <span color='cyan'>remainder digits</span> ",
             f"are also <span color='yellow'>divided by the temporary Divisor.</span> ",
             f"<span color='cyan'>Otherwise this division is not needed.</span>",
