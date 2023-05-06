@@ -1300,8 +1300,94 @@ class Vilokanam(Scene):
 
             
 class StraightDivision(Scene):
+    def Iqr(self, quotient, remainder):
+        q1 = MarkupText("Thus, the Quotient is").scale(0.65).set_color(TEAL_C).move_to(2 * LEFT + DOWN * 2.5)
+        q2 = MarkupText(str(quotient)).scale(0.65).set_color(YELLOW).next_to(q1, RIGHT)
+        r1 = MarkupText("and the Remainder is").scale(0.65).set_color(TEAL_C).next_to(q2, RIGHT)
+        r2 = MarkupText(str(remainder)).scale(0.65).set_color(YELLOW).next_to(r1, RIGHT)
+        self.play(FadeIn(q1, q2, r1, r2))
+        self.play(Indicate(q2))
+        self.play(Indicate(r2))
+        return (q1, q2, r1, r2)
+
     def construct(self):
+        Title(self, "ध्वजहरणम्", "Straight Division", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(1)
+
+        text = [
+            f"In the previous videos,",
+            f"we saw division using <span color='yellow'>Nikhilam</span> and <span color='yellow'>Paravartya.</span>",
+            f"These two were really easy methods,",
+            f"but can be applied only when  <span color='yellow'>certain conditions are met.</span>",
+        ]
+
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+
+        text = [
+            f"Today we are learning <span color='yellow'>Straight Division,</span>",
+            f"the <span color='yellow'>Universal Method</span> of division. ",
+            f"Let's first understand this division process",
+            f"and then we shall <span color='yellow'>simplify</span> the same by <span color='yellow'>observation.</span>",
+        ]
+
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Straight Division is almost same like <span color='yellow'>Paravartya</span>",
+            f"but the <span color='yellow'>first digit of the divisor</span> also takes part in division. ",
+            f"In the process, it is named as <span color='yellow'>temporary divisor.</span>",
+            f"Actually the division is performed only by the <span color='yellow'>temporary divisor.</span>"
+            ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Let's see the process in detail--",
+            f"1.Just like <span color='yellow'>Nikhilam</span> and <span color='yellow'>Paravartya</span>",
+            f"  first we estimate the <span color='yellow'>number of Quotient Digits.</span>",
+            f"2.Divisor digits except the first are marked as <span color='yellow'>negative.</span>",
+            f"  (Digits in the Vinculum form will become normal). ",
+            f"3.The <span color='yellow'>first digit of the dividend </span>is divided by the <span color='yellow'>temporary divisor.</span>",
+            f"  <span color='cyan'>Quotient</span> of this division is the <span color='yellow'>first answer digit</span>",
+            f"  and the <span color='cyan'>carry</span> if any <span color='yellow'>is multiplied by 10</span> ",
+            f"  and is written <span color='yellow'>above the next dividend digit.</span>"
+            ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"4.Then this first <span color='yellow'>Quotient digit</span> is multiplied with <span color='yellow'>flag digit(s)</span>",
+            f"  and the <span color='yellow'>products</span> are written in the <span color='yellow'>next columns.</span>",
+            f"5.Then the <span color='yellow'>digits in the 2nd column</span>",
+            f"   <span color='cyan'>-carry if any, dividend digit and products from last step</span> ",
+            f"   are added and the <span color='yellow'>result is divided by temporary divisor.</span>",
+            f"Steps 3-5 are repeated until all the result digits are obtained."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If we want the answer in <span color='cyan'>decimal form,</span> ",
+            f"the result of <span color='cyan'>addition</span> in the columns for <span color='cyan'>remainder digits</span> ",
+            f"are also <span color='yellow'>divided by the temporary Divisor.</span> ",
+            f"<span color='cyan'>Otherwise this division is not needed.</span>",
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
         #straight division
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                               Span("3393 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("24:", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-3, -1), fade=False)
+        self.wait(1)
+
+        title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                               Span("3", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-2.5, -1), fade=False)
+
+        self.wait(2)
+
         d = Divop(self, "3393", "24",
                   divisor_xform="24'",
                   subs=["4'", ["1'6'"], "4'"],
@@ -1311,10 +1397,29 @@ class StraightDivision(Scene):
                   vertical=False)
 
         d.step_all(wait=3)
+        self.wait(1)
 
+        (q1, q2, r1, r2) = self.Iqr(141,9)
         self.wait(1)
 
         d.clear()
+
+        self.play(FadeOut(title_h1, title_h2))
+        self.play(FadeOut(q1, q2, r1, r2))
+
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                               Span("7468 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("38:", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-3, -1), fade=False)
+        self.wait(1)
+
+        title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                               Span("3", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-2.5, -1), fade=False)
+
+        self.wait(2)
 
         #straight division with observation
         d = Divop(self, "7468", "38",
@@ -1332,7 +1437,27 @@ class StraightDivision(Scene):
 
         d.step_all(wait=1)
         self.wait(3)
+
+        (q1, q2, r1, r2) = self.Iqr(196,20)
+        self.wait(1)
+
         d.clear()
+
+        self.play(FadeOut(title_h1, title_h2))
+        self.play(FadeOut(q1, q2, r1, r2))
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                               Span("7172 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("246:", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-3, -1), fade=False)
+        self.wait(1)
+
+        title_h2 = DisplayText(self, Span("By assessment, number of Quotient digits=", color="pink") +
+                               Span("2", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-2.5, -1), fade=False)
+
+        self.wait(2)
 
         #straight division with observation 3 digit divisor
 
@@ -1350,7 +1475,20 @@ class StraightDivision(Scene):
                   ansplaces=2,
                   vertical=False)
 
+
         d.step_all(wait=1)
+
+        (q1, q2, r1, r2) = self.Iqr(29, 38)
+        self.wait(1)
+
+        d.clear()
+
+        self.play(FadeOut(title_h1, title_h2))
+        self.play(FadeOut(q1, q2, r1, r2))
+        lastscene(self)
+
+        
+
 
 
 
