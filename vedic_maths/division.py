@@ -99,7 +99,12 @@ class Divop:
                 
         self.raw = MathTex(dividend, "\divisionsymbol", divisor, color="White")  # Raw divisor
         self.rx  = MT(dividend_xform)
-        self.e_dividend = MT(dividend_xform).arrange(buff=1)  # Dividend
+        if len(answer) > len(self.rx):
+                # Pad with extra zeros
+                self.e_dividend = MT(dividend_xform + (len(answer)-len(self.rx))*"0").arrange(buff=1)   
+                self.e_dividend[len(self.rx):].set_color(BLACK)
+        else:
+                self.e_dividend = MT(dividend_xform).arrange(buff=1)  # Dividend
 
         if divisor_xform2 is not None:
                 self.divisor_x2 = MT(divisor_xform2, color='Lime') # Transformed divisor
@@ -196,7 +201,8 @@ class Divop:
                 # to keep the divisor and vline alignment right
 
                 for i, gcx in enumerate(gc):
-                        gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT)
+                        gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT) 
+                
                 # Loop over subs for horizontal alignment
                  
                 for i in range(1, len(g2)-2):
@@ -277,7 +283,7 @@ class Divop:
                 _realign()
 
                 self.scene.wait(5)
-
+        
                 # Next, show the next carry
                 # Only nonzero carries are visible
                 if n <= len(self.carries):
@@ -295,6 +301,10 @@ class Divop:
                 
                 # Show the next flag carries / subs
                 if n <= len(self.subs):
+                        # Extra dividend zeros  
+                        # Do not  enter while backtracking (since this extension has been done)
+                        if (n >= len(self.rx)) and not is_backtracking:   
+                                self.e_dividend[n].set_color(RED)
                         dlen = len(self.e_dividend)
                         self.scene.play(Indicate(ga[-1]))
                         if self.flag:
@@ -365,6 +375,9 @@ class Divop:
                 
                 # Show the next backtracking flag carries
                 if n <= len(self.backtrack_subs):
+                        # Extra dividend zeros if needed
+                        if (n >= len(self.rx)):          
+                                self.e_dividend[n].set_color(RED)                        
                         dlen = len(self.e_dividend)
                         self.scene.play(Indicate(self.backtrack_answer[n-1]))
                         if self.flag:
@@ -385,10 +398,15 @@ class Divop:
                         for i in range(n):
                                 s_ += MT("0", color='Black')
                         if isinstance(s, list):
+                                # We need this later to gray out subs
+                                lens = len(s)   
                                 for sx in s:
                                         s_ += MT(sx, color='White')
                         else:
                                 st = MT(s, color='White')
+                                # We need this later to gray out subs
+                                # We can't use len(s) directly here because of potential vincula
+                                lens = len(st)
                                 for sx in st:
                                         s_ += sx
                         for i in range(dlen-len(s_)):
@@ -409,7 +427,7 @@ class Divop:
                 if n <= len(self.backtrack_carries):
                         c_.set_color(BLACK)
                 if n <= len(self.backtrack_subs):
-                        s_[n:n+len(s)].set_color(GREY)
+                        s_[n:n+lens].set_color(GREY)
                 self.scene.wait(4)
                 
                 # Now we have established the need to backtrack
@@ -1489,9 +1507,20 @@ class StraightDivision(Scene):
         lastscene(self)
 
         
-
-
-
+class DecimalTest(Scene):
+       def construct(self):
+              d = Divop(self, "1000", "12", divisor_xform="12'",
+                        subs=["0",["1'6'"], "6'", "6'", "6'"],
+                        carries=["10","20","10","10","10"],
+                        answer=["0", "8", "3", "3", "3", "3"],
+                        backtrack_answer=[0, 10, 4, 4, 4, 4],
+                        backtrack_en=[False, True, True, True, False, False],
+                        backtrack_subs=["0", ["2'0'"], "8'", "8'", "8'"],
+                        backtrack_next_answer=["", "2'0'", "8'", "8'", ""],
+                        backtrack_carries=["0","0","0","0","0"],
+                        backtrackp=True,
+                        ansplaces=2)
+              d.step_all(wait=1)
 
 
 
