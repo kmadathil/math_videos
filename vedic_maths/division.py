@@ -192,23 +192,27 @@ class Divop:
                 ga.arrange(RIGHT, buff=1)
                 # Answer pre-alignment
                 for i, ax in enumerate(g2[-1]):
-                        ax.next_to(g2[0][i], DOWN, aligned_edge=RIGHT)
-                g2.arrange(DOWN, aligned_edge=LEFT)
+                        ax.next_to(g2[0][i], DOWN*0.2, aligned_edge=RIGHT)
+
+                g2.arrange(DOWN*0.5, aligned_edge=LEFT)
                 g1.arrange(RIGHT, aligned_edge=UP)
                 if self.is_vertical:
-                       self.e_divisor.next_to(self.vln, LEFT, aligned_edge=DOWN)
+                       self.e_divisor.next_to(self.vln, LEFT, aligned_edge=DOWN*0.2)
+
                 # We do this instead of prepending gc to g2
                 # to keep the divisor and vline alignment right
 
                 for i, gcx in enumerate(gc):
-                        gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT) 
-                
-                # Loop over subs for horizontal alignment
+                        gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT)
+
+                        # Loop over subs for horizontal alignment
                  
                 for i in range(1, len(g2)-2):
                         for j, fcx in enumerate(g2[i]):
                                 # sub alignment wrt previous row
-                                fcx.next_to(g2[i-1][j], DOWN, aligned_edge=RIGHT)
+                                fcx.next_to(g2[i-1][j], DOWN*0.2, aligned_edge=RIGHT)
+
+
                 
         scene = self.scene
         if n==0:
@@ -1507,9 +1511,77 @@ class StraightDivision(Scene):
         lastscene(self)
 
         
-class DecimalTest(Scene):
-       def construct(self):
-              d = Divop(self, "1000", "12", divisor_xform="12'",
+class DecimalAnswerSD(Scene):
+
+    def ansr(self, answer):
+        ans1 = MarkupText("Thus, the Answer is").scale(0.5).set_color(TEAL_C).move_to(2*LEFT + DOWN * 2.5)
+        ans2 = MarkupText(str(answer)).scale(0.5).set_color(YELLOW).next_to(ans1, RIGHT)
+        self.play(FadeIn(ans1, ans2))
+        self.play(Indicate(ans2))
+        return (ans1, ans2)
+
+    def construct(self):
+
+        Title(self, "ध्वजहरणम्", "Straight Division", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(1)
+
+        text = [
+            f"In the previous video we learned <span color='cyan'>Straight Division.</span>",
+            f"In this, let's learn to bring the" ,
+            f"<span color='cyan'>answer</span> of Straight division in <span color='cyan'>Decimal Form.</span>"
+        ]
+
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"In the last video it was mentioned that",
+            f"If we need the answer in <span color='cyan'>decimal form,</span> ",
+            f"(not quotient and remainder)",
+            f"the result of <span color='cyan'>addition</span> in the columns for <span color='cyan'>remainder digits</span> ",
+            f"are also <span color='yellow'>divided by the temporary Divisor.</span> ",
+            f"Let's see some examples of this."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                               Span("4277 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("52:", color="yellow", font="cambria math") +
+                               Span(" By assessment, number of Quotient digits=", color="pink") +
+                               Span("2", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-3, -1), fade=False)
+        self.wait(1)
+
+        d = Divop(self, "4277", "52",
+                        divisor_xform="52'",
+                        subs=["0", ["1'6'"], "4'",  "4'", ["1'0'"]],
+                        carries=["40", "20","10","30","10"],
+                        answer="082250",
+                        ansplaces=3,
+                        vertical=False)
+
+        d.step_all(wait=3)
+        self.wait(1)
+
+        (ans1, ans2) = self.ansr(82.25)
+        self.wait(1)
+
+        d.clear()
+        self.play(FadeOut(ans1, ans2))
+        self.play(FadeOut(title_h1  ))
+
+        title_h1 = DisplayText(self, Span("Divide ", color="Turquoise") +
+                               Span("1000 ", color="yellow", font="cambria math") +
+                               Span("by ", color="Turquoise") +
+                               Span("12:", color="yellow", font="cambria math") +
+                               Span(" By assessment, number of Quotient digits=", color="pink") +
+                               Span("2", color="yellow", font="cambria math"),
+                               scale=0.4, wait=0, move=(-3, -1), fade=False)
+
+        self.wait(2)
+
+        d = Divop(self, "1000", "12", divisor_xform="12'",
                         subs=["0",["1'6'"], "6'", "6'", "6'"],
                         carries=["10","20","10","10","10"],
                         answer=["0", "8", "3", "3", "3", "3"],
@@ -1520,7 +1592,18 @@ class DecimalTest(Scene):
                         backtrack_carries=["0","0","0","0","0"],
                         backtrackp=True,
                         ansplaces=2)
-              d.step_all(wait=1)
+        d.step_all(wait=1)
+        self.wait(1)
+
+        (ans1, ans2) = self.ansr(83.333)
+        self.wait(1)
+
+        d.clear()
+        self.play(FadeOut(ans1, ans2))
+        self.play(FadeOut(title_h1))
+
+        lastscene(self)
+
 
 
 
