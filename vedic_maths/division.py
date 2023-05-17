@@ -1514,7 +1514,7 @@ class StraightDivision(Scene):
 class DecimalAnswerSD(Scene):
 
     def ansr(self, answer):
-        ans1 = MarkupText("Thus, the Answer is").scale(0.5).set_color(TEAL_C).move_to(2*LEFT + DOWN * 2.5)
+        ans1 = MarkupText("Thus, the answer is").scale(0.5).set_color(TEAL_C).move_to(2*LEFT + DOWN * 2.5)
         ans2 = MarkupText(str(answer)).scale(0.5).set_color(YELLOW).next_to(ans1, RIGHT)
         self.play(FadeIn(ans1, ans2))
         self.play(Indicate(ans2))
@@ -1528,7 +1528,7 @@ class DecimalAnswerSD(Scene):
 
         text = [
             f"In the previous video we learned <span color='cyan'>Straight Division.</span>",
-            f"In this, let's learn to bring the" ,
+            f"In this, we will learn how to obtain the" ,
             f"<span color='cyan'>answer</span> of Straight division in <span color='cyan'>Decimal Form.</span>"
         ]
 
@@ -1595,7 +1595,7 @@ class DecimalAnswerSD(Scene):
         d.step_all(wait=1)
         self.wait(1)
 
-        (ans1, ans2) = self.ansr(83.333)
+        (ans1, ans2) = self.ansr("83.333...")
         self.wait(1)
 
         d.clear()
