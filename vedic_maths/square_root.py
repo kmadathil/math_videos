@@ -473,14 +473,18 @@ def sqr(scene, num):
     D_Op_Val = [DOpVal(((DCalc[i].replace("D", "")).replace("(","")).replace(")","")) for i in range(len(DCalc))]
 
     el3 = [x for x in D_Op_Val]
-    eg3 = MathTex(*el3, color="cyan").arrange(RIGHT * 6, aligned_edge=ORIGIN)
-    eg3.next_to(eg2, DOWN)
+    eg3 = MathTex(*el3, color="cyan").arrange(RIGHT, aligned_edge=ORIGIN)
+    for i, _el in enumerate(eg3):
+        _el.next_to(eg2[i], DOWN)
 
     for _el in eg3:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
         scene.wait(1)
     scene.wait(2)
-
+    for _el in eg3:
+        # Digits before lsb are carries
+        _el[0:-1].set_color(GRAY)
+    scene.wait(1)
     ans = []
     cy = 0
     for i in reversed(range(len(D_Op_Val))):
@@ -495,8 +499,10 @@ def sqr(scene, num):
             cy = 0
 
     el4 = [x for x in ans]
-    eg4 = MathTex(*el4, color="cyan").arrange(LEFT * 6, aligned_edge=ORIGIN)
-    eg4.next_to(eg3, DOWN)
+    eg4 = MathTex(*el4, color="cyan").arrange(LEFT, aligned_edge=ORIGIN)
+    l3 = len(eg3)-1
+    for i, _el in enumerate(eg4):
+        eg4[i].next_to(eg3[l3-i], DOWN, aligned_edge=RIGHT)
 
     for _el in eg4:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
@@ -526,15 +532,15 @@ def lastscene(self):
 
 class Squares(Scene):
     def construct(self):
-        Title(self, "वर्गगणनम्", "Finding Square", move=(3, 5), wait=2)
+        Title(self, "वर्गगणनम्", "Finding Squares", move=(3, 5), wait=2)
         self.next_section()
         self.wait(1)
 
         text = [
             f"In our previous videos we learned to <span color='yellow'>Square</span> any number",
-            f"satisfying some conditions:",
+            f"satisfying one of these conditions:",
             f"1. If the <span color='cyan'>last digit is 5</span>",
-            f"2. If the number is <span color='cyan'>near the powers of 10</span>"
+            f"2. If the number is <span color='cyan'>near a powers 10</span>"
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
@@ -558,18 +564,27 @@ class Squares(Scene):
         self.play(FadeOut(title_h1))
 
         text = [
-            f"let's see the process of squaring a number with <span color='yellow'>D Operator:</span>",
-            f"Apply <span color='cyan'>D Operator</span> on each <span color='cyan'>digit</span> of the number.",
-            f"These answers are considered as <span color='cyan'>partial products.</span>",
-            f"To get the <span color='cyan'>final answer</span>, starting from right most value",
-            f"we <span color='cyan'>retain only the unit digit</span> of each and ",
-            f"and <span color='cyan'>prev. digits are considered as carry</span> ",
-            f"to previous partial values."
+            f"Let's see the process of squaring a number with <span color='yellow'>D Operator:</span>",
+            f"Apply <span color='cyan'>D Operator</span> on each <span color='cyan'>segment</span> of the number.",
+            f"Segments are chosen starting from the left-most digit,",
+            f"adding one digit at a time. After all digits have been covered, ",
+            f"we remove one digit at a time from the left,",
+            f"until only the right-most digit remains."]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"The answers from applying D operators on each segment",
+            f"are considered as <span color='cyan'>partial products.</span>",
+            f"To get the <span color='cyan'>final answer</span>,",
+            f"starting from the right-most partial product,",
+            f"we <span color='cyan'>retain only the unit digit</span> of each partial product,",
+            f"and <span color='cyan'>carry the previous digits</span> to previous answer digits."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         sqr(self, "27")
         sqr(self, "123")
+        sqr(self, "3476")
         lastscene(self)
 
 class SquareRoot(Scene):
