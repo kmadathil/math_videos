@@ -614,17 +614,19 @@ class SquareRoot(Scene):
 
         text = [
             f"<span color='yellow'>Square root</span> of this <span color='cyan'>perfect square</span> is the <span color='orange'>first digit</span> of the answer.",
-            f"<span color='yellow'>Double</span> of the <span color='yellow'>first digit</span> is the <span color='cyan'>temporary divisor.</span>",
+            f"<span color='yellow'>Double</span> of this <span color='yellow'>first digit</span> is the <span color='cyan'>temporary divisor.</span>",
             f"Prepend the <span color='yellow'>difference </span>between the <span color='cyan'>left group</span> of the number",
             f"and the <span color='cyan'>square of the first digit</span> of the answer",
             f"to the next digit of the number as <span color='orange'>carry.</span> ",
+            f"There will be the same number of digits in the answer",
+            f"before the decimal point, as there are groups.",
             f"Please note that <span color='yellow'>grouping</span> was done <span color='orange'>only to find the first digit </span>",
             f"and hereafter groups don't have any significance."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"<span color='yellow'>Divide</span> this digit by the <span color='cyan'>temporary divisor</span> ",
+            f"<span color='yellow'>Divide</span> the second digit of the number by the <span color='cyan'>temporary divisor</span> ",
             f"and bring down the <span color='yellow'>quotient</span> as the <span color='yellow'>second digit</span> of the answer. ",
             f"Prepend the <span color='orange'>remainder</span> to the <span color='yellow'>next digit </span>of the number."
         ]
@@ -634,7 +636,7 @@ class SquareRoot(Scene):
             f"For each step, from the next digit of the number,",
             f"<span color='yellow'>subtract</span> the result of the <span color='cyan'>D operator</span> ",
             f"on the <span color='yellow'>previous digits of the answer</span>",
-            f"(not including the first number we estimated) ",
+            f"(not including the number we estimated as first answer digit) ",
             f"then <span color='yellow'>divide</span> it by the <span color='cyan'>temporary divisor,</span> ",
             f"and bring the <span color='yellow'>quotient</span> down as the  <span color='yellow'>next digit</span> of the answer.",
             f"Prepend any  <span color='orange'>remainder</span> to the  <span color='yellow'>next digit</span> as usual."
@@ -690,7 +692,7 @@ class SquareRoot(Scene):
                      backtrack_answer = [1, 3, 8, 2, 0],
                      backtrack_next_answer = [1, "2'", "1'0", "2'2'"],
                      backtrack_subs = [6, 32, 53],
-                     backtrack_carries = [0, 0, 0, 0],
+                     backtrack_carries = [0, 0, 10, 0],
                      wait=5)
         s.step_all()
         self.wait(5)
