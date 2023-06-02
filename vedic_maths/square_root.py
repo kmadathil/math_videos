@@ -578,6 +578,69 @@ class SquareRoot(Scene):
         self.next_section()
         self.wait(1)
 
+        text = [
+            f"We learned <span color='yellow'>straight division</span> in last videos.",
+            f"A variant of straight division can be used",
+            f"to find <span color='cyan'>Square Root</span> of any number.",
+            F"<span color='yellow'>D Operator</span> is also used in this method.",
+            f"Let's learn the same in this video."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Let's see the process...",
+            f"Starting from the <span color='yellow'>right most digit,</span>",
+            f"divide the number into <span color='cyan'>groups of 2 digits.</span>",
+            f"It's ok to have only <span color='yellow'>1 digit in left most group.</span>",
+            f"Now, consider the number in <span color='cyan'>left most group.</span>",
+            f"Find the <span color='yellow'>perfect square</span> <span color='cyan'>less than or equal</span> to that."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"<span color='yellow'>Square root</span> of this <span color='cyan'>perfect square</span> is the <span color='orange'>first digit</span> of the answer.",
+            f"<span color='yellow'>Double</span> of the <span color='yellow'>first digit</span> is the <span color='cyan'>temporary divisor.</span>",
+            f"Prepend the <span color='yellow'>difference </span>between the <span color='cyan'>left group</span> of the number",
+            f"and the <span color='cyan'>square of the first digit</span> of the answer",
+            f"to the next digit of the number as <span color='orange'>carry.</span> ",
+            f"Please note that <span color='yellow'>grouping</span> was done <span color='orange'>only to find the first digit </span>",
+            f"and hereafter groups don't have any significance."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"<span color='yellow'>Divide</span> this digit by the <span color='cyan'>temporary divisor</span> ",
+            f"and bring down the <span color='yellow'>quotient</span> as the <span color='yellow'>second digit</span> of the answer. ",
+            f"Prepend the <span color='orange'>remainder</span> to the <span color='yellow'>next digit </span>of the number."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"For each step, from the next digit of the number,",
+            f"<span color='yellow'>subtract</span> the result of the <span color='cyan'>D operator</span> ",
+            f"on the <span color='yellow'>previous digits of the answer</span>",
+            f"(not including the first number we estimated) ",
+            f"then <span color='yellow'>divide</span> it by the <span color='cyan'>temporary divisor,</span> ",
+            f"and bring the <span color='yellow'>quotient</span> down as the  <span color='yellow'>next digit</span> of the answer.",
+            f"Prepend any  <span color='orange'>remainder</span> to the  <span color='yellow'>next digit</span> as usual."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"The answer for any step cannot be  <span color='yellow'>negative.</span>",
+            f"If it is, reduce the answer for the previous step ",
+            f"till it becomes positive or zero.",
+            f"We can use the  <span color='yellow'>backtracking procedure </span>here also. "
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If the <span color='cyan'>number</span> is not a <span color='yellow'>perfect square,</span>",
+            f"continue past the <span color='yellow'>decimal point,</span> ",
+            f"using the same procedure to get <span color='yellow'>decimal digits.</span>"
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
         s = SqRootOp(self, 2025, 8,
                   subs = [25],
                   carries=[40, 20],
@@ -619,6 +682,6 @@ class SquareRoot(Scene):
         s.clear()
         self.next_section()
 
-        #astscene(self)
+        lastscene(self)
 
 
