@@ -35,7 +35,7 @@ def DOp(scene, num, wait=0):
 def DOPR(scene, num):
     title_h2 = DisplayText(scene, Span("D(" + str(num) + ")", color="Turquoise"),
                            scale=0.6, wait=0, move=(0, -1.5), fade=False)
-    g1, lines = DOp(scene, num, wait=5)
+    g1, lines = DOp(scene, num, wait=7)
     scene.remove(g1[0], g1[1], g1[2], g1[3])
     scene.remove(*lines)
     scene.play(FadeOut(title_h2))
@@ -479,7 +479,7 @@ def sqr(scene, num):
 
     for _el in eg3:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
-        scene.wait(1)
+        scene.wait(5)
     scene.wait(2)
     for _el in eg3:
         # Digits before lsb are carries
@@ -506,9 +506,12 @@ def sqr(scene, num):
 
     for _el in eg4:
         scene.play(AddTextLetterByLetter(_el, time_per_letter=1))
-        scene.wait(1)
-    scene.wait(2)
-    scene.play(FadeOut(eg1, eg2, eg3, eg4))
+        scene.wait(4)
+    scene.wait(1)
+    (q1, q2) = scene.Iqr(int(num) ** 2)
+    scene.wait(1)
+    scene.play(FadeOut(eg1, eg2, eg3, eg4, q1, q2))
+
 
 
 def lastscene(self):
@@ -531,6 +534,13 @@ def lastscene(self):
     self.play(FadeOut(titleL3, titleL2, titleL1))
 
 class Squares(Scene):
+    def Iqr(self, quotient):
+        q1 = MarkupText("Thus, the Answer is").scale(0.65).set_color(TEAL_C).move_to(LEFT + DOWN)
+        q2 = MarkupText(str(quotient)).scale(0.65).set_color(YELLOW).next_to(q1, RIGHT)
+        self.play(FadeIn(q1, q2))
+        self.play(Indicate(q2))
+        return (q1, q2)
+
     def construct(self):
         Title(self, "वर्गगणनम्", "Finding Squares", move=(3, 5), wait=2)
         self.next_section()
@@ -540,13 +550,13 @@ class Squares(Scene):
             f"In our previous videos we learned to <span color='yellow'>Square</span> any number",
             f"satisfying one of these conditions:",
             f"1. If the <span color='cyan'>last digit is 5</span>",
-            f"2. If the number is <span color='cyan'>near a powers 10</span>"
+            f"2. If the number is <span color='cyan'>near a power of 10</span>"
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
             f"In this video, we learn a <span color='cyan'>general method for squaring.</span>",
-            f"Here we come across a new term : the <span color='cyan'>D Operator.</span>",
+            f"Here we come across a new term: the <span color='cyan'>D Operator.</span>",
             f"It can be defined as the result of the",
             f"<span color='yellow'>longest step of the Vertically and Crosswise method</span> ",
             f"when a number is multiplied by itself."
@@ -563,6 +573,7 @@ class Squares(Scene):
 
         self.play(FadeOut(title_h1))
 
+        """
         text = [
             f"Let's see the process of squaring a number with <span color='yellow'>D Operator:</span>",
             f"Apply <span color='cyan'>D Operator</span> on each <span color='cyan'>segment</span> of the number.",
@@ -570,6 +581,21 @@ class Squares(Scene):
             f"adding one digit at a time. After all digits have been covered, ",
             f"we remove one digit at a time from the left,",
             f"until only the right-most digit remains."]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        """
+
+        text = [
+            f"Let's see the process of squaring a number with <span color='yellow'>D Operator:</span>",
+            f"To begin with, we divide the number into <span color='orange'>Segments.</span>",
+            f"Segments are chosen <span color='cyan'>starting</span> from the <span color='cyan'>left-most</span> digit,",
+            f"<span color='cyan'>joining one digit</span> at a time. After all digits have been covered, ",
+            f"we <span color='cyan'>remove one digit</span> at a time from the left,",
+            f"until only the <span color='cyan'>right-most digit</span> remains.",
+            f"For eg: segments for <span color='orange'>345</span> are <span color='lime'>"
+            f"3</span>,<span color='tomato'>34</span>,<span color='lime'>345</span>,<span color='tomato'>"
+            f"45</span>,<span color='lime'>5</span>",
+            f"Then apply<span color='cyan'> D Operator</span> on each <span color='cyan'>segment</span> of the number.",
+        ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
@@ -583,8 +609,14 @@ class Squares(Scene):
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         sqr(self, "27")
+        self.wait(1)
+
         sqr(self, "123")
+        self.wait(1)
+
         sqr(self, "3476")
+        self.wait(1)
+
         lastscene(self)
 
 class SquareRoot(Scene):
