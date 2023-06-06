@@ -133,7 +133,17 @@ class SqRootOp:
         self.ln = len(str(dividend))
 
         self.raw = MathTex("\sqrt{" + str(dividend) + "}", color="White")  # Raw divisor
-        self.e_dividend = MT(dividend).arrange(buff=buff)  # Dividend
+        mtd = MT(dividend)
+        if self.ln %2 == 0 :
+            # Account for the invisible leading zero
+            la = len(answer) + 1   
+        else:
+            la = len(answer)
+        if la> self.ln:
+            self.e_dividend = MT(str(dividend) + (la-len(mtd))*"0").arrange(buff=buff)   
+            self.e_dividend[self.ln:].set_color(BLACK)
+        else:
+            self.e_dividend = mtd.arrange(buff=buff)  # Dividend
 
         # self.divisor_x = MT(divisor)
         self.scene.wait(1)
@@ -217,7 +227,6 @@ class SqRootOp:
             g1.arrange(RIGHT, aligned_edge=UP)
             # We do this instead of prepending gc to g2
             # to keep the divisor and vline alignment right
-
             for i, gcx in enumerate(gc):
                 gcx.next_to(g2[0][i], UP, aligned_edge=RIGHT)
             # Loop over subs for horizontal alignment
@@ -252,14 +261,19 @@ class SqRootOp:
 
             # Color alternate groups differently
             # Note the first group being 1 or two digits
+            clr = BLUE
             if self.ln % 2 == 0:
                 self.e_dividend[0:2].set_color(BLUE)
-                s = 4
+                s = 2
             else:
                 self.e_dividend[0].set_color(BLUE)
-                s = 3
+                s = 1
             while s < self.ln:
-                self.e_dividend[s:s + 2].set_color(BLUE)
+                if clr==BLUE:
+                    clr = GREEN
+                else:
+                    clr = BLUE
+                self.e_dividend[s:s + 2].set_color(clr)
                 s += 2
 
             # Add dividend and carry groups
@@ -342,6 +356,10 @@ class SqRootOp:
 
             # DOP
             if n < len(self.answer):
+                # Extra dividend zeros  
+                # Do not  enter while backtracking (since this extension has been done)
+                if ((n + self.neven) >= self.ln) and not is_backtracking:   
+                        self.e_dividend[n + self.neven].set_color(RED)
                 gd, lines = DOp_(ga[dop_start:], self.subs[n - 2], self.scene)
                 scene.add(gd)
                 scene.add(*lines)
@@ -394,6 +412,9 @@ class SqRootOp:
 
             # DOP
             if n < len(self.answer):
+                # Extra dividend zeros  
+                if ((n + self.neven) >= self.ln):   
+                        self.e_dividend[n + self.neven].set_color(RED)
                 gd, lines = DOp_(ga[dop_start:], self.backtrack_subs[n - 2], self.scene)
                 scene.add(gd)
                 scene.add(*lines)
@@ -540,13 +561,13 @@ class Squares(Scene):
             f"In our previous videos we learned to <span color='yellow'>Square</span> any number",
             f"satisfying one of these conditions:",
             f"1. If the <span color='cyan'>last digit is 5</span>",
-            f"2. If the number is <span color='cyan'>near a powers 10</span>"
+            f"2. If the number is <span color='cyan'>near a power of 10</span>"
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
             f"In this video, we learn a <span color='cyan'>general method for squaring.</span>",
-            f"Here we come across a new term : the <span color='cyan'>D Operator.</span>",
+            f"Here we come across a new term: the <span color='cyan'>D Operator.</span>",
             f"It can be defined as the result of the",
             f"<span color='yellow'>longest step of the Vertically and Crosswise method</span> ",
             f"when a number is multiplied by itself."
@@ -594,67 +615,74 @@ class SquareRoot(Scene):
         self.wait(1)
 
         text = [
-            f"We learned <span color='yellow'>straight division</span> in last videos.",
+            f"We learned <span color='yellow'>straight division</span> in previous videos.",
             f"A variant of straight division can be used",
-            f"to find <span color='cyan'>Square Root</span> of any number.",
-            F"<span color='yellow'>D Operator</span> is also used in this method.",
-            f"Let's learn the same in this video."
+            f"to find the <span color='cyan'>Square Root</span> of any number.",
+            F"The <span color='yellow'>D Operator</span> is also used in this method.",
+            f"Let's learn this method in this video."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"Let's see the process...",
+            f"To find the square root of a number:",
             f"Starting from the <span color='yellow'>right most digit,</span>",
             f"divide the number into <span color='cyan'>groups of 2 digits.</span>",
-            f"It's ok to have only <span color='yellow'>1 digit in left most group.</span>",
-            f"Now, consider the number in <span color='cyan'>left most group.</span>",
-            f"Find the <span color='yellow'>perfect square</span> <span color='cyan'>less than or equal</span> to that."
+            f"It's ok to have <span color='orange'>1 or 2 digits</span> in the <span color='yellow'>left most group.</span>",
+            f"The <span color='orange'>number of digits in the answer</span> before the decimal point",
+            f"is equal to <span color='cyan'>the number of groups.</span>"
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
+            f"Consider the number in the <span color='cyan'>left most group.</span>",
+            f"Find the <span color='yellow'>perfect square</span> <span color='cyan'>less than or equal</span> to it.", 
             f"<span color='yellow'>Square root</span> of this <span color='cyan'>perfect square</span> is the <span color='orange'>first digit</span> of the answer.",
-            f"<span color='yellow'>Double</span> of this <span color='yellow'>first digit</span> is the <span color='cyan'>temporary divisor.</span>",
+            f"<span color='yellow'>Double</span> of this <span color='orange'>first digit</span> is called the <span color='cyan'>temporary divisor.</span>",
             f"Prepend the <span color='yellow'>difference </span>between the <span color='cyan'>left group</span> of the number",
-            f"and the <span color='cyan'>square of the first digit</span> of the answer",
-            f"to the next digit of the number as <span color='orange'>carry.</span> ",
-            f"There will be the same number of digits in the answer",
-            f"before the decimal point, as there are groups.",
-            f"Please note that <span color='yellow'>grouping</span> was done <span color='orange'>only to find the first digit </span>",
-            f"and hereafter groups don't have any significance."
+            f"and the <span color='cyan'>square of the </span><span color='orange'>first digit</span> of the answer",
+            f"to the next digit of the number as <span color='orange'>carry.</span> "
+            ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"<span color='yellow'>Grouping</span> was done to find the <span color='orange'>first digit </span>",
+            f"and <span color='yellow'>number of digits</span> in the answer,",
+            f"and groups have no significance in the rest of the process."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"<span color='yellow'>Divide</span> the second digit of the number by the <span color='cyan'>temporary divisor</span> ",
+            f"<span color='yellow'>Divide</span> the next digit of the number by the <span color='cyan'>temporary divisor</span> ",
             f"and bring down the <span color='yellow'>quotient</span> as the <span color='yellow'>second digit</span> of the answer. ",
-            f"Prepend the <span color='orange'>remainder</span> to the <span color='yellow'>next digit </span>of the number."
+            f"Prepend the <span color='orange'>remainder</span> to the <span color='yellow'>succeeding digit </span>of the number."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"For each step, from the next digit of the number,",
-            f"<span color='yellow'>subtract</span> the result of the <span color='cyan'>D operator</span> ",
-            f"on the <span color='yellow'>previous digits of the answer</span>",
-            f"(not including the number we estimated as first answer digit) ",
-            f"then <span color='yellow'>divide</span> it by the <span color='cyan'>temporary divisor,</span> ",
-            f"and bring the <span color='yellow'>quotient</span> down as the  <span color='yellow'>next digit</span> of the answer.",
-            f"Prepend any  <span color='orange'>remainder</span> to the  <span color='yellow'>next digit</span> as usual."
+            f"At each step, from the next digit of the number,",
+            f"1. <span color='yellow'>Subtract</span> the result of the <span color='cyan'>D operator</span> ",
+            f"  on the <span color='yellow'>previous digits of the answer</span>",
+            f"  (not including the number we estimated as first answer digit) ",
+            f"2. Then, <span color='yellow'>divide</span> it by the <span color='cyan'>temporary divisor,</span> ",
+            f"3. Bring the <span color='yellow'>quotient</span> down as the  <span color='yellow'>next digit</span> of the answer.",
+            f"4. Prepend any  <span color='orange'>remainder</span> to the  <span color='yellow'>next digit</span> as usual."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
             f"The answer for any step cannot be  <span color='yellow'>negative.</span>",
             f"If it is, reduce the answer for the previous step ",
-            f"till it becomes positive or zero.",
-            f"We can use the  <span color='yellow'>backtracking procedure </span>here also. "
+            f" till it becomes positive or zero.",
+            f"We can use the  <span color='yellow'>backtracking procedure</span> for this. "
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
             f"If the <span color='cyan'>number</span> is not a <span color='yellow'>perfect square,</span>",
-            f"continue past the <span color='yellow'>decimal point,</span> ",
-            f"using the same procedure to get <span color='yellow'>decimal digits.</span>"
+            f"continue past the <span color='yellow'>decimal point</span> of the answer ",
+            f"adding decimal zeros to the number as necessary,",
+            f"and use the same procedure to get <span color='yellow'>decimal digits</span>",
+            f"of the answer."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
@@ -698,7 +726,21 @@ class SquareRoot(Scene):
         self.wait(5)
         s.clear()
         self.next_section()
-
+        s = SqRootOp(self, 1000, 6,
+                     subs = [1, 12, 40, 28],   # 56
+                     carries=[10, 40, 30, 60, 80],  # 100
+                     answer=[3,1,6,2,2,8],
+                     ansplaces=2,
+                     backtrackp=True,
+                     backtrack_en = [False, False, False, True, True, False],
+                     backtrack_answer = [3, 1, 6, 3, 3, 8],
+                     backtrack_next_answer = [1, 6, 3, "7'", "2'"],   # "0'"
+                     backtrack_subs = [1, 12, 42, 30, 44],
+                     backtrack_carries = [0, 0, 0, 0, 20],  # 40
+                     wait=5)
+        s.step_all()
+        self.wait(5)
+        s.clear()
         lastscene(self)
 
 
