@@ -104,3 +104,38 @@ class FoldingTest(Scene):
         self.next_section()
 
 
+class Reciprocal():
+    ''' Class for Reciprocal calculation'''
+    def __init__(self, scene, numerator, denominator, multiplier = None) -> None:
+        self.scene = scene
+        assert numerator<10
+        self.numerator = numerator
+        self.denominator = denominator
+        if multiplier is None:
+            multiplier = int((denominator+1)/10)
+        self.multiplier = multiplier
+    def display(self):
+        '''Initial display'''
+        frac = MathTex("\\frac{"+str(self.numerator)+"}{"+str(self.denominator)+"}", color="Yellow")
+        e = Text(" = ")
+        z = MathTex("0.", color="Yellow")
+        t = Text("...")
+        n = MathTex(str(self.numerator), color="Yellow")
+        ng = VGroup(n).arrange(LEFT)
+        self.tg = VGroup(frac, e, z, t, ng).arrange(RIGHT)
+        self.mg = VGroup(Text("Multiplier:").scale(0.6), MathTex(self.multiplier, color="Yellow")).arrange(RIGHT)
+        self.mg.next_to(self.tg, RIGHT, buff=1)
+        self.scene.play(FadeIn(self.tg))
+        self.scene.play(FadeIn(self.mg))
+        return self.tg, self.mg
+    
+    def step(self):
+        '''Single Step'''
+        return None
+
+class ReciprocalTest(Scene):
+    def construct(self):
+        r = Reciprocal(self, 1, 19, 2)
+        r.display()
+        self.wait(3)
+        self.next_section()
