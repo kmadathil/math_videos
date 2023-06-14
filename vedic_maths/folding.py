@@ -114,6 +114,8 @@ class Reciprocal():
         if multiplier is None:
             multiplier = int((denominator+1)/10)
         self.multiplier = multiplier
+        self.last_digit = self.numerator
+        self.carry = 0
     def display(self):
         '''Initial display'''
         frac = MathTex("\\frac{"+str(self.numerator)+"}{"+str(self.denominator)+"}", color="Yellow")
@@ -123,14 +125,48 @@ class Reciprocal():
         n = MathTex(str(self.numerator), color="Yellow")
         ng = VGroup(n).arrange(LEFT)
         self.tg = VGroup(frac, e, z, t, ng).arrange(RIGHT)
-        self.mg = VGroup(Text("Multiplier:").scale(0.6), MathTex(self.multiplier, color="Yellow")).arrange(RIGHT)
+        self.mg = VGroup(VGroup(Text("Multiplier:").scale(0.6), MathTex(self.multiplier, color="Yellow")).arrange(RIGHT))
         self.mg.next_to(self.tg, RIGHT, buff=1)
         self.scene.play(FadeIn(self.tg))
         self.scene.play(FadeIn(self.mg))
         return self.tg, self.mg
     
-    def step(self):
+    def step(self, wait=3):
         '''Single Step'''
+        if len(self.mg) == 1:
+            self.mg.add(MathTex(str(self.last_digit), color="Yellow"))
+            self.mg.add(MathTex(str(self.multiplier*self.last_digit), color="Yellow"))
+            self.mg.arrange(DOWN, aligned_edge=RIGHT)
+            self.x = Text("×").scale(0.7)
+            self.eq = Text("=").scale(0.7)
+            #self.scene.play(self.mg.animate.next_to(self.tg, RIGHT, buff=2))
+            self.mg.next_to(self.tg, RIGHT, buff=2)
+            self.x.next_to(self.mg[0], RIGHT)
+            self.eq.next_to(self.mg[2], LEFT)
+            self.scene.add(self.x, self.eq)
+            self.scene.wait(1)
+        else:
+            self.mg[-2].become(self.tg[-1][-1])
+            self.scene.wait(2)
+            t = MathTex(str(self.multiplier*self.last_digit), color="Yellow")
+            self.mg[-1].become(t)
+            self.mg.arrange(DOWN, aligned_edge=RIGHT)
+            self.mg.next_to(self.tg, RIGHT, buff=1)
+            self.x.next_to(self.mg[0], RIGHT)
+            self.eq.next_to(self.mg[2], LEFT)
+        self.scene.wait(2)
+        self.last_digit = self.multiplier * self.last_digit + self.carry
+        self.carry = int(self.last_digit/10)
+        self.last_digit = self.last_digit % 10
+        self.tg[-1].add(MathTex(str(self.last_digit), color="Yellow"))
+        self.tg[-1].arrange(LEFT)
+        self.tg.arrange(RIGHT)
+        self.mg.next_to(self.tg, RIGHT, buff=1)
+        self.x.next_to(self.mg[0], RIGHT)
+        self.eq.next_to(self.mg[2], LEFT)
+        self.scene.wait(wait)
+
+            
         return None
 
 class ReciprocalTest(Scene):
@@ -139,3 +175,9 @@ class ReciprocalTest(Scene):
         r.display()
         self.wait(3)
         self.next_section()
+        r.step()
+        r.step()
+        r.step()
+        r.step()
+        r.step()
+        self.wait(3)
