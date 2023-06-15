@@ -116,7 +116,8 @@ class Reciprocal():
         self.multiplier = multiplier
         self.last_digit = self.numerator
         self.carry = 0
-    def display(self):
+
+    def display(self, wait=3):
         '''Initial display'''
         frac = MathTex("\\frac{"+str(self.numerator)+"}{"+str(self.denominator)+"}", color="Yellow")
         e = Text(" = ")
@@ -124,15 +125,36 @@ class Reciprocal():
         t = Text("...")
         n = MathTex(str(self.numerator), color="Yellow")
         ng = VGroup(n).arrange(LEFT)
+        self.cg = VGroup(MathTex("0", color="Black")).arrange(LEFT)   # Carry Group
         self.tg = VGroup(frac, e, z, t, ng).arrange(RIGHT)
         self.mg = VGroup(VGroup(Text("Multiplier:").scale(0.6), MathTex(self.multiplier, color="Yellow")).arrange(RIGHT))
-        self.mg.next_to(self.tg, RIGHT, buff=1)
+        self.tg.shift(UP)
+        self.mg.next_to(self.tg, DOWN, buff=1)
+        self.cg.next_to(self.tg[-1], UP, aligned_edge=RIGHT)
         self.scene.play(FadeIn(self.tg))
         self.scene.play(FadeIn(self.mg))
+        self.scene.add(self.cg)
         return self.tg, self.mg
     
+    def end(self, wait=3):
+        '''We are done, remove the ... symbol'''
+        self.scene.play(Indicate(self.tg[-1][0]))
+        self.scene.play(Indicate(self.tg[-1][-1]))
+        self.tg[-1][-1].set_color(GREY)
+        self.scene.remove(self.cg)
+        self.scene.wait(1)
+        self.tg1 = VGroup(*self.tg[0:3].copy(), self.tg[4][0:-1].copy(), self.tg[3].copy()).arrange(RIGHT)
+        self.tg1.shift(UP)
+        self.scene.play(Transform(self.tg, self.tg1))
+        self.scene.wait(wait)
+
     def step(self, wait=3):
-        '''Single Step'''
+        '''Single Step
+        
+           Calculate current digit * multiplier + carry
+           The LSB of this becomes the next digit and the rest become the 
+           next carry
+        '''
         if len(self.mg) == 1:
             self.mg.add(MathTex(str(self.last_digit), color="Yellow"))
             self.mg.add(MathTex(str(self.multiplier*self.last_digit), color="Yellow"))
@@ -140,7 +162,7 @@ class Reciprocal():
             self.x = Text("×").scale(0.7)
             self.eq = Text("=").scale(0.7)
             #self.scene.play(self.mg.animate.next_to(self.tg, RIGHT, buff=2))
-            self.mg.next_to(self.tg, RIGHT, buff=2)
+            self.mg.next_to(self.tg, DOWN, buff=1)
             self.x.next_to(self.mg[0], RIGHT)
             self.eq.next_to(self.mg[2], LEFT)
             self.scene.add(self.x, self.eq)
@@ -151,7 +173,7 @@ class Reciprocal():
             t = MathTex(str(self.multiplier*self.last_digit), color="Yellow")
             self.mg[-1].become(t)
             self.mg.arrange(DOWN, aligned_edge=RIGHT)
-            self.mg.next_to(self.tg, RIGHT, buff=1)
+            self.mg.next_to(self.tg, DOWN, buff=1)
             self.x.next_to(self.mg[0], RIGHT)
             self.eq.next_to(self.mg[2], LEFT)
         self.scene.wait(2)
@@ -161,23 +183,48 @@ class Reciprocal():
         self.tg[-1].add(MathTex(str(self.last_digit), color="Yellow"))
         self.tg[-1].arrange(LEFT)
         self.tg.arrange(RIGHT)
-        self.mg.next_to(self.tg, RIGHT, buff=1)
+        self.tg.shift(UP)
+        self.mg.next_to(self.tg, DOWN, buff=1)
         self.x.next_to(self.mg[0], RIGHT)
         self.eq.next_to(self.mg[2], LEFT)
+        # Carries
+        # Zeros are not shown but kept for alignment
+        cm = MathTex(self.carry, color="Grey" if self.carry else "Black")   
+        self.cg.add(cm)
+        self.cg.arrange(LEFT)
+        for ix, _c in enumerate(self.cg):
+            _c.next_to(self.tg[-1][ix], UP, aligned_edge=RIGHT)
+        self.scene.play(Indicate(self.mg[2]))
+        self.scene.play(Indicate(self.tg[-1][-1]))
+        if self.carry:
+            self.scene.play(Indicate(self.cg[-1]))
         self.scene.wait(wait)
+        end_p = ((self.last_digit == self.numerator) and (self.carry == 0))
+        return end_p
+    
+    def clear(self): 
+        ''' Clear the scene'''
+        self.scene.remove(self.tg, self.mg, self.x, self.eq)
 
-            
-        return None
+    def step_all(self, wait = 3):
+        ''' Run all necessary steps after initiation'''
+        self.display(wait) 
+        # Max steps = denominator - 1
+        for i in range(self.denominator-1):
+            e = self.step(wait)
+            # End detected, break
+            if e:
+                break    
+        self.end(wait)
+        self.clear()
 
 class ReciprocalTest(Scene):
     def construct(self):
         r = Reciprocal(self, 1, 19, 2)
-        r.display()
-        self.wait(3)
-        self.next_section()
-        r.step()
-        r.step()
-        r.step()
-        r.step()
-        r.step()
-        self.wait(3)
+        r.step_all()        
+        r = Reciprocal(self, 7, 49, 5)
+        r.step_all()
+        r = Reciprocal(self, 6, 39, 4)
+        r.step_all()
+        t = Text("Bye")
+        self.play(FadeIn(t))
