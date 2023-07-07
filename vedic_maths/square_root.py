@@ -266,6 +266,8 @@ class SqRootOp:
 
             # Color alternate groups differently
             # Note the first group being 1 or two digits
+            """
+            COMMENTED AS SUGGESTED 03JUL
             clr = BLUE_D
             if self.ln % 2 == 0:
                 self.e_dividend[0:2].set_color(BLUE_D)
@@ -280,6 +282,19 @@ class SqRootOp:
                     clr = MAROON_B
                 self.e_dividend[s:s + 2].set_color(clr)
                 s += 2
+            """
+
+            if self.ln % 2 == 0:
+                self.e_dividend[0:2].set_color(BLUE)
+                s = 4
+            else:
+                self.e_dividend[0].set_color(BLUE)
+                s = 3
+            while s<self.ln:
+                self.e_dividend[s:s + 2].set_color(BLUE)
+                s += 2
+
+
 
             # Add dividend and carry groups
             scene.add(g2, gc)
@@ -339,10 +354,18 @@ class SqRootOp:
             else:
                 ga += self.answer[n - 1]
 
+            """
+            COMMENTED AS SUGGESTED 03JUL
             if n > self.ansplaces:
                 ga[-1].set_color(GOLD_C) #ANSWER DECIMAL DIGITS
             else:
                 ga[-1].set_color(YELLOW_D)#ANSWER OTHER DIGITS
+            """
+            if n > self.ansplaces:
+                ga[-1].set_color(RED) #ANSWER DECIMAL DIGITS
+            else:
+                ga[-1].set_color(GREEN)#ANSWER OTHER DIGITS
+
             scene.add(ga[-1])
             _realign()
 
@@ -371,7 +394,7 @@ class SqRootOp:
                 gd, lines = DOp_(ga[dop_start:], self.subs[n - 2], self.scene)
                 scene.add(gd)
                 scene.add(*lines)
-                scene.wait(2)
+                scene.wait(5) #increase wait geeth
                 # show the next sub
                 if is_backtracking:
                     gs[-1].become(gd[-1])
@@ -380,7 +403,7 @@ class SqRootOp:
                 gs[-1].set_color(WHITE)
                 _realign()
                 scene.remove(*gd[1:], *lines)
-            self.scene.wait(wait)
+            self.scene.wait(2)
         else:
             # Need backtracking
             ga = self.ga
@@ -398,10 +421,19 @@ class SqRootOp:
             # First, show the next answer bit, which we will later backtrack
             ga += self.backtrack_answer[n - 1]
 
+            """
+            COMMENTED AS SUGGESTED 03JUL
             if n > self.ansplaces:
                 self.backtrack_answer[n - 1].set_color(RED)
             else:
                 self.backtrack_answer[n - 1].set_color(PURE_GREEN)  
+            """
+
+            if n > self.ansplaces:
+                self.backtrack_answer[n - 1].set_color(RED)
+            else:
+                self.backtrack_answer[n - 1].set_color(GREEN)
+
             scene.add(ga[-1])
             _realign()
 
@@ -426,7 +458,7 @@ class SqRootOp:
                 gd, lines = DOp_(ga[dop_start:], self.backtrack_subs[n - 2], self.scene)
                 scene.add(gd)
                 scene.add(*lines)
-                scene.wait(2)
+                scene.wait(5) #increase wait geeth
                 # show the next sub
                 if is_backtracking:
                     gs[-1].become(gd[-1])
@@ -666,6 +698,7 @@ class SquareRoot(Scene):
         return (q1, q2)
 
     def construct(self):
+        
         Title(self, "वर्गमूलम्", "Square Root", move=(3, 5), wait=2)
         self.next_section()
         self.wait(1)
@@ -757,6 +790,7 @@ class SquareRoot(Scene):
         self.play(FadeOut(q1, q2))
         self.next_section()
 
+
         s = SqRootOp(self, 14641, 2,
                  subs = [4, 4, 1],
                  carries=[0, 0, 0, 0],
@@ -766,10 +800,12 @@ class SquareRoot(Scene):
                  wait=0)
         s.step_all()
 
+
         (q1, q2) = self.Iqr(14641,math.sqrt(14641))
         s.clear()
         self.play(FadeOut(q1, q2))
         self.next_section()
+    
 
         s = SqRootOp(self, 16129, 2,
                      subs = [4, 28, 49],
@@ -789,7 +825,7 @@ class SquareRoot(Scene):
         s.clear()
         self.play(FadeOut(q1, q2))
         self.next_section()
-        
+
         s = SqRootOp(self, 1000, 6,
                      subs = [1, 12, 40, 28],   # 56
                      carries=[10, 40, 30, 60, 80],  # 100
@@ -808,6 +844,8 @@ class SquareRoot(Scene):
         s.clear()
         self.play(FadeOut(q1, q2))
         lastscene(self)
+
+
 
 
 
