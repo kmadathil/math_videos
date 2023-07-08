@@ -132,6 +132,7 @@ class SqRootOp:
 
         self.ln = len(str(dividend))
 
+
         self.raw = MathTex("\sqrt{" + str(dividend) + "}", color="White")  # Raw divisor
         mtd = MT(dividend)
         if self.ln %2 == 0 :
@@ -184,6 +185,8 @@ class SqRootOp:
             self.dop_start = 2
             self.neven = 1
 
+
+
     def clear(self):
         ''' Remove everything from scene'''
         for i in self.gc:
@@ -201,10 +204,10 @@ class SqRootOp:
         ''' Run all steps '''
         for i in range(len(self.answer) + 1):
             self.step(i)
-            self.scene.wait(3)
-        self.scene.wait(wait)
+            self.scene.wait(2)
+        #self.scene.wait(1)
 
-    def step(self, n=0, wait=5, is_backtracking=False):
+    def step(self, n=0, wait=3.5, is_backtracking=False):
         ''' Single step (nth)
         
             n: integer
@@ -263,6 +266,8 @@ class SqRootOp:
 
             # Color alternate groups differently
             # Note the first group being 1 or two digits
+            """
+            COMMENTED AS SUGGESTED 03JUL
             clr = BLUE_D
             if self.ln % 2 == 0:
                 self.e_dividend[0:2].set_color(BLUE_D)
@@ -277,6 +282,19 @@ class SqRootOp:
                     clr = MAROON_B
                 self.e_dividend[s:s + 2].set_color(clr)
                 s += 2
+            """
+
+            if self.ln % 2 == 0:
+                self.e_dividend[0:2].set_color(BLUE)
+                s = 4
+            else:
+                self.e_dividend[0].set_color(BLUE)
+                s = 3
+            while s<self.ln:
+                self.e_dividend[s:s + 2].set_color(BLUE)
+                s += 2
+
+
 
             # Add dividend and carry groups
             scene.add(g2, gc)
@@ -336,10 +354,18 @@ class SqRootOp:
             else:
                 ga += self.answer[n - 1]
 
+            """
+            COMMENTED AS SUGGESTED 03JUL
             if n > self.ansplaces:
                 ga[-1].set_color(GOLD_C) #ANSWER DECIMAL DIGITS
             else:
                 ga[-1].set_color(YELLOW_D)#ANSWER OTHER DIGITS
+            """
+            if n > self.ansplaces:
+                ga[-1].set_color(RED) #ANSWER DECIMAL DIGITS
+            else:
+                ga[-1].set_color(GREEN)#ANSWER OTHER DIGITS
+
             scene.add(ga[-1])
             _realign()
 
@@ -368,7 +394,7 @@ class SqRootOp:
                 gd, lines = DOp_(ga[dop_start:], self.subs[n - 2], self.scene)
                 scene.add(gd)
                 scene.add(*lines)
-                scene.wait(2)
+                scene.wait(5) #increase wait geeth
                 # show the next sub
                 if is_backtracking:
                     gs[-1].become(gd[-1])
@@ -377,7 +403,7 @@ class SqRootOp:
                 gs[-1].set_color(WHITE)
                 _realign()
                 scene.remove(*gd[1:], *lines)
-            self.scene.wait(wait)
+            self.scene.wait(2)
         else:
             # Need backtracking
             ga = self.ga
@@ -395,10 +421,19 @@ class SqRootOp:
             # First, show the next answer bit, which we will later backtrack
             ga += self.backtrack_answer[n - 1]
 
+            """
+            COMMENTED AS SUGGESTED 03JUL
             if n > self.ansplaces:
                 self.backtrack_answer[n - 1].set_color(RED)
             else:
                 self.backtrack_answer[n - 1].set_color(PURE_GREEN)  
+            """
+
+            if n > self.ansplaces:
+                self.backtrack_answer[n - 1].set_color(RED)
+            else:
+                self.backtrack_answer[n - 1].set_color(GREEN)
+
             scene.add(ga[-1])
             _realign()
 
@@ -423,7 +458,7 @@ class SqRootOp:
                 gd, lines = DOp_(ga[dop_start:], self.backtrack_subs[n - 2], self.scene)
                 scene.add(gd)
                 scene.add(*lines)
-                scene.wait(2)
+                scene.wait(5) #increase wait geeth
                 # show the next sub
                 if is_backtracking:
                     gs[-1].become(gd[-1])
@@ -452,7 +487,7 @@ class SqRootOp:
                 c_.set_color(BLACK)
             if n <= len(self.backtrack_subs):
                 gs[-1].set_color(GREY)
-            self.scene.wait(4)
+            self.scene.wait(2)
 
             # Now we have established the need to backtrack
             ## Remove next answer
@@ -460,7 +495,7 @@ class SqRootOp:
             ga -= self.backtrack_next_answer[n - 1]
             # Now we recursively call step with backtracking enabled.
 
-            self.step(n, wait=wait, is_backtracking=True)
+            self.step(n, wait=1, is_backtracking=True)
 
 
 
@@ -595,12 +630,12 @@ class Squares(Scene):
                                scale=0.6, wait=0, move=(-3, -1), fade=False)
 
         DOPR(self, 3)
-        """
+
         DOPR(self, 8)
         DOPR(self, 67)
         DOPR(self, 345)
         DOPR(self, 2314)
-        """
+
         self.play(FadeOut(title_h1))
 
         """
@@ -637,7 +672,7 @@ class Squares(Scene):
             f"and <span color='cyan'>carry the previous digits</span> to previous answer digits."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
-        """
+
 
         sqr(self, "27")
         self.wait(1)
@@ -649,16 +684,24 @@ class Squares(Scene):
         self.wait(1)
 
         lastscene(self)
-        """
+
 
 class SquareRoot(Scene):
+    def Iqr(self,num, sqrt):
+        #q1 = MarkupText("Thus, the Answer is").scale(0.5).set_color(TEAL_C).move_to( DOWN*2)
+
+        q1 = MathTex("\sqrt{" + str(num) + "}  = ", color="White").move_to(DOWN*2)
+        #q2 = MarkupText(str(sqrt)).scale(0.7).set_color(YELLOW).next_to(q1, RIGHT)
+        q2 = MathTex(str(sqrt)).scale(0.9).set_color(ORANGE).next_to(q1, RIGHT)
+        self.play(FadeIn(q1, q2))
+        self.play(Indicate(q2))
+        return (q1, q2)
+
     def construct(self):
-
-
+        
         Title(self, "वर्गमूलम्", "Square Root", move=(3, 5), wait=2)
         self.next_section()
         self.wait(1)
-
 
         text = [
             f"We learned <span color='yellow'>straight division</span> in previous videos.",
@@ -667,7 +710,7 @@ class SquareRoot(Scene):
             F"The <span color='yellow'>D Operator</span> is also used in this method.",
             f"Let's learn this method in this video."
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"To find the square root of a number:",
@@ -677,7 +720,7 @@ class SquareRoot(Scene):
             f"The <span color='orange'>number of digits in the answer</span> before the decimal point",
             f"is equal to <span color='cyan'>the number of groups.</span>"
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"Consider the number in the <span color='cyan'>left most group.</span>",
@@ -688,21 +731,21 @@ class SquareRoot(Scene):
             f"and the <span color='cyan'>square of the </span><span color='orange'>first digit</span> of the answer",
             f"to the next digit of the number as <span color='orange'>carry.</span> "
             ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"<span color='yellow'>Grouping</span> was done to find the <span color='orange'>first digit </span>",
             f"and <span color='yellow'>number of digits</span> in the answer,",
             f"and groups have no significance in the rest of the process."
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"<span color='yellow'>Divide</span> the next digit of the number by the <span color='cyan'>temporary divisor</span> ",
             f"and bring down the <span color='yellow'>quotient</span> as the <span color='yellow'>second digit</span> of the answer. ",
             f"Prepend the <span color='orange'>remainder</span> to the <span color='yellow'>succeeding digit </span>of the number."
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"At each step, from the next digit of the number,",
@@ -713,7 +756,7 @@ class SquareRoot(Scene):
             f"3. Bring the <span color='yellow'>quotient</span> down as the  <span color='yellow'>next digit</span> of the answer.",
             f"4. Prepend any  <span color='orange'>remainder</span> to the  <span color='yellow'>next digit</span> as usual."
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"The answer for any step cannot be  <span color='yellow'>negative.</span>",
@@ -721,7 +764,7 @@ class SquareRoot(Scene):
             f" till it becomes positive or zero.",
             f"We can use the  <span color='yellow'>backtracking procedure</span> for this. "
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"If the <span color='cyan'>number</span> is not a <span color='yellow'>perfect square,</span>",
@@ -730,7 +773,7 @@ class SquareRoot(Scene):
             f"and use the same procedure to get <span color='yellow'>decimal digits</span>",
             f"of the answer."
         ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
 
         s = SqRootOp(self, 2025, 8,
@@ -741,8 +784,12 @@ class SquareRoot(Scene):
                   backtrackp=False,
                   wait=0)
         s.step_all()
+
+        (q1, q2) = self.Iqr(2025, math.sqrt(2025))
         s.clear()
+        self.play(FadeOut(q1, q2))
         self.next_section()
+
 
         s = SqRootOp(self, 14641, 2,
                  subs = [4, 4, 1],
@@ -752,10 +799,14 @@ class SquareRoot(Scene):
                  backtrackp=False,
                  wait=0)
         s.step_all()
-        s.clear()
-          
 
-        self.next_section() 
+
+        (q1, q2) = self.Iqr(14641,math.sqrt(14641))
+        s.clear()
+        self.play(FadeOut(q1, q2))
+        self.next_section()
+    
+
         s = SqRootOp(self, 16129, 2,
                      subs = [4, 28, 49],
                      carries=[0, 20, 30, 40],
@@ -767,14 +818,14 @@ class SquareRoot(Scene):
                      backtrack_next_answer = [1, "4'", "1'0", "2'2'"],
                      backtrack_subs = [9, 32, 53],
                      backtrack_carries = [0, 0, 10, 0],
-                     wait=5)
+                     wait=0)
         s.step_all()
-        self.wait(5)
+
+        (q1, q2) = self.Iqr(16129,math.sqrt(16129))
         s.clear()
+        self.play(FadeOut(q1, q2))
         self.next_section()
 
-
-        
         s = SqRootOp(self, 1000, 6,
                      subs = [1, 12, 40, 28],   # 56
                      carries=[10, 40, 30, 60, 80],  # 100
@@ -786,11 +837,19 @@ class SquareRoot(Scene):
                      backtrack_next_answer = [1, 6, 3, "7'", "1'"],   # "0'"
                      backtrack_subs = [1, 12, 42, 30, 44],
                      backtrack_carries = [0, 0, 0, 0, 20],  # 40
-                     wait=5)
+                     wait=0)
         s.step_all()
-        self.wait(5)
+
+        (q1, q2) = self.Iqr(1000, round(math.sqrt(1000),4))
         s.clear()
+        self.play(FadeOut(q1, q2))
         lastscene(self)
+
+
+
+
+
+
 
 
 
