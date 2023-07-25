@@ -29,7 +29,8 @@ class FoldingOp:
         t01.next_to(t00, DOWN, buff=1)
         self.scene.add(t01)
         self.scene.wait(wait)
-        g0 = VGroup(Text("Folding Generator = ").scale(0.7), self.og).arrange(RIGHT)
+        #g0 = VGroup(Text("Folding Generator = ").scale(0.7), self.og).arrange(RIGHT)
+        g0 = VGroup(Text("Multiplier Generator = ").scale(0.7), self.og).arrange(RIGHT)
         t1 = Text(f"Folding Multiplier = ").scale(0.7)
         gm = VGroup(t1, self.e_mult).arrange(RIGHT)
         gd = VGroup(g0, gm).arrange(DOWN)
@@ -85,8 +86,167 @@ class FoldingOp:
         g = DisplayText(self.scene, t, scale=0.7, move=(2, 0), wait=3, fade=True)
         self.scene.remove(self.g0)
 
-class FoldingTest(Scene):
+def lastscene(self):
+    titleL1 = DisplayText(self,
+            Span("Thank you for watching this video.", color="yellow"), scale=0.7, wait=1,
+            move=(-2.5, -1), fade=False)
+    titleL2 = DisplayText(self,
+                Span("Please let us know your feedback by your Likes and Comments.", color="yellow"),
+                        scale=0.6, wait=2, move=(-1.5, -1),fade=False)
+    titleL2 = DisplayText(self,
+            Span("Share the video with your friends too.",
+            color="yellow"),scale=0.6,wait=3, move=(-1, -1), fade=False)
+
+    titleL3 = DisplayText(self,
+                              Span("Do Subscribe to our Channel and press the Bell Icon!", color="yellow"),
+                              scale=0.6, wait=2, move=(0, -1),
+                              fade=False)
+
+    self.wait(3)
+    self.play(FadeOut(titleL3, titleL2, titleL1))
+
+class Folding(Scene):
     def construct(self):
+        Title(self, "वेष्टनम्", "Folding", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(1)
+
+        text = [
+            f"The term <span color='yellow'>Divisibility Test</span> is very familiar to us.",
+            f"Also we are proficient in doing the ",
+            f"divisibility test of any number by 2, 3 and 5.",
+            f"In our previous videos we used <span color='yellow'>Digitsum</span> " ,
+            f"to check whether a number is  <span color='cyan'>divisible by 9.</span>",
+            f"We also learned that  <span color='yellow'>ekadasha shesha</span> can be used ",
+            f"to check whether a number is  <span color='cyan'>divisible by 11.</span>"
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Today we are learning a new technique, <span color='cyan'>Folding,</span>",
+            f"to check the  <span color='yellow'>divisibility</span> for <span color='yellow'>any number.</span>",
+            f"This number is referred as  <span color='cyan'>Divisor.</span>",
+            f"The number that we seek to check the divisibility is <span color='cyan'>Dividend.</span>" ,
+            f"So,now we are learning to check whether",
+            f"a  <span color='cyan'>Dividend</span><span color='yellow'> is divisible by a</span><span color='cyan'> Divisor</span><span color='yellow'> or not.</span>"
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+
+        text = [
+            f"Let's see the procedure in detail.",
+            f"To begin with, we find a  <span color='yellow'>multiple</span> of the <span color='yellow'>Divisor</span>",
+            f"that is  <span color='yellow'>1 less or greater</span> than a <span color='yellow'>10's multiple.</span>",
+            f"let's call this as <span color='cyan'>Multiplier Generator.</span>"
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        title_h1 = DisplayText(self, Span("Examples for ", color="white") + Span("Multiplier Generator:", color="yellow"),
+                               scale=0.6, wait=0, move=(-3, -1), fade=False)
+
+        text = [
+            f"If Divisor is <span color='cyan'>7</span>, Multiplier Generator can be<span color='cyan'> 21 or 49.</span>"
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Divisor is <span color='cyan'>9</span>, Multiplier Generator is <span color='cyan'>9.</span>"
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Divisor is <span color='cyan'>11</span>, Multiplier Generator is <span color='cyan'>11.</span>"
+              ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Divisor is <span color='cyan'>13</span>, Multiplier Generator is <span color='cyan'>39.</span>"
+              ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        self.play(FadeOut(title_h1))
+
+        text = [
+            f"Next step is finding the <span color='cyan'>Folding Multiplier</span>",
+            f"For this,",
+            f"the <span color='yellow'>mutiplier generator is divided by 10.</span>",
+            f"If multiplier generator <span color='yellow'>ends in 1</span>, we take <span color='yellow'>negative</span> of this value.",
+            f"Else the value itself is the Folding multiplier."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        title_h1 = DisplayText(self, Span("Examples for ", color="white") + Span("Folding multiplier:", color="yellow"),
+                               scale=0.6, wait=0, move=(-3, -1), fade=False)
+
+        text = [
+            f"If Multiplier Generator is <span color='cyan'>21</span>, folding multiplier is <span color='cyan'>-2</span>."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Multiplier Generator is <span color='cyan'>49</span>, folding multiplier is <span color='cyan'>5</span>."
+                ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Multiplier Generator is <span color='cyan'>9</span>, folding multiplier is <span color='cyan'>1</span>."
+              ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Multiplier Generator is <span color='cyan'>11</span>, folding multiplier is <span color='cyan'>-1</span>.",
+             ]
+
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"If Multiplier Generator is <span color='cyan'>39</span>, folding multiplier is <span color='cyan'>4</span>."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        self.play(FadeOut(title_h1))
+
+        text = [
+            f"Now we can start <span color='yellow'>Folding</span> the number:",
+            f"We take out the <span color='yellow'>last digit</span> of the dividend.",
+            f"This digit is <span color='cyan'>multiplied</span> by <span color='yellow'>folding multiplier</span>",
+            f"and the <span color='cyan'>product is added</span> with rest of the digits."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+
+        text = [
+            f"Repeat this Folding process",
+            f"until we receive a <span color='cyan'>single digit</span>",
+            f"or a <span color='cyan'>number already seen</span> is obtained (a loop)",
+            f"or a <span color='cyan'>known multiple of Divisor</span> is found."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"At any stage of Folding process,",
+            f"Divisor, Multiplier Generator or their multiples ",
+            f"may be <span color='cyan'>“cast out”(subtracted)</span> if it makes the process easy."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"So, how can we conclude our testing?",
+            f"If a <span color='yellow'>multiple of D</span> or <span color='yellow'>OG</span> or <span color='yellow'>zero</span> is found in the process,",
+            f"then Dividend is <span color='green'>divisible</span> by Divisor. <span color='red'>Else,it's NOT.</span>",
+            f"We can also stop with a <span color='red'>negative result</span> if a " ,
+            f"known <span color='red'>non-multiple of Divisor</span> is found in the process."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+
+
+        text = [
+            f"If the Divisor is a multiple of 2 or 5,",
+            f"we can remove these from Divisor and Dividend and ",
+            f"do the same folding process to check the divisibility."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+        
         n = 533
         d = 13
         f = FoldingOp(self, n, d, d*3, 4)
@@ -102,6 +262,9 @@ class FoldingTest(Scene):
         f.fold()    
         f.end()
         self.next_section()
+
+        lastscene(self)
+
 
 
 class Reciprocal():
@@ -218,13 +381,111 @@ class Reciprocal():
         self.end(wait)
         self.clear()
 
-class ReciprocalTest(Scene):
+class Reciprocals(Scene):
     def construct(self):
+
+        Title(self, "विपर्यस्तगणनम्", "Reciprocals", move=(3, 5), wait=2)
+        self.next_section()
+        self.wait(1)
+
+        text = [
+            f"In this video,",
+            f"we are learning a simple technique to write the",
+            f"<span color='cyan'>Decimal Form</span> of the <span color='yellow'>reciprocal of any number</span> that <span color='yellow'>ends in 9.</span>",
+            f"We use the sutra <span color='cyan'>एकाधिकेन पूर्वेण</span> for this."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"The <span color='cyan'>decimal form</span> of the <span color='yellow'>reciprocal of any number</span> that <span color='yellow'>end in 9</span>",
+            f"will always be a <span color='yellow'>repeating sequence of digits.</span>",
+            f"In this process, we start with <span color='yellow'>last digit</span> of the answer",
+            f"and calculate the <span color='yellow'>previous digits</span> and continue the process",
+            f"until we identify a <span color='yellow'>repeat of the sequence.</span>"
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+
+        text = [
+            f"Before going to the procedure, ",
+            f"let's look at the two <span color='cyan'>initial steps.</span>",
+            f"First is finding the <span color='yellow'>last digit of the answer.</span>",
+            f"Second is finding the <span color='yellow'>multiplier</span> to write the <span color='yellow'>previous digits.</span>",
+            ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"To write the <span color='cyan'>decimal form of 1/9:</span>",
+            f"Number in numerator is <span color='yellow'>1.</span> So last digit of the answer is <span color='yellow'>1.</span>",
+            f"Number in Denominator is <span color='yellow'>9.</span> There is no digit before <span color='yellow'>9.</span>",
+            f"so, let's take it as <span color='yellow'>Zero.</span> By <span color='yellow'>एकाधिकेन पूर्वेण</span> we get <span color='yellow'>0+1=1.</span>",
+            f"This <span color='yellow'>1</span> is the <span color='yellow'>multiplier</span> in the process."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"To write the <span color='cyan'>decimal form of 3/39:</span>",
+            f"Number in numerator is <span color='yellow'>3.</span> So last digit of the answer is <span color='yellow'>3.</span>",
+            f"Number in Denominator is <span color='yellow'>39.</span> Digit before 9 is <span color='yellow'>3.</span>",
+            f"By <span color='yellow'>एकाधिकेन पूर्वेण</span> we get <span color='yellow'>3+1=4</span>",
+            f"This <span color='yellow'>4</span> is the <span color='yellow'>multiplier</span> in the process."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Now we have the <span color='yellow'>last digit</span> of the answer ",
+            f"and the <span color='yellow'>multiplier</span> to find the <span color='yellow'>previous digits.</span>",
+            f"Rest of the process is really easy.",
+            f"<span color='yellow'>Multiply</span> the <span color='yellow'>last digit</span> with <span color='yellow'>multiplier.</span>",
+            f"We write the <span color='yellow'>unit digit</span> of this product before the <span color='yellow'>last digit</span>",
+            f"and <span color='yellow'>rest of the digits</span> are treated as <span color='yellow'>carry</span> for next step."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Now, <span color='yellow'>second last digit</span> is <span color='yellow'>multiplied</span> with <span color='yellow'>multiplier</span>",
+            f"and the <span color='yellow'>result</span> is added with any <span color='yellow'>carry</span> from <span color='yellow'>previous step.</span>",
+            f"Again, we write the <span color='yellow'>unit digit</span> of this answer ",
+            f"before the <span color='yellow'>second last digit</span>",
+            f"and <span color='yellow'>rest of the digits</span> are treated as <span color='yellow'>carry</span> for next step."
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"This process is continued until the <span color='yellow'>repeat</span> of ",
+            "<span color='yellow'>any digit</span> in the series with <span color='yellow'>same carry</span> for next step.",
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"Some <span color='cyan'>Interesting facts!</span>",
+            f"Every reciprocal <span color='yellow'>1/x</span> has a <span color='yellow'>*maximum*</span> of ",
+            f"<span color='yellow'>x-1</span> repeating digits. When this is true,",
+            f"all <span color='yellow'>multiples</span> with <span color='yellow'>different numerators</span> less than <span color='yellow'>x</span> are",
+            f"<span color='cyan'>Cyclic Permutations!</span>"
+        ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
+        text = [
+            f"This property makes it easy to compute many fractions.",
+            f"2/7 = <span color='yellow'>0.285714...</span>",
+            f"3/7 = <span color='yellow'>0.428571...</span>",
+            f"4/7 = <span color='yellow'>0.571428...</span>",
+            f"5/7 = <span color='yellow'>0.714285...</span>",
+            f"6/7 = <span color='yellow'>0.857142...</span>"
+            ]
+        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
         r = Reciprocal(self, 1, 19, 2)
         r.step_all()        
         r = Reciprocal(self, 7, 49, 5)
         r.step_all()
         r = Reciprocal(self, 6, 39, 4)
         r.step_all()
+
+        lastscene(self)
+
         t = Text("Bye")
         self.play(FadeIn(t))
+
+
