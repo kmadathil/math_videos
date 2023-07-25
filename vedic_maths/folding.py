@@ -113,8 +113,8 @@ class Folding(Scene):
 
         text = [
             f"The term <span color='yellow'>Divisibility Test</span> is very familiar to us.",
-            f"Also we are proficient in doing the ",
-            f"divisibility test of any number by 2, 3 and 5.",
+            f"We are proficient in performing",
+            f"divisibility tests of any number by 2, 3 and 5.",
             f"In our previous videos we used <span color='yellow'>Digitsum</span> " ,
             f"to check whether a number is  <span color='cyan'>divisible by 9.</span>",
             f"We also learned that  <span color='yellow'>ekadasha shesha</span> can be used ",
@@ -123,12 +123,11 @@ class Folding(Scene):
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"Today we are learning a new technique, <span color='cyan'>Folding,</span>",
-            f"to check the  <span color='yellow'>divisibility</span> for <span color='yellow'>any number.</span>",
-            f"This number is referred as  <span color='cyan'>Divisor.</span>",
-            f"The number that we seek to check the divisibility is <span color='cyan'>Dividend.</span>" ,
-            f"So,now we are learning to check whether",
-            f"a  <span color='cyan'>Dividend</span><span color='yellow'> is divisible by a</span><span color='cyan'> Divisor</span><span color='yellow'> or not.</span>"
+            f"Today we learn a new technique, <span color='cyan'>Folding,</span>",
+            f"to check the  <span color='yellow'>divisibility</span> by <span color='yellow'>any number.</span>",
+            f"We will learn to check whether or not",
+            f"a number, called <span color='cyan'>Dividend</span>, <span color='yellow'> is divisible by</span>",
+            f"another number, called the<span color='cyan'> Divisor</span>."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
@@ -136,71 +135,72 @@ class Folding(Scene):
         text = [
             f"Let's see the procedure in detail.",
             f"To begin with, we find a  <span color='yellow'>multiple</span> of the <span color='yellow'>Divisor</span>",
-            f"that is  <span color='yellow'>1 less or greater</span> than a <span color='yellow'>10's multiple.</span>",
-            f"let's call this as <span color='cyan'>Multiplier Generator.</span>"
+            f"that is <span color='yellow'>less or greater by 1</span> than a <span color='yellow'>multiple of 10.</span>",
+            f"We will call this the <span color='cyan'>Multiplier Generator.</span>"
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         title_h1 = DisplayText(self, Span("Examples for ", color="white") + Span("Multiplier Generator:", color="yellow"),
-                               scale=0.6, wait=0, move=(-3, -1), fade=False)
+                               scale=0.8, wait=0, move=(-3, -1), fade=False)
 
         text = [
-            f"If Divisor is <span color='cyan'>7</span>, Multiplier Generator can be<span color='cyan'> 21 or 49.</span>"
+            f"If the Divisor is <span color='cyan'>7</span>, the Multiplier Generator can be<span color='cyan'> 21 or 49.</span>"
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Divisor is <span color='cyan'>9</span>, Multiplier Generator is <span color='cyan'>9.</span>"
+            f"If the Divisor is <span color='cyan'>9</span>, the Multiplier Generator is <span color='cyan'>9.</span>"
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Divisor is <span color='cyan'>11</span>, Multiplier Generator is <span color='cyan'>11.</span>"
+            f"If the Divisor is <span color='cyan'>11</span>, the Multiplier Generator is <span color='cyan'>11.</span>"
               ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Divisor is <span color='cyan'>13</span>, Multiplier Generator is <span color='cyan'>39.</span>"
+            f"If the Divisor is <span color='cyan'>13</span>, the Multiplier Generator is <span color='cyan'>39.</span>"
               ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         self.play(FadeOut(title_h1))
 
         text = [
-            f"Next step is finding the <span color='cyan'>Folding Multiplier</span>",
-            f"For this,",
-            f"the <span color='yellow'>mutiplier generator is divided by 10.</span>",
-            f"If multiplier generator <span color='yellow'>ends in 1</span>, we take <span color='yellow'>negative</span> of this value.",
-            f"Else the value itself is the Folding multiplier."
+            f"The next step is finding the <span color='cyan'>Folding Multiplier</span>",
+            f"For this, the <span color='cyan'>multiple of 10</span> that is adjacent to",
+            f"the <span color='yellow'>mutiplier generator,</span> <span color='cyan'>is divided by 10.</span>",
+            f"If the <span color='yellow'>multiplier generator ends in 1</span>,",
+            f"the Folding multiplier is the <span color='yellow'>negative</span> of this result.",
+            f"If the <span color='yellow'>multiplier generator ends in 9</span> the result itself is the Folding multiplier."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         title_h1 = DisplayText(self, Span("Examples for ", color="white") + Span("Folding multiplier:", color="yellow"),
-                               scale=0.6, wait=0, move=(-3, -1), fade=False)
+                               scale=0.8, wait=0, move=(-3, -1), fade=False)
 
         text = [
-            f"If Multiplier Generator is <span color='cyan'>21</span>, folding multiplier is <span color='cyan'>-2</span>."
+            f"If the Multiplier Generator is <span color='cyan'>21</span>, the Folding Multiplier is <span color='cyan'>-2</span>."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Multiplier Generator is <span color='cyan'>49</span>, folding multiplier is <span color='cyan'>5</span>."
+            f"If the Multiplier Generator is <span color='cyan'>49</span>, the Folding Multiplier is <span color='cyan'>5</span>."
                 ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Multiplier Generator is <span color='cyan'>9</span>, folding multiplier is <span color='cyan'>1</span>."
+            f"If the Multiplier Generator is <span color='cyan'>9</span>, the Folding Multiplier is <span color='cyan'>1</span>."
               ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Multiplier Generator is <span color='cyan'>11</span>, folding multiplier is <span color='cyan'>-1</span>.",
+            f"If the Multiplier Generator is <span color='cyan'>11</span>, the Folding Multiplier is <span color='cyan'>-1</span>.",
              ]
 
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"If Multiplier Generator is <span color='cyan'>39</span>, folding multiplier is <span color='cyan'>4</span>."
+            f"If the Multiplier Generator is <span color='cyan'>39</span>, the Folding Multiplier is <span color='cyan'>4</span>."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
@@ -209,41 +209,43 @@ class Folding(Scene):
         text = [
             f"Now we can start <span color='yellow'>Folding</span> the number:",
             f"We take out the <span color='yellow'>last digit</span> of the dividend.",
-            f"This digit is <span color='cyan'>multiplied</span> by <span color='yellow'>folding multiplier</span>",
+            f"This digit is <span color='cyan'>multiplied</span> by the <span color='yellow'>Folding Multiplier</span>",
             f"and the <span color='cyan'>product is added</span> with rest of the digits."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
 
         text = [
-            f"Repeat this Folding process",
-            f"until we receive a <span color='cyan'>single digit</span>",
-            f"or a <span color='cyan'>number already seen</span> is obtained (a loop)",
-            f"or a <span color='cyan'>known multiple of Divisor</span> is found."
+            f"We repeat this Folding process",
+            f"until we obtain a <span color='cyan'>single digit</span>",
+            f"or a <span color='cyan'>number already seen</span> is obtained(a loop),",
+            f"or a <span color='cyan'>known multiple of the Divisor</span> is found."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
-        text = [
+        """ text = [
             f"At any stage of Folding process,",
-            f"Divisor, Multiplier Generator or their multiples ",
-            f"may be <span color='cyan'>“cast out”(subtracted)</span> if it makes the process easy."
+            f"the Divisor, or its multiples ",
+            f"may be <span color='cyan'>“cast out” (subtracted)</span> from the result",
+            f"if it makes the process easy."
+        ]
+        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+        """
+        text = [
+            f"So, how does our divisibility test conclude?",
+            f"If a <span color='yellow'>multiple of the divisor</span> (positive or negative)",
+            f"or <span color='yellow'>zero</span> is found in the process,",
+            f"then the Dividend is <span color='green'>divisible</span> by the Divisor.",
+            f"Otherwise, <span color='red'>it is not.</span>",
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"So, how can we conclude our testing?",
-            f"If a <span color='yellow'>multiple of D</span> or <span color='yellow'>OG</span> or <span color='yellow'>zero</span> is found in the process,",
-            f"then Dividend is <span color='green'>divisible</span> by Divisor. <span color='red'>Else,it's NOT.</span>",
-            f"We can also stop with a <span color='red'>negative result</span> if a " ,
-            f"known <span color='red'>non-multiple of Divisor</span> is found in the process."
-        ]
-        e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
-
-
-        text = [
-            f"If the Divisor is a multiple of 2 or 5,",
-            f"we can remove these from Divisor and Dividend and ",
-            f"do the same folding process to check the divisibility."
+            f"Does this work for any Divisor?",
+            f"It does for any <span color='yellow>Odd Divisor</span> that is not a multiple of 5."
+            f"If the <span color='yellow'>Divisor</span> is a multiple of <span color='yellow'>2 or 5</span>,",
+            f"we can divide both Divisor and Dividend by those,",
+            f"and perform the same folding process to check the divisibility."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
         
