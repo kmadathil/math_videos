@@ -6,7 +6,7 @@ from division import vinc_int, vinc_str, vinc_list, MT
 import math
 
 class FoldingOp:
-    def __init__(self, scene, num, divisor, fold_gen=19, fold_multiplier = 2) -> None:
+    def __init__(self, scene, num, divisor, fold_gen=19, fold_multiplier=2) -> None:
         self.scene = scene
         self.num = num
         self.fold_t = num
@@ -20,11 +20,11 @@ class FoldingOp:
         self.div_fact = int(fold_gen/divisor)
         self.n_folds = 0
 
-    def idisplay(self, wait = 1):
+    def idisplay(self, wait = 2):
         ''' Initial display of folding '''
         t00=MarkupText(f"Is {Span(self.num, color='yellow')} divisible by {Span(self.divisor, color='yellow')} ?")
         self.scene.add(t00)
-        self.scene.wait(1)
+        self.scene.wait(2)
         t01= MarkupText(f"We note that {self.divisor} x {self.div_fact} = {self.fold_gen}")
         t01.next_to(t00, DOWN, buff=1)
         self.scene.add(t01)
@@ -49,7 +49,7 @@ class FoldingOp:
         self.g1 = gm
         return gn, gm
     
-    def fold(self, wait=2):
+    def fold(self, wait=3):
         ''' One folding step '''
         nd = (self.fold_t % 10)* self.multiplier
         self.fold_t = int(self.fold_t/10) + nd
@@ -65,7 +65,7 @@ class FoldingOp:
         self.scene.play(Indicate(self.g1[-1]))
         self.scene.play(Transform(self.g0[1][-1], ndm))
         self.scene.add(t, o)
-        self.scene.wait(2)
+        self.scene.wait(3)
         self.scene.remove(self.g0[1][-1], o)
         self.g0[1].become(t)
         self.scene.play(self.g0.animate.arrange(DOWN).shift(UP))
@@ -81,12 +81,14 @@ class FoldingOp:
         if self.n_folds == (self.divisor - 1):
             assert ((self.fold_t % self.divisor) == (self.num % self.divisor))
         self.scene.remove(self.g1)
-        dp = Span("divisible by", color="Green") if (self.fold_t % self.divisor) == 0 else Span("not divisible by", color="Red")
+        dp = Span("divisible by", color="springGreen") if (self.fold_t % self.divisor) == 0 else Span("not divisible by", color="Red")
         t = f"{Span(self.fold_t, color='Yellow')} is {dp} {Span(self.divisor, color='Yellow')}, and therefore so is {Span(self.num, color='Yellow')}"
         g = DisplayText(self.scene, t, scale=0.7, move=(2, 0), wait=3, fade=True)
         self.scene.remove(self.g0)
 
+
 def lastscene(self):
+    
     titleL1 = DisplayText(self,
             Span("Thank you for watching this video.", color="yellow"), scale=0.7, wait=1,
             move=(-2.5, -1), fade=False)
@@ -107,6 +109,7 @@ def lastscene(self):
 
 class Folding(Scene):
     def construct(self):
+
         Title(self, "वेष्टनम्", "Folding", move=(3, 5), wait=2)
         self.next_section()
         self.wait(1)
@@ -171,7 +174,8 @@ class Folding(Scene):
             f"the <span color='yellow'>mutiplier generator,</span> <span color='cyan'>is divided by 10.</span>",
             f"If the <span color='yellow'>multiplier generator ends in 1</span>,",
             f"the Folding multiplier is the <span color='yellow'>negative</span> of this result.",
-            f"If the <span color='yellow'>multiplier generator ends in 9</span> the result itself is the Folding multiplier."
+            f"If the <span color='yellow'>multiplier generator ends in 9</span> ",
+            f"the result itself is the Folding multiplier."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
@@ -205,6 +209,7 @@ class Folding(Scene):
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         self.play(FadeOut(title_h1))
+         
 
         text = [
             f"Now we can start <span color='yellow'>Folding</span> the number:",
@@ -214,7 +219,7 @@ class Folding(Scene):
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
-
+         
         text = [
             f"We repeat this Folding process",
             f"until we obtain a <span color='cyan'>single digit</span>",
@@ -222,8 +227,9 @@ class Folding(Scene):
             f"or a <span color='cyan'>known multiple of the Divisor</span> is found."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
-
-        """ text = [
+        
+        """
+        text = [
             f"At any stage of Folding process,",
             f"the Divisor, or its multiples ",
             f"may be <span color='cyan'>“cast out” (subtracted)</span> from the result",
@@ -235,27 +241,28 @@ class Folding(Scene):
             f"So, how does our divisibility test conclude?",
             f"If a <span color='yellow'>multiple of the divisor</span> (positive or negative)",
             f"or <span color='yellow'>zero</span> is found in the process,",
-            f"then the Dividend is <span color='green'>divisible</span> by the Divisor.",
+            f"then the Dividend is <span color='springgreen'>divisible</span> by the Divisor.",
             f"Otherwise, <span color='red'>it is not.</span>",
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"Does this work for any Divisor?",
-            f"It does for any <span color='yellow>Odd Divisor</span> that is not a multiple of 5."
+            f"<span color='springgreen'>It does</span> for any <span color='yellow'>Odd Divisor</span> that is not a multiple of 5.",
             f"If the <span color='yellow'>Divisor</span> is a multiple of <span color='yellow'>2 or 5</span>,",
             f"we can divide both Divisor and Dividend by those,",
             f"and perform the same folding process to check the divisibility."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
-        
+         
         n = 533
         d = 13
         f = FoldingOp(self, n, d, d*3, 4)
         t0, t1 = f.idisplay(3)
         f.fold()
         f.fold()
-        f.end()
+        f.end()       
+
         n = 948
         d = 7
         f = FoldingOp(self, n, d, d*3, -2)
@@ -263,9 +270,21 @@ class Folding(Scene):
         f.fold()    
         f.fold()    
         f.end()
+
+        n = 1712
+        d = 13
+        f = FoldingOp(self, n, d, d*3, 4)
+        t0, t1 = f.idisplay(3)
+        f.fold()
+        f.fold()
+        f.fold()
+        f.end()
+
         self.next_section()
 
         lastscene(self)
+
+
 
 
 
