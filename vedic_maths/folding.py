@@ -77,13 +77,11 @@ class FoldingOp:
         self.scene.remove(self.g0, self.g1)
 
     def end(self):
-
         assert (((self.fold_t % self.divisor) == 0) == ((self.num % self.divisor) == 0))
-
         if self.n_folds == (self.divisor - 1):
             assert ((self.fold_t % self.divisor) == (self.num % self.divisor))
         self.scene.remove(self.g1)
-        dp = Span("divisible by", color="Green") if (self.fold_t % self.divisor) == 0 else Span("not divisible by", color="Red")
+        dp = Span("divisible by", color="springGreen") if (self.fold_t % self.divisor) == 0 else Span("not divisible by", color="Red")
         t = f"{Span(self.fold_t, color='Yellow')} is {dp} {Span(self.divisor, color='Yellow')}, and therefore so is {Span(self.num, color='Yellow')}"
         g = DisplayText(self.scene, t, scale=0.7, move=(2, 0), wait=3, fade=True)
         self.scene.remove(self.g0)
@@ -211,6 +209,7 @@ class Folding(Scene):
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         self.play(FadeOut(title_h1))
+         
 
         text = [
             f"Now we can start <span color='yellow'>Folding</span> the number:",
@@ -220,7 +219,7 @@ class Folding(Scene):
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
-
+         
         text = [
             f"We repeat this Folding process",
             f"until we obtain a <span color='cyan'>single digit</span>",
@@ -228,7 +227,8 @@ class Folding(Scene):
             f"or a <span color='cyan'>known multiple of the Divisor</span> is found."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
-
+        
+        """
         text = [
             f"At any stage of Folding process,",
             f"the Divisor, or its multiples ",
@@ -236,25 +236,25 @@ class Folding(Scene):
             f"if it makes the process easy."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
-
+        """
         text = [
             f"So, how does our divisibility test conclude?",
             f"If a <span color='yellow'>multiple of the divisor</span> (positive or negative)",
             f"or <span color='yellow'>zero</span> is found in the process,",
-            f"then the Dividend is <span color='green'>divisible</span> by the Divisor.",
+            f"then the Dividend is <span color='springgreen'>divisible</span> by the Divisor.",
             f"Otherwise, <span color='red'>it is not.</span>",
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
 
         text = [
             f"Does this work for any Divisor?",
-            f"<span color='green'>It does</span> for any <span color='yellow'>Odd Divisor</span> that is not a multiple of 5.",
+            f"<span color='springgreen'>It does</span> for any <span color='yellow'>Odd Divisor</span> that is not a multiple of 5.",
             f"If the <span color='yellow'>Divisor</span> is a multiple of <span color='yellow'>2 or 5</span>,",
             f"we can divide both Divisor and Dividend by those,",
             f"and perform the same folding process to check the divisibility."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
-        
+         
         n = 533
         d = 13
         f = FoldingOp(self, n, d, d*3, 4)
@@ -283,6 +283,8 @@ class Folding(Scene):
         self.next_section()
 
         lastscene(self)
+
+
 
 
 
