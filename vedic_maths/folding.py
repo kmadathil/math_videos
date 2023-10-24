@@ -20,7 +20,7 @@ class FoldingOp:
         self.div_fact = int(fold_gen/divisor)
         self.n_folds = 0
 
-    def idisplay(self, wait = 2):
+    def idisplay(self, wait = 4):
         ''' Initial display of folding '''
         t00=MarkupText(f"Is {Span(self.num, color='yellow')} divisible by {Span(self.divisor, color='yellow')} ?")
         self.scene.add(t00)
@@ -40,17 +40,18 @@ class FoldingOp:
         self.scene.play(ReplacementTransform(t00,gn))
         self.scene.play(t01.animate.become(g0))
         self.scene.play(FadeIn(gm, shift=DOWN))
-        self.scene.wait(wait)
+        self.scene.wait(2)
         self.scene.play(FadeOut(t01))
         self.scene.play(gm.animate.shift(DOWN))
         self.scene.play(gn.animate.arrange(DOWN).shift(UP))
-        self.scene.wait(wait)
+        self.scene.wait(2)
         self.g0 = gn
         self.g1 = gm
         return gn, gm
     
-    def fold(self, wait=3):
+    def fold(self, wait=4):
         ''' One folding step '''
+
         nd = (self.fold_t % 10)* self.multiplier
         self.fold_t = int(self.fold_t/10) + nd
         o = Text("+")
@@ -65,7 +66,7 @@ class FoldingOp:
         self.scene.play(Indicate(self.g1[-1]))
         self.scene.play(Transform(self.g0[1][-1], ndm))
         self.scene.add(t, o)
-        self.scene.wait(3)
+        self.scene.wait(4)
         self.scene.remove(self.g0[1][-1], o)
         self.g0[1].become(t)
         self.scene.play(self.g0.animate.arrange(DOWN).shift(UP))
@@ -83,7 +84,7 @@ class FoldingOp:
         self.scene.remove(self.g1)
         dp = Span("divisible by", color="springGreen") if (self.fold_t % self.divisor) == 0 else Span("not divisible by", color="Red")
         t = f"{Span(self.fold_t, color='Yellow')} is {dp} {Span(self.divisor, color='Yellow')}, and therefore so is {Span(self.num, color='Yellow')}"
-        g = DisplayText(self.scene, t, scale=0.7, move=(2, 0), wait=3, fade=True)
+        g = DisplayText(self.scene, t, scale=0.7, move=(2, 0), wait=2, fade=True)
         self.scene.remove(self.g0)
 
 
@@ -109,6 +110,7 @@ def lastscene(self):
 
 class Folding(Scene):
     def construct(self):
+
 
         Title(self, "वेष्टनम्", "Folding", move=(3, 5), wait=2)
         self.next_section()
@@ -228,6 +230,7 @@ class Folding(Scene):
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
         
+
         """
         text = [
             f"At any stage of Folding process,",
@@ -237,6 +240,7 @@ class Folding(Scene):
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
         """
+
         text = [
             f"So, how does our divisibility test conclude?",
             f"If a <span color='yellow'>multiple of the divisor</span> (positive or negative)",
@@ -254,35 +258,48 @@ class Folding(Scene):
             f"and perform the same folding process to check the divisibility."
         ]
         e = Explanation(self, text, wait=2, fade=True, aligned_edge=LEFT)
+        self.wait(2)
          
         n = 533
         d = 13
         f = FoldingOp(self, n, d, d*3, 4)
-        t0, t1 = f.idisplay(3)
+        t0, t1 = f.idisplay(4)
+        self.wait(1)
         f.fold()
+        self.wait(1)
         f.fold()
-        f.end()       
+        f.end()
+        self.wait(1)
 
         n = 948
         d = 7
         f = FoldingOp(self, n, d, d*3, -2)
-        t0, t1 = f.idisplay(3)
-        f.fold()    
-        f.fold()    
+        t0, t1 = f.idisplay(4)
+        self.wait(1)
+        f.fold()
+        self.wait(1)
+        f.fold()
         f.end()
+        self.wait(1)
 
+        """
         n = 1712
         d = 13
         f = FoldingOp(self, n, d, d*3, 4)
-        t0, t1 = f.idisplay(3)
+        t0, t1 = f.idisplay(4)
+        self.wait(1)
         f.fold()
+        self.wait(1)
         f.fold()
+        self.wait(1)
         f.fold()
         f.end()
+        self.wait(1)
+        """
 
         self.next_section()
-
         lastscene(self)
+
 
 
 
@@ -301,7 +318,7 @@ class Reciprocal():
         self.last_digit = self.numerator
         self.carry = 0
 
-    def display(self, wait=3):
+    def display(self, wait=5):
         '''Initial display'''
         frac = MathTex("\\frac{"+str(self.numerator)+"}{"+str(self.denominator)+"}", color="Yellow")
         e = Text(" = ")
@@ -311,26 +328,30 @@ class Reciprocal():
         ng = VGroup(n).arrange(LEFT)
         self.cg = VGroup(MathTex("0", color="Black")).arrange(LEFT)   # Carry Group
         self.tg = VGroup(frac, e, z, t, ng).arrange(RIGHT)
-        self.mg = VGroup(VGroup(Text("Multiplier:").scale(0.6), MathTex(self.multiplier, color="Yellow")).arrange(RIGHT))
+
+        self.mg = VGroup(VGroup(Text("Multiplier:").scale(0.6), MathTex(self.multiplier, color="cyan")).arrange(RIGHT))
         self.tg.shift(UP)
         self.mg.next_to(self.tg, DOWN, buff=1)
         self.cg.next_to(self.tg[-1], UP, aligned_edge=RIGHT)
         self.scene.play(FadeIn(self.tg))
+        self.scene.wait(5)
         self.scene.play(FadeIn(self.mg))
         self.scene.add(self.cg)
+        self.scene.wait(6)
         return self.tg, self.mg
     
-    def end(self, wait=3):
+    def end(self, wait=5):
         '''We are done, remove the ... symbol'''
         self.scene.play(Indicate(self.tg[-1][0]))
         self.scene.play(Indicate(self.tg[-1][-1]))
         self.tg[-1][-1].set_color(GREY)
         self.scene.remove(self.cg)
-        self.scene.wait(1)
+        self.scene.wait(2)
         self.tg1 = VGroup(*self.tg[0:3].copy(), self.tg[4][0:-1].copy(), self.tg[3].copy()).arrange(RIGHT)
         self.tg1.shift(UP)
         self.scene.play(Transform(self.tg, self.tg1))
         self.scene.wait(wait)
+        self.scene.wait(6)
 
     def step(self, wait=3):
         '''Single Step
@@ -350,17 +371,17 @@ class Reciprocal():
             self.x.next_to(self.mg[0], RIGHT)
             self.eq.next_to(self.mg[2], LEFT)
             self.scene.add(self.x, self.eq)
-            self.scene.wait(1)
+            self.scene.wait(3)
         else:
             self.mg[-2].become(self.tg[-1][-1])
-            self.scene.wait(2)
+            self.scene.wait(4)
             t = MathTex(str(self.multiplier*self.last_digit), color="Yellow")
             self.mg[-1].become(t)
             self.mg.arrange(DOWN, aligned_edge=RIGHT)
             self.mg.next_to(self.tg, DOWN, buff=1)
             self.x.next_to(self.mg[0], RIGHT)
             self.eq.next_to(self.mg[2], LEFT)
-        self.scene.wait(2)
+        self.scene.wait(4)
         self.last_digit = self.multiplier * self.last_digit + self.carry
         self.carry = int(self.last_digit/10)
         self.last_digit = self.last_digit % 10
@@ -487,18 +508,27 @@ class Reciprocals(Scene):
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
-        text = [
-            f"This property makes it easy to compute many fractions.",
-            f"2/7 = <span color='yellow'>0.285714...</span>",
-            f"3/7 = <span color='yellow'>0.428571...</span>",
-            f"4/7 = <span color='yellow'>0.571428...</span>",
-            f"5/7 = <span color='yellow'>0.714285...</span>",
-            f"6/7 = <span color='yellow'>0.857142...</span>"
-            ]
-        e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+        title_fact = DisplayText(self,
+                              Span("This property makes it easy to compute many fractions.", color="cyan"), scale=0.7, wait=1,
+                              move=(-2.5, -1), fade=False)
+        title_fact1 = DisplayText(self, Span("2/7 = 0.285714...", color="yellow"),
+                                  scale=0.6, wait=4, move=(-1.5, -1), fade=False)
+        title_fact2 = DisplayText(self, Span("3/7 = 0.428571...", color="yellow"),
+                                  scale=0.6, wait=4, move=(-1.0, -1), fade=False)
+        title_fact3 = DisplayText(self, Span("4/7 = 0.571428...", color="yellow"),
+                              scale=0.6, wait=4, move=(-0.5, -1), fade=False)
+        title_fact4 = DisplayText(self, Span("5/7 = 0.714285...", color="yellow"),
+                                 scale=0.6, wait=4, move=(0, -1),fade=False)
+        title_fact5 = DisplayText(self, Span("6/7 = 0.857142...", color="yellow"),
+                                 scale=0.6, wait=4, move=(0.5, -1), fade=False)
+
+        self.wait(3)
+        self.play(FadeOut(title_fact, title_fact1, title_fact2, title_fact3,title_fact4 ,title_fact5 ))
+
+
 
         r = Reciprocal(self, 1, 19, 2)
-        r.step_all()        
+        r.step_all()
         r = Reciprocal(self, 7, 49, 5)
         r.step_all()
         r = Reciprocal(self, 6, 39, 4)
@@ -506,7 +536,9 @@ class Reciprocals(Scene):
 
         lastscene(self)
 
-        t = Text("Bye")
-        self.play(FadeIn(t))
+
+        #t = Text("Bye")
+        #self.play(FadeIn(t))
+
 
 
