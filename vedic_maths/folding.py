@@ -432,43 +432,45 @@ class Reciprocals(Scene):
 
         text = [
             f"In this video,",
-            f"we are learning a simple technique to write the",
+            f"we learn a simple technique to calculate the",
             f"<span color='cyan'>Decimal Form</span> of the <span color='yellow'>reciprocal of any number</span> that <span color='yellow'>ends in 9.</span>",
             f"We use the sutra <span color='cyan'>एकाधिकेन पूर्वेण</span> for this."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"The <span color='cyan'>decimal form</span> of the <span color='yellow'>reciprocal of any number</span> that <span color='yellow'>end in 9</span>",
+            f"The <span color='cyan'>decimal form</span> of the <span color='yellow'>reciprocal of any number</span> that <span color='yellow'>ends in 9</span>",
             f"will always be a <span color='yellow'>repeating sequence of digits.</span>",
             f"In this process, we start with <span color='yellow'>last digit</span> of the answer",
-            f"and calculate the <span color='yellow'>previous digits</span> and continue the process",
+            f"and calculate the <span color='yellow'>previous digits</span> and continue",
             f"until we identify a <span color='yellow'>repeat of the sequence.</span>"
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
 
         text = [
-            f"Before going to the procedure, ",
-            f"let's look at the two <span color='cyan'>initial steps.</span>",
-            f"First is finding the <span color='yellow'>last digit of the answer.</span>",
-            f"Second is finding the <span color='yellow'>multiplier</span> to write the <span color='yellow'>previous digits.</span>",
+            f"The procedure has two <span color='cyan'>initial steps.</span>",
+            f"The first is finding the <span color='yellow'>last digit of the answer.</span>",
+            f"The second is finding the <span color='yellow'>multiplier</span> for the <span color='yellow'>previous digits.</span>",
             ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"To write the <span color='cyan'>decimal form of 1/9:</span>",
-            f"Number in numerator is <span color='yellow'>1.</span> So last digit of the answer is <span color='yellow'>1.</span>",
-            f"Number in Denominator is <span color='yellow'>9.</span> There is no digit before <span color='yellow'>9.</span>",
-            f"so, let's take it as <span color='yellow'>Zero.</span> By <span color='yellow'>एकाधिकेन पूर्वेण</span> we get <span color='yellow'>0+1=1.</span>",
+            f"To calculate the <span color='cyan'>decimal form of 1/9:</span>",
+            f"The number in the numerator is <span color='yellow'>1.</span>",
+            f"So, the last digit of the answer is also <span color='yellow'>1.</span>",
+            f"The number in the denominator is <span color='yellow'>9.</span>",
+            f"There is no digit before <span color='yellow'>9</span>, so let's take it as <span color='yellow'>Zero.</span>",
+            f"By <span color='yellow'>एकाधिकेन पूर्वेण</span> we get <span color='yellow'>0+1=1.</span>",
             f"This <span color='yellow'>1</span> is the <span color='yellow'>multiplier</span> in the process."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"To write the <span color='cyan'>decimal form of 3/39:</span>",
-            f"Number in numerator is <span color='yellow'>3.</span> So last digit of the answer is <span color='yellow'>3.</span>",
-            f"Number in Denominator is <span color='yellow'>39.</span> Digit before 9 is <span color='yellow'>3.</span>",
+            f"To calculate the <span color='cyan'>decimal form of 1/13 = 3/39:</span>",
+            f"The number in numerator is <span color='yellow'>3.</span>",
+            f"So, the last digit of the answer is also <span color='yellow'>3.</span>",
+            f"The number in Denominator is <span color='yellow'>39.</span> The digit before 9 is <span color='yellow'>3.</span>",
             f"By <span color='yellow'>एकाधिकेन पूर्वेण</span> we get <span color='yellow'>3+1=4</span>",
             f"This <span color='yellow'>4</span> is the <span color='yellow'>multiplier</span> in the process."
         ]
@@ -477,36 +479,44 @@ class Reciprocals(Scene):
         text = [
             f"Now we have the <span color='yellow'>last digit</span> of the answer ",
             f"and the <span color='yellow'>multiplier</span> to find the <span color='yellow'>previous digits.</span>",
-            f"Rest of the process is really easy.",
-            f"<span color='yellow'>Multiply</span> the <span color='yellow'>last digit</span> with <span color='yellow'>multiplier.</span>",
+            f"The rest of the process is quite simple.",
+            f"<span color='yellow'>Multiply</span> the <span color='yellow'>last digit</span> with the <span color='yellow'>multiplier.</span>",
             f"We write the <span color='yellow'>unit digit</span> of this product before the <span color='yellow'>last digit</span>",
-            f"and <span color='yellow'>rest of the digits</span> are treated as <span color='yellow'>carry</span> for next step."
+            f"and the <span color='yellow'>rest of the digits</span> are treated as <span color='yellow'>carry</span> for the next step."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"Now, <span color='yellow'>second last digit</span> is <span color='yellow'>multiplied</span> with <span color='yellow'>multiplier</span>",
-            f"and the <span color='yellow'>result</span> is added with any <span color='yellow'>carry</span> from <span color='yellow'>previous step.</span>",
+            f"Now, the <span color='yellow'>second last digit</span> is <span color='yellow'>multiplied</span> with the <span color='yellow'>multiplier</span>",
+            f"and the <span color='yellow'>result</span> is added with any <span color='yellow'>carry</span> from <span color='yellow'>the previous step.</span>",
             f"Again, we write the <span color='yellow'>unit digit</span> of this answer ",
             f"before the <span color='yellow'>second last digit</span>",
-            f"and <span color='yellow'>rest of the digits</span> are treated as <span color='yellow'>carry</span> for next step."
+            f"and the <span color='yellow'>rest of the digits</span> are treated as <span color='yellow'>carry</span> for the next step."
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
         text = [
-            f"This process is continued until the <span color='yellow'>repeat</span> of ",
-            "<span color='yellow'>any digit</span> in the series with <span color='yellow'>same carry</span> for next step.",
+            f"This process is continued until we see a <span color='yellow'>repeat</span> of ",
+            "<span color='yellow'>any digit</span> in the series with the <span color='yellow'>same carry</span> for the next step.",
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
 
+       
+        r = Reciprocal(self, 1, 19, 2)
+        r.step_all()        
+        r = Reciprocal(self, 7, 49, 5)
+        r.step_all()
+        r = Reciprocal(self, 6, 39, 4)
+        r.step_all()
         text = [
-            f"Some <span color='cyan'>Interesting facts!</span>",
-            f"Every reciprocal <span color='yellow'>1/x</span> has a <span color='yellow'>*maximum*</span> of ",
-            f"<span color='yellow'>x-1</span> repeating digits. When this is true,",
-            f"all <span color='yellow'>multiples</span> with <span color='yellow'>different numerators</span> less than <span color='yellow'>x</span> are",
+            f"An <span color='cyan'>Interesting fact:</span>",
+            f"Every reciprocal <span color='yellow'>1/n</span> has a <span color='yellow'><b>maximum</b></span> of <span color='yellow'>n-1</span> repeating digits.",
+            f"When it has exactly <span color='yellow'>n-1</span> digits,",
+            f"all <span color='yellow'>multiples</span> with <span color='yellow'>different numerators</span> less than <span color='yellow'>n</span> are",
             f"<span color='cyan'>Cyclic Permutations!</span>"
         ]
         e = Explanation(self, text, wait=3, fade=True, aligned_edge=LEFT)
+
 
         title_fact = DisplayText(self,
                               Span("This property makes it easy to compute many fractions.", color="cyan"), scale=0.7, wait=1,
