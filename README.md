@@ -12,16 +12,16 @@ Sutras:
 एकन्यूनेन पूर्वेण
 
 ```
-$ manim -pql vedic_math/nikhilam.py Nikhilam 
-$ manim -pql vedic_math/nikhilam.py Subtraction 
-$ manim -pql vedic_math/nikhilam.py Ekanyunena 
+$ manim -pql vedic_maths/nikhilam.py Nikhilam 
+$ manim -pql vedic_maths/nikhilam.py Subtraction 
+$ manim -pql vedic_maths/nikhilam.py Ekanyunena 
 ```
 एकाधिकेन पूर्वेण
 ```
-$ manim -pql vedic_math/multiplication.py Ekadhikena 
+$ manim -pql vedic_maths/multiplication.py Ekadhikena 
 ```
 यावदूनम् 
 ```
-$ manim -pql vedic_math/multiplication.py Yavadunam 
+$ manim -pql vedic_maths/multiplication.py Yavadunam 
 ```
 
